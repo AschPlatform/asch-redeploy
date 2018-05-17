@@ -1,17 +1,21 @@
 {
-  "watch": [ 
-    "interface"
-  ],
-  "delegates": [
-    "flame bottom dragon rely endorse garage supply urge turtle team demand put",
-    "thrive veteran child enforce puzzle buzz valley crew genuine basket start top",
-    "black tool gift useless bring nothing huge vendor asset mix chimney weird",
-    "ribbon crumble loud chief turn maid neglect move day churn share fabric",
-    "scan prevent agent close human pair aerobic sad forest wave toe dust"
-  ],
-  "asch": "~/test/asch/",
-  "dappName": "asch-dapp-helloworld",
-  "dappMasterAccountPassword": "sentence weasel match weather apple onion release keen lens deal fruit matrix",
-  "host": "http://localhost",
-  "port": 4096
+  "config": {
+    "watch": [ 
+      "interface"
+    ],
+    "delegates": [
+      "flame bottom dragon rely endorse garage supply urge turtle team demand put",
+      "thrive veteran child enforce puzzle buzz valley crew genuine basket start top",
+      "black tool gift useless bring nothing huge vendor asset mix chimney weird",
+      "ribbon crumble loud chief turn maid neglect move day churn share fabric",
+      "scan prevent agent close human pair aerobic sad forest wave toe dust"
+    ],
+    "asch": "~/test/asch/",
+    "aschGenesisAccount": "someone manual strong movie roof episode eight spatial brown soldier soup motor",
+    "dappName": "asch-dapp-helloworld",
+    "dappMasterAccountPassword": "sentence weasel match weather apple onion release keen lens deal fruit matrix",
+    "dappMasterAccountPassword2nd": null,
+    "host": "http://localhost",
+    "port": 4096
+  }
 }
