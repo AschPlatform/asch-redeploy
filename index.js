@@ -9,12 +9,12 @@ const aschService = require('./src/asch-service')
 
 
 process.on('SIGTERM', function () {
-  'Shutting down asch-redeploy...'
+  console.log('Trying to shut down asch-redeploy...')
   console.log(asch.status())
   proccess.exit()
 })
 process.on('SIGINT', function () {
-  'Shutting down asch-redeploy...'
+  console.log('Trying to shut down asch-redeploy...')
   console.log(asch.stop())
   process.exit()
 })
@@ -40,7 +40,7 @@ console.log(asch.start())
 let dep = new deploy(defaultConfig)
 
 dep.sendMoney()
-  .then(function (response) {
+  .then(function sendMoneyFinished(response) {
     if (response.status !== 200) {
       throw new Error('Could not send money')
     }
@@ -50,23 +50,24 @@ dep.sendMoney()
     console.log(`successful created money transaction: ${response.data.transactionId}`)
     return dep.registerDapp()
   })
-  .then(function (response) {
+  dep.registerDapp()
+  .then(function registerDappFinished(response) {
     if (response.status !== 200) {
       throw new Error('Could not register dapp')
     }
     if (response.data.success === false) {
       throw new Error(response.data.error)
     }
-    console.log(`dappId: ${response.data.transactionId}`)
+    console.log(`DAPP registered, DappId: ${response.data.transactionId}`)
     return dep.copyFiles(response.data.transactionId)
   })
-  .then(function (result) {
+  .then(function copyingFilesFinished(result) {
 
     console.log('needs to restart')
     console.log(asch.restart())
-    console.log(`result: ${result}`)
+    console.log("SUCCESS")
   })
-  .catch(function(error) {
-    console.log(error)
+  .catch(function errorOccured(error) {
+    console.log('ERROR OCCURED')
+    console.log(error.message)
   })
-

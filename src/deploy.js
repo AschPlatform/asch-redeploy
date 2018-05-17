@@ -20,7 +20,7 @@ let deploy = function (config) {
     let toAddress = aschJS.crypto.getAddress(aschJS.crypto.getKeys(toSecret).publicKey)
 
     let amount = 1000
-    console.log(`Sending ${amount} XAS to "${toAddress}"`)
+    console.log(`Sending ${amount} XAS to "${toAddress}"...`)
 
     var trs = aschJS.transaction.createTransaction(
       toAddress,
@@ -28,16 +28,19 @@ let deploy = function (config) {
       null,
       genesisSecret,
       null
-    );
+    )
+    console.log(this.peerTransactionUrl)
+    console.log(this.header)
 
     return axios({
       method: 'POST',
       url: this.peerTransactionUrl,
-      headers: this.header,
+      headers: { headers: this.header },
       data: {
         transaction: trs
       }
     })
+
   } // end sendMoney
   
 
