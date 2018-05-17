@@ -40,7 +40,14 @@ console.log(asch.start())
 let dep = new deploy(defaultConfig)
 
 dep.sendMoney()
-  .then(function (result) {
+  .then(function (response) {
+    if (response.status !== 200) {
+      throw new Error('Could not send money')
+    }
+    if (response.data.success === false) {
+      throw new Error(response.data.error)
+    }
+    console.log(`successful created money transaction: ${response.data.transactionId}`)
     return dep.registerDapp()
   })
   .then(function (response) {
