@@ -76,6 +76,7 @@ let deploy = function (config) {
       let dappConfigPath = path.join(self.config.executionDir,  'config.json')
       let dappConfig = JSON.parse(fs.readFileSync(dappConfigPath, 'utf8'))
   
+      dappConfig.secrets = []
       dappConfig.secrets.push(...self.config.delegates)
       fs.writeFileSync(dappConfigPath, JSON.stringify(dappConfig), 'utf8')
   

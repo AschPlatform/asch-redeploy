@@ -10,12 +10,12 @@ const aschService = require('./src/asch-service')
 
 process.on('SIGTERM', function () {
   'Shutting down asch-redeploy...'
-  asch.stop()
+  console.log(asch.status())
   proccess.exit()
 })
 process.on('SIGINT', function () {
   'Shutting down asch-redeploy...'
-  asch.stop()
+  console.log(asch.stop())
   process.exit()
 })
 
@@ -34,6 +34,7 @@ watch(executionDir, { recursive: true }, function (evt, name) {
 
 let asch = new aschService(defaultConfig.asch)
 console.log(`Starting asch-node in ${defaultConfig.asch}`)
+console.log(asch.stop())
 console.log(asch.start())
 
 let dep = new deploy(defaultConfig)
