@@ -50,7 +50,6 @@ dep.sendMoney()
     console.log(`successful created money transaction: ${response.data.transactionId}`)
     return dep.registerDapp()
   })
-  dep.registerDapp()
   .then(function registerDappFinished(response) {
     if (response.status !== 200) {
       throw new Error('Could not register dapp')
@@ -58,7 +57,7 @@ dep.sendMoney()
     if (response.data.success === false) {
       throw new Error(response.data.error)
     }
-    console.log(`DAPP registered, DappId: ${response.data.transactionId}`)
+    console.log(`DAPP registered, DappId: ${response.data.transactionId}\n`)
     return dep.copyFiles(response.data.transactionId)
   })
   .then(function copyingFilesFinished(result) {

@@ -35,7 +35,7 @@ let deploy = function (config) {
     return axios({
       method: 'POST',
       url: this.peerTransactionUrl,
-      headers: { headers: this.header },
+      headers: this.header,
       data: {
         transaction: trs
       }
