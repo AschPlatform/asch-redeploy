@@ -15,3 +15,7 @@ cd asch-dapp-helloworld
 asch-redeploy .
 ```
 
+
+# TODO
+* Only watch on some folders and filetypes
+* retry when not enough money

@@ -1,15 +1,18 @@
+process.env["NODE_CONFIG_DIR"] = __dirname + "/config/"
 const config = require('config')
+const shelljs = require('shelljs')
+
 const path = require('path')
 const watch = require('node-watch')
 const deploy = require('./src/deploy')
 const aschService = require('./src/asch-service')
 
 // config
-let executionDir = path.dirname(require.main.filename)
+let executionDir = shelljs.pwd().stdout
 let defaultConfig = config.get('config')
 defaultConfig.executionDir = executionDir
 
-console.log(`asch-redploy is executed "${executionDir}`)
+console.log(`asch-redploy is executed "${executionDir}"`)
 
 watch(executionDir, { recursive: true }, function (evt, name) {
   console.log(`changed: ${name}`)
@@ -36,7 +39,7 @@ dep.registerDapp()
 
     console.log('needs to restart')
     console.log(asch.restart())
-
+    console.log(`result: ${result}`)
   })
   .catch(function(error) {
     console.log(error)
