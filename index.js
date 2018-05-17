@@ -3,7 +3,7 @@ const path = require('path')
 const watch = require('node-watch')
 const deploy = require('./deploy')
 const { spawn } = require('child_process');
-const shelljs = require('shelljs')
+const aschService = require('./asch-service')
 
 
 // config
@@ -19,11 +19,9 @@ watch(executionDir, { recursive: true }, function (evt, name) {
   console.log(`changed: ${name}`)
 })
 
-
-// https://github.com/embark-framework/embark/blob/69e264e765832c2010ed7a076c3db162e995b40e/lib/cmds/blockchain/blockchain.js
-let result = shelljs.exec('cd /home/matt/test/asch/ && ./aschd status')
-console.log(result.stdout)
-
+let asch = new aschService(defaultConfig.asch)
+console.log(asch.start())
+return
 
 let dep = new deploy(defaultConfig)
 
