@@ -8,10 +8,38 @@ let ncp = require('ncp').ncp
 let deploy = function (config) {
   this.config = config
 
-  this.enoughMoney = function () {
-
+  this.peerTransactionUrl = `${config.host}:${config.port}/peer/transactions`
+  this.header = {
+    magic: this.config.magic,
+    version: ''
   }
-  // end enoughMoney
+
+  this.sendMoney = function () {
+    let genesisSecret = this.config.aschGenesisAccount
+    let toSecret = this.config.dappMasterAccountPassword
+    let toAddress = aschJS.crypto.getAddress(aschJS.crypto.getKeys(toSecret).publicKey)
+
+    let amount = 1000
+    console.log(`Sending ${amount} XAS to "${toAddress}"`)
+
+    var trs = aschJS.transaction.createTransaction(
+      toAddress,
+      Number(amount * 1e8),
+      null,
+      genesisSecret,
+      null
+    );
+
+    return axios({
+      method: 'POST',
+      url: this.peerTransactionUrl,
+      headers: this.header,
+      data: {
+        transaction: trs
+      }
+    })
+  } // end sendMoney
+  
 
   this.registerDapp = function (callback) {
     let secret = this.config.dappMasterAccountPassword
@@ -22,14 +50,11 @@ let deploy = function (config) {
     var dapp = JSON.parse(fs.readFileSync(dappJsFile, 'utf8'));
     let trs = aschJS.dapp.createDApp(dapp, secret, secondSecret)
 
-    let url = `${config.host}:${config.port}/peer/transactions`
+
     return axios({
       method: 'POST',
-      url: url,
-      headers: {
-        magic: this.config.magic,
-        version: ''
-      },
+      url: this.peerTransactionUrl,
+      headers: this.header,
       data: {
         transaction: trs
       }

@@ -1,11 +1,25 @@
-process.env["NODE_CONFIG_DIR"] = __dirname + "/config/"
+const path = require('path')
+process.env["NODE_CONFIG_DIR"] = path.join(__dirname, "config")
 const config = require('config')
 const shelljs = require('shelljs')
 
-const path = require('path')
 const watch = require('node-watch')
 const deploy = require('./src/deploy')
 const aschService = require('./src/asch-service')
+
+
+process.on('SIGTERM', function () {
+  'Shutting down asch-redeploy...'
+  asch.stop()
+  proccess.exit()
+})
+process.on('SIGINT', function () {
+  'Shutting down asch-redeploy...'
+  asch.stop()
+  process.exit()
+})
+
+
 
 // config
 let executionDir = shelljs.pwd().stdout
@@ -24,7 +38,10 @@ console.log(asch.start())
 
 let dep = new deploy(defaultConfig)
 
-dep.registerDapp()
+dep.sendMoney()
+  .then(function (result) {
+    return dep.registerDapp()
+  })
   .then(function (response) {
     if (response.status !== 200) {
       throw new Error('Could not register dapp')
@@ -44,3 +61,4 @@ dep.registerDapp()
   .catch(function(error) {
     console.log(error)
   })
+
