@@ -1,27 +1,23 @@
 const config = require('config')
 const path = require('path')
 const watch = require('node-watch')
-const deploy = require('./deploy')
-const { spawn } = require('child_process');
-const aschService = require('./asch-service')
-
+const deploy = require('./src/deploy')
+const aschService = require('./src/asch-service')
 
 // config
 let executionDir = path.dirname(require.main.filename)
-
 let defaultConfig = config.get('config')
 defaultConfig.executionDir = executionDir
 
-console.log(executionDir)
-// console.log(defaultConfig)
+console.log(`asch-redploy is executed "${executionDir}`)
 
 watch(executionDir, { recursive: true }, function (evt, name) {
   console.log(`changed: ${name}`)
 })
 
 let asch = new aschService(defaultConfig.asch)
+console.log(`Starting asch-node in ${defaultConfig.asch}`)
 console.log(asch.start())
-return
 
 let dep = new deploy(defaultConfig)
 
@@ -39,7 +35,8 @@ dep.registerDapp()
   .then(function (result) {
 
     console.log('needs to restart')
-    
+    console.log(asch.restart())
+
   })
   .catch(function(error) {
     console.log(error)
