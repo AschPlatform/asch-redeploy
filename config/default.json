@@ -16,6 +16,7 @@
     "dappMasterAccountPassword": "sentence weasel match weather apple onion release keen lens deal fruit matrix",
     "dappMasterAccountPassword2nd": null,
     "host": "http://localhost",
-    "port": 4096
+    "port": 4096,
+    "magic": "594fe0f3"
   }
 }
