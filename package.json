@@ -8,8 +8,8 @@
     "axios": "^0.18.0",
     "config": "^1.30.0",
     "ncp": "^2.0.0",
-    "node-linux": "^0.1.11",
-    "node-watch": "^0.5.8"
+    "node-watch": "^0.5.8",
+    "shelljs": "^0.8.2"
   },
   "devDependencies": {},
   "scripts": {

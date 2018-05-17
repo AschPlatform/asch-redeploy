@@ -2,7 +2,9 @@ const config = require('config')
 const path = require('path')
 const watch = require('node-watch')
 const deploy = require('./deploy')
-var Service = require('node-linux').Service;
+const { spawn } = require('child_process');
+const shelljs = require('shelljs')
+
 
 // config
 let executionDir = path.dirname(require.main.filename)
@@ -11,13 +13,18 @@ let defaultConfig = config.get('config')
 defaultConfig.executionDir = executionDir
 
 console.log(executionDir)
-console.log(defaultConfig)
+// console.log(defaultConfig)
 
 watch(executionDir, { recursive: true }, function (evt, name) {
   console.log(`changed: ${name}`)
 })
 
-// register
+
+// https://github.com/embark-framework/embark/blob/69e264e765832c2010ed7a076c3db162e995b40e/lib/cmds/blockchain/blockchain.js
+let result = shelljs.exec('cd /home/matt/test/asch/ && ./aschd status')
+console.log(result.stdout)
+
+
 let dep = new deploy(defaultConfig)
 
 dep.registerDapp()
@@ -33,32 +40,8 @@ dep.registerDapp()
   })
   .then(function (result) {
 
-    let pathToService = path.join(defaultConfig.asch, 'app.js')
-    let svc = new Service({
-      name:'Asch Service',
-      script: pathToService
-    })
+    console.log('needs to restart')
     
-    svc.install()
-
-    svc.on('install', function () {
-      console.log('install')
-      svc.stop()
-    })
-
-    svc.on('alreadyinstalled', function (){
-      console.log('alreadyinstalled')
-      svc.stop()
-    })
-    svc.on('start', function () {
-      console.log('start')
-    })
-    svc.on('stop', function () {
-      console.log('stop')
-    })
-    svc.on('doesnotexist', function () {
-      console.log('doesnotexist')
-    })
   })
   .catch(function(error) {
     console.log(error)
