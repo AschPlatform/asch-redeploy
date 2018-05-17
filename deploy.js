@@ -21,12 +21,24 @@ let deploy = function (config) {
     let trs = aschJS.dapp.createDApp(dapp, secret, secondSecret)
 
     let url = `${config.host}:${config.port}/peer/transactions`
-    axios.post(url, trs, { headers: { magic: this.config.magic, version: '' }}, function (err, result) {
-      if (result.status === 200 && result.data.success === true) {
-        callback(null, result.data.transactionId)
-      } else {
-        callback(err)
+    axios({
+      method: 'POST',
+      url: url,
+      headers: {
+        magic: this.config.magic,
+        version: ''
+      },
+      data: {
+        transaction: trs
       }
+    }).then(function (response) {
+      if (response.data.success === true) {
+        callback(null, response.data)
+      } else {
+        callback(null, response.data.error)
+      }
+    }).catch(function (err) {
+      callback(err)
     })
   } // deploy end
 }
