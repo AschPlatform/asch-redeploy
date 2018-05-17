@@ -14,7 +14,7 @@ console.log(executionDir)
 console.log(defaultConfig)
 
 watch(executionDir, { recursive: true }, function (evt, name) {
-  console.log(name)
+  console.log(`changed: ${name}`)
 })
 
 // register
@@ -33,26 +33,32 @@ dep.registerDapp()
   })
   .then(function (result) {
 
-    let pathToService = path.join(defaultConfig.asch, 'aschd')
+    let pathToService = path.join(defaultConfig.asch, 'app.js')
     let svc = new Service({
       name:'Asch Service',
       script: pathToService
     })
+    
+    svc.install()
+
+    svc.on('install', function () {
+      console.log('install')
+      svc.stop()
+    })
 
     svc.on('alreadyinstalled', function (){
-
+      console.log('alreadyinstalled')
+      svc.stop()
     })
     svc.on('start', function () {
-
+      console.log('start')
     })
     svc.on('stop', function () {
-
+      console.log('stop')
     })
     svc.on('doesnotexist', function () {
-
+      console.log('doesnotexist')
     })
-
-
   })
   .catch(function(error) {
     console.log(error)
