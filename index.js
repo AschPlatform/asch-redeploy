@@ -17,6 +17,13 @@ watch(executionDir, { recursive: true }, function (evt, name) {
 })
 
 
-// deploy
+// register
 let dep = new deploy(defaultConfig)
-dep.registerDapp()
+dep.registerDapp(function (error, transactionId) {
+  if (error) {
+    console.log(error)
+  } else {
+    console.log(transactionId)
+  }
+})
+
