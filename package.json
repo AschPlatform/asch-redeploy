@@ -1,0 +1,27 @@
+{
+  "name": "asch-redeploy",
+  "version": "1.0.0",
+  "description": "A hassle-free local asch environment",
+  "main": "index.js",
+  "dependencies": {
+    "config": "^1.30.0",
+    "node-watch": "^0.5.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a1300/asch-redeploy.git"
+  },
+  "keywords": [
+    "asch"
+  ],
+  "author": "a1300",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/a1300/asch-redeploy/issues"
+  },
+  "homepage": "https://github.com/a1300/asch-redeploy#readme"
+}
