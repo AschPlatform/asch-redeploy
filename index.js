@@ -21,9 +21,11 @@ watch(executionDir, { recursive: true }, function (evt, name) {
 let dep = new deploy(defaultConfig)
 dep.registerDapp(function (error, transactionId) {
   if (error) {
-    console.log(error)
-  } else {
-    console.log(transactionId)
+    return
   }
+
+  dep.copyFiles(transactionId, function (err, result) {
+
+  })
 })
 

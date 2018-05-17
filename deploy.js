@@ -10,6 +10,7 @@ let deploy = function (config) {
   this.enoughMoney = function () {
 
   }
+  // end enoughMoney
 
   this.registerDapp = function (callback) {
     let secret = this.config.dappMasterAccountPassword
@@ -41,6 +42,20 @@ let deploy = function (config) {
       callback(err)
     })
   } // deploy end
+
+  this.copyFiles = function (dappId, callback) {
+    let newDappDirectory = path.join(this.config.asch, 'dapp', dappid)
+    fs.mkdirSync(newDappDirectory)
+
+    let dappConfigPath = path.join(this.config.executionDir,  'config.json')
+    let dappConfig = JSON.parse(fs.readFileSync(dappConfigPath, 'utf8'))
+
+    dappConfig.secret.push(this.config.delegates)
+    fs.writeFileSync(dappConfigPath, dappConfig, 'utf8')
+
+    
+    callback()
+  }
 }
 
 
