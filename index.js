@@ -7,7 +7,7 @@ const deploy = require('./deploy')
 let executionDir = path.dirname(require.main.filename)
 
 let defaultConfig = config.get('config')
-config.executionDir = executionDir
+defaultConfig.executionDir = executionDir
 
 console.log(executionDir)
 console.log(defaultConfig)
@@ -18,5 +18,5 @@ watch(executionDir, { recursive: true }, function (evt, name) {
 
 
 // deploy
-let dep = new deploy(config)
+let dep = new deploy(defaultConfig)
 dep.registerDapp()
