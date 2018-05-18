@@ -7,42 +7,50 @@ const log = console.log
 
 const watch = require('node-watch')
 const deploy = require('./src/deploy')
-const aschService = require('./src/asch-service')
+const service = require('./src/asch-service')
 
 
 process.on('SIGTERM', function () {
-  console.log('Trying to shut down asch-redeploy...')
-  console.log(asch.status())
-  proccess.exit()
+  log(chalk.blue('SIGTERM'))
+  asch.execute('stop')
+  .then(function (result) {
+    log(chalk.green(result))
+    process.exit()
+  })
 })
 process.on('SIGINT', function () {
-  console.log('Trying to shut down asch-redeploy...')
-  console.log(asch.stop())
-  process.exit()
+  log(chalk.blue('SIGTERM'))
+  asch.execute('stop')
+    .then(function (result) {
+      log(chalk.green(result))
+      process.exit()
+    })
 })
-
-
 
 // config
 let executionDir = shelljs.pwd().stdout
 let defaultConfig = config.get('config')
 defaultConfig.executionDir = executionDir
 
-console.log(`asch-redploy is executed "${executionDir}"`)
+
+let aschService = new service(defaultConfig.asch)
+
+
+console.log(chalk.yellow(`asch-redploy is executed "${executionDir}"`))
 
 watch(executionDir, { recursive: true }, function (evt, name) {
   log(chalk.yellow(`changed: ${name}`))
 })
 
-let asch = new aschService(defaultConfig.asch)
+
 log(chalk.yellow(`Starting asch-node in ${defaultConfig.asch}`))
 
 let dep = new deploy(defaultConfig)
 
-asch.execute('stop')
+aschService.execute('stop')
   .then(function stopServer(result) {
     log(chalk.red(result))
-    return asch.execute('start')
+    return aschService.execute('start')
   })
   .then(function startServer(result) {
     log(chalk.green(result))
@@ -71,7 +79,7 @@ asch.execute('stop')
   })
   .then(function copyingFilesFinished(result) {
 
-    return asch.restart()
+    return aschService.execute('restart')
   })
   .then (function restartResult(result) {
     log(chalk.green(result))
