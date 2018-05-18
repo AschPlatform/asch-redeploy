@@ -12,7 +12,7 @@ const service = require('./src/asch-service')
 
 process.on('SIGTERM', function () {
   log(chalk.blue('SIGTERM'))
-  asch.execute('stop')
+  aschService.execute('stop')
   .then(function (result) {
     log(chalk.green(result))
     process.exit()
@@ -20,7 +20,7 @@ process.on('SIGTERM', function () {
 })
 process.on('SIGINT', function () {
   log(chalk.blue('SIGTERM'))
-  asch.execute('stop')
+  aschService.execute('stop')
     .then(function (result) {
       log(chalk.green(result))
       process.exit()
@@ -54,7 +54,6 @@ aschService.execute('stop')
   })
   .then(function startServer(result) {
     log(chalk.green(result))
-
     return dep.sendMoney()
   })
   .then(function sendMoneyFinished(response) {
@@ -78,7 +77,6 @@ aschService.execute('stop')
     return dep.copyFiles(response.data.transactionId)
   })
   .then(function copyingFilesFinished(result) {
-
     return aschService.execute('restart')
   })
   .then (function restartResult(result) {
