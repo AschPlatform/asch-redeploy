@@ -9,13 +9,16 @@ let aschService = function (aschServiceLocation) {
 
     let self = this
     return new Promise(function (resolve, reject) {
+      console.log(`execute command "${command} in "${self.aschServiceLocation}"`)
       let result = shelljs.exec(`cd ${self.aschServiceLocation} && ./aschd ${command}`)
+      console.log('after execution of shell.js exec')
+      console.log(result)
       resolve(result.stdout)
     }).then(function (result) {
       return new Promise(resolve => {
         setTimeout(function () {
           resolve(result)
-        }, 5000)
+        }, 15000)
       })
     })
 
