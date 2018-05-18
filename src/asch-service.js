@@ -5,14 +5,15 @@ const shelljs = require('shelljs')
 let aschService = function (aschServiceLocation) {
   this.aschServiceLocation = aschServiceLocation
 
+  shelljs.pushd(this.aschServiceLocation).stdout
+  shelljs.pushd('+1').stdout
+  shelljs.popd().stdout
+  
   this.execute = function (command) {
 
     let self = this
     return new Promise(function (resolve, reject) {
-      console.log(`execute command "${command} in "${self.aschServiceLocation}"`)
-      let result = shelljs.exec(`cd ${self.aschServiceLocation} && ./aschd ${command}`)
-      console.log('after execution of shell.js exec')
-      console.log(result)
+      let result = shelljs.exec(`./aschd ${command}`, { silent:true })
       resolve(result.stdout)
     }).then(function (result) {
       return new Promise(resolve => {
@@ -20,6 +21,8 @@ let aschService = function (aschServiceLocation) {
           resolve(result)
         }, 15000)
       })
+    }).catch(function (error) {
+      
     })
 
   }
