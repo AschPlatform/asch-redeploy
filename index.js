@@ -31,6 +31,7 @@ let executionDir = __dirname
 let defaultConfig = config.get('config')
 defaultConfig.executionDir = executionDir
 
+log(chalk.red(`EXECUTION dir ${executionDir}`))
 
 let aschService = new service(defaultConfig.asch)
 
