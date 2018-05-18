@@ -84,7 +84,7 @@ let deploy = function (config) {
   
       dappConfig.secrets = []
       dappConfig.secrets.push(...self.config.delegates)
-      fs.writeFileSync(dappConfigPath, JSON.stringify(dappConfig), 'utf8')
+      fs.writeFileSync(dappConfigPath, JSON.stringify(dappConfig, null, 2), 'utf8')
   
       ncp(self.config.executionDir, newDappDirectory, function (err) {
         if (err) {
