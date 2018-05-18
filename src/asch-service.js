@@ -1,28 +1,34 @@
 const shelljs = require('shelljs')
 
-// constructor
-// https://github.com/embark-framework/embark/blob/69e264e765832c2010ed7a076c3db162e995b40e/lib/cmds/blockchain/blockchain.js
-let aschService = function (aschServiceLocation) {
-  this.aschServiceLocation = aschServiceLocation
+// ctor
+let aschService = function (aschNodeDir) {
+  this.aschNodeDir = aschNodeDir
 
-  shelljs.pushd(this.aschServiceLocation).stdout
+  this.userDevDir = shelljs.pwd().stdout
+
+  shelljs.pushd(this.aschNodeDir).stdout
   shelljs.pushd('+1').stdout
   shelljs.popd().stdout
   
-  this.execute = function (command) {
+  this.execute = function (command, timeout) {
+    timeout = typeof timeout !== 'undefined' ? timeout : 5000
 
-    let self = this
     return new Promise(function (resolve, reject) {
       let result = shelljs.exec(`./aschd ${command}`, { silent:true })
       resolve(result.stdout)
-    }).then(function (result) {
+    })
+    .then(function (result) {
       return new Promise(resolve => {
+        console.log(`Waiting for ${timeout}ms`)
+
         setTimeout(function () {
           resolve(result)
-        }, 15000)
+        }, timeout)
       })
-    }).catch(function (error) {
-      
+    })
+    .catch(function (error) {
+      console.log('error while executing:')
+      console.error(error)
     })
 
   }

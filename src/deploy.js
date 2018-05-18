@@ -8,15 +8,15 @@ let ncp = require('ncp').ncp
 let deploy = function (config) {
   this.config = config
 
-  this.peerTransactionUrl = `${config.host}:${config.port}/peer/transactions`
+  this.peerTransactionUrl = `${config.node.host}:${config.node.port}/peer/transactions`
   this.header = {
     magic: this.config.magic,
     version: ''
   }
 
   this.sendMoney = function () {
-    let genesisSecret = this.config.aschGenesisAccount
-    let toSecret = this.config.dappMasterAccountPassword
+    let genesisSecret = this.config.node.genesisAccount
+    let toSecret = this.config.dapp.masterAccountPassword
     let toAddress = aschJS.crypto.getAddress(aschJS.crypto.getKeys(toSecret).publicKey)
 
     let amount = 1000
@@ -31,8 +31,6 @@ let deploy = function (config) {
         genesisSecret,
         null
       )
-      console.log(self.peerTransactionUrl)
-      console.log(self.header)
 
       resolve(axios({
         method: 'POST',
@@ -48,10 +46,10 @@ let deploy = function (config) {
 
 
   this.registerDapp = function (callback) {
-    let secret = this.config.dappMasterAccountPassword
-    let secondSecret = this.config.dappMasterAccountPassword2nd
+    let secret = this.config.dapp.masterAccountPassword
+    let secondSecret = this.config.dapp.masterAccountPassword2nd
   
-    let dappJsFile = path.join(config.executionDir, 'dapp.json')
+    let dappJsFile = path.join(config.userDevDir, 'dapp.json')
     // todo check if file exists
     var dapp = JSON.parse(fs.readFileSync(dappJsFile, 'utf8'));
     let trs = aschJS.dapp.createDApp(dapp, secret, secondSecret)
@@ -70,20 +68,20 @@ let deploy = function (config) {
   this.copyFiles = function (dappId) {
     let self = this
     return new Promise(function (resolve, reject) {
-      let dappParentDir = path.join(self.config.asch, 'dapps')
+      let dappParentDir = path.join(self.config.node.directory, 'dapps')
       let existsDappDir = fs.existsSync(dappParentDir)
       if(existsDappDir === false) {
         fs.mkdirSync(dappParentDir)
       }
 
-      let newDappDirectory = path.join(self.config.asch, 'dapps', dappId)
+      let newDappDirectory = path.join(self.config.node.directory, 'dapps', dappId)
       fs.mkdirSync(newDappDirectory)
   
-      let dappConfigPath = path.join(self.config.executionDir,  'config.json')
+      let dappConfigPath = path.join(self.config.userDevDir,  'config.json')
       let dappConfig = JSON.parse(fs.readFileSync(dappConfigPath, 'utf8'))
   
       dappConfig.secrets = []
-      dappConfig.secrets.push(...self.config.delegates)
+      dappConfig.secrets.push(...self.config.dapp.delegates)
       fs.writeFileSync(dappConfigPath, JSON.stringify(dappConfig, null, 2), 'utf8')
   
       ncp(self.config.executionDir, newDappDirectory, function (err) {
@@ -97,14 +95,6 @@ let deploy = function (config) {
 
     
   } // end copyFiles
-
-  this.restartAsch = function () {
-    return new Promise(function (resolve, reject) {
-      
-    })
-  }
 }
-
-
 
 module.exports = deploy

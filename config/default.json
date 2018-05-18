@@ -1,22 +1,26 @@
 {
   "config": {
     "watch": [ 
-      "interface"
+      "interface/**.js",
+      "model/**js"
     ],
-    "delegates": [
-      "flame bottom dragon rely endorse garage supply urge turtle team demand put",
-      "thrive veteran child enforce puzzle buzz valley crew genuine basket start top",
-      "black tool gift useless bring nothing huge vendor asset mix chimney weird",
-      "ribbon crumble loud chief turn maid neglect move day churn share fabric",
-      "scan prevent agent close human pair aerobic sad forest wave toe dust"
-    ],
-    "asch": "/home/matt/test/asch/",
-    "aschGenesisAccount": "someone manual strong movie roof episode eight spatial brown soldier soup motor",
-    "dappName": "asch-dapp-helloworld",
-    "dappMasterAccountPassword": "sentence weasel match weather apple onion release keen lens deal fruit matrix",
-    "dappMasterAccountPassword2nd": null,
-    "host": "http://localhost",
-    "port": 4096,
-    "magic": "594fe0f3"
+    "dapp": {
+      "masterAccountPassword": "sentence weasel match weather apple onion release keen lens deal fruit matrix",
+      "masterAccountPassword2nd": null,
+      "delegates": [
+        "flame bottom dragon rely endorse garage supply urge turtle team demand put",
+        "thrive veteran child enforce puzzle buzz valley crew genuine basket start top",
+        "black tool gift useless bring nothing huge vendor asset mix chimney weird",
+        "ribbon crumble loud chief turn maid neglect move day churn share fabric",
+        "scan prevent agent close human pair aerobic sad forest wave toe dust"
+      ]
+    },
+    "node": {
+      "directory": "/home/matt/test/asch/",
+      "host": "http://localhost",
+      "port": 4096,
+      "magic": "594fe0f3",
+      "genesisAccount": "someone manual strong movie roof episode eight spatial brown soldier soup motor"
+    }
   }
 }

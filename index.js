@@ -1,10 +1,9 @@
 const path = require('path')
 process.env["NODE_CONFIG_DIR"] = path.join(__dirname, "config")
-const config = require('config')
 const chalk = require('chalk')
 const log = console.log
 
-const watch = require('node-watch')
+
 const deploy = require('./src/deploy')
 const service = require('./src/asch-service')
 
@@ -13,7 +12,7 @@ process.on('SIGTERM', function () {
   log(chalk.blue('SIGTERM'))
   aschService.execute('stop')
   .then(function (result) {
-    log(chalk.green(result))
+    log(chalk.blue(result))
     process.exit()
   })
 })
@@ -21,37 +20,25 @@ process.on('SIGINT', function () {
   log(chalk.blue('SIGTERM'))
   aschService.execute('stop')
     .then(function (result) {
-      log(chalk.green(result))
+      log(chalk.blue(result))
       process.exit()
     })
 })
 
 // config
-let executionDir = __dirname
+const config = require('config')
+let userDevDir = __dirname
 let defaultConfig = config.get('config')
-defaultConfig.executionDir = executionDir
+defaultConfig.userDevDir = userDevDir
 
-log(chalk.red(`EXECUTION dir ${executionDir}`))
+log(chalk.red(`You started "asch-redeploy" from directory "${userDevDir}"`))
 
-let aschService = new service(defaultConfig.asch)
-
-
-console.log(chalk.yellow(`asch-redploy is executed "${executionDir}"`))
-
-watch(executionDir, { recursive: true }, function (evt, name) {
-  log(chalk.yellow(`changed: ${name}`))
-})
-
-
-log(chalk.yellow(`Starting asch-node in ${defaultConfig.asch}`))
+let aschService = new service(defaultConfig.node.directory)
 
 let dep = new deploy(defaultConfig)
 
-aschService.execute('stop')
-  .then(function stopServer(result) {
-    log(chalk.red(result))
-    return aschService.execute('start')
-  })
+
+aschService.execute('start')
   .then(function startServer(result) {
     log(chalk.green(result))
     return dep.sendMoney()
