@@ -5,30 +5,20 @@ const shelljs = require('shelljs')
 let aschService = function (aschServiceLocation) {
   this.aschServiceLocation = aschServiceLocation
 
-  let execute = function (command) {
-    function pause(milliseconds) {
-      var dt = new Date();
-      while ((new Date()) - dt <= milliseconds) { /* Do nothing */ }
-    }
+  this.execute = function (command) {
 
-    pause(5000)
-    let result = shelljs.exec(`cd ${this.aschServiceLocation} && ./aschd ${command}`)
-    return result.stdout
-    pause(7000)
+    let self = this
+    return new Promise(function (resolve, reject) {
+      let result = shelljs.exec(`cd ${self.aschServiceLocation} && ./aschd ${command}`)
+      resolve(result.stdout)
+    }).then(function (result) {
+      return new Promise(resolve => {
+        setTimeout(function () {
+          resolve(result)
+        }, 5000)
+      })
+    })
 
-  }.bind(this)
-
-  this.start = function () {
-    return execute('start')
-  }
-  this.stop  = function () {
-    return execute('stop')
-  }
-  this.restart = function () {
-    return execute('restart')
-  }
-  this.status = function () {
-    return execute('status')
   }
 }
 

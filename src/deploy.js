@@ -22,27 +22,30 @@ let deploy = function (config) {
     let amount = 1000
     console.log(`Sending ${amount} XAS to "${toAddress}"...`)
 
-    var trs = aschJS.transaction.createTransaction(
-      toAddress,
-      Number(amount * 1e8),
-      null,
-      genesisSecret,
-      null
-    )
-    console.log(this.peerTransactionUrl)
-    console.log(this.header)
+    let self = this
+    return new Promise(function (resolve, reject) {
+      var trs = aschJS.transaction.createTransaction(
+        toAddress,
+        Number(amount * 1e8),
+        null,
+        genesisSecret,
+        null
+      )
+      console.log(self.peerTransactionUrl)
+      console.log(self.header)
 
-    return axios({
-      method: 'POST',
-      url: this.peerTransactionUrl,
-      headers: this.header,
-      data: {
-        transaction: trs
-      }
+      resolve(axios({
+        method: 'POST',
+        url: self.peerTransactionUrl,
+        headers: self.header,
+        data: {
+          transaction: trs
+        }
+      }))
+    
     })
-
   } // end sendMoney
-  
+
 
   this.registerDapp = function (callback) {
     let secret = this.config.dappMasterAccountPassword

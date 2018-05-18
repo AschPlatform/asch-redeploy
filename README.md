@@ -19,3 +19,4 @@ asch-redeploy .
 # TODO
 * Only watch on some folders and filetypes
 * retry when not enough money
+* Integrate chalk package for colorful console-output

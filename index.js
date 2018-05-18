@@ -2,6 +2,8 @@ const path = require('path')
 process.env["NODE_CONFIG_DIR"] = path.join(__dirname, "config")
 const config = require('config')
 const shelljs = require('shelljs')
+const chalk = require('chalk')
+const log = console.log
 
 const watch = require('node-watch')
 const deploy = require('./src/deploy')
@@ -29,17 +31,24 @@ defaultConfig.executionDir = executionDir
 console.log(`asch-redploy is executed "${executionDir}"`)
 
 watch(executionDir, { recursive: true }, function (evt, name) {
-  console.log(`changed: ${name}`)
+  log(chalk.yellow(`changed: ${name}`))
 })
 
 let asch = new aschService(defaultConfig.asch)
-console.log(`Starting asch-node in ${defaultConfig.asch}`)
-console.log(asch.stop())
-console.log(asch.start())
+log(chalk.yellow(`Starting asch-node in ${defaultConfig.asch}`))
 
 let dep = new deploy(defaultConfig)
 
-dep.sendMoney()
+asch.execute('stop')
+  .then(function stopServer(result) {
+    log(chalk.red(result))
+    return asch.execute('start')
+  })
+  .then(function startServer(result) {
+    log(chalk.green(result))
+
+    return dep.sendMoney()
+  })
   .then(function sendMoneyFinished(response) {
     if (response.status !== 200) {
       throw new Error('Could not send money')
@@ -47,7 +56,7 @@ dep.sendMoney()
     if (response.data.success === false) {
       throw new Error(response.data.error)
     }
-    console.log(`successful created money transaction: ${response.data.transactionId}`)
+    log(chalk.green(`successful created money transaction: ${response.data.transactionId}`))
     return dep.registerDapp()
   })
   .then(function registerDappFinished(response) {
@@ -62,11 +71,12 @@ dep.sendMoney()
   })
   .then(function copyingFilesFinished(result) {
 
-    console.log('needs to restart')
-    console.log(asch.restart())
-    console.log("SUCCESS")
+    return asch.restart()
+  })
+  .then (function restartResult(result) {
+    log(chalk.green(result))
   })
   .catch(function errorOccured(error) {
-    console.log('ERROR OCCURED')
-    console.log(error.message)
+    log(chalk.red('ERROR OCCURED'))
+    log(chalk.red(error.message))
   })
