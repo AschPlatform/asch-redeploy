@@ -82,6 +82,8 @@ new Promise(function wait(resolve, reject) {
     if (response.data.success === false) {
       throw new Error(response.data.error)
     }
+    dep.dappId = response.data.transactionId
+
     log(chalk.green(`\nDAPP registered, DappId: ${response.data.transactionId}\n`))
     return dep.copyFiles(response.data.transactionId)
   })
@@ -89,20 +91,24 @@ new Promise(function wait(resolve, reject) {
     console.log(result)
     return new Promise(function wait(resolve, reject) {
       setTimeout(function waitTime() {
-        resolve(null)
+        resolve(result)
       }, 10000)
     })
   })
   .then(function (result) {
-    log(chalk.green( ))
+    log(chalk.green('stopping asch-Server for restart'))
     aschService.stop()
     return new Promise(function (resolve, reject) {
       setTimeout(function timeout() {
-        resolve('aschService stopped')
+        log(chalk.green('asch-server stopped'))
+        resolve(result)
       }, 5000)
     })
   })
-  .then(function aschServerStoppedFinished(result){
+  .then(function afterStopChangeAschConfig(result) {
+    return dep.changeAschConfig(result)
+  })
+  .then(function (result){
     console.log(result)
     aschService.start()
     return new Promise(function (resolve, reject) {

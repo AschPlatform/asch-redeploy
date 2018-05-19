@@ -52,7 +52,7 @@ let deploy = function (config) {
   
     let dappJsFile = path.join(config.userDevDir, 'dapp.json')
     // todo check if file exists
-    var dapp = JSON.parse(fs.readFileSync(dappJsFile, 'utf8'));
+    var dapp = JSON.parse(fs.readFileSync(dappJsFile, 'utf8'))
     let trs = aschJS.dapp.createDApp(dapp, secret, secondSecret)
 
 
@@ -101,6 +101,21 @@ let deploy = function (config) {
 
     
   } // end copyFiles
+
+  this.changeAschConfig = function () {
+    let self = this
+    return new Promise(function (resolve, reject) {
+      let aschNodeConfigPath = path.join(self.config.node.directory, 'config.json')
+      let aschConfig = JSON.parse(fs.readFileSync(aschNodeConfigPath, 'utf8'))
+
+      let newOption =  [self.config.dapp.masterAccountPassword]
+      aschConfig.dapp.params[self.dappId] = newOption
+
+      fs.writeFileSync(aschNodeConfigPath, JSON.stringify(aschConfig, null, 2), 'utf8')
+      resolve('wrote asch/config.json successfully')
+    })
+  } // end changeAschConfig
+
 }
 
 module.exports = deploy
