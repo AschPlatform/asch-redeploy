@@ -54,7 +54,7 @@ let dep = new deploy(defaultConfig)
 new Promise(function wait(resolve, reject) {
   setTimeout(function waitTime() {
     resolve(dep.sendMoney())
-  }, 5000)
+  }, 12000)
 })
   .then(function sendMoneyFinished(response) {
     if (response.status !== 200) {
@@ -85,6 +85,14 @@ new Promise(function wait(resolve, reject) {
   })
   .then(function copyingFilesFinished(result) {
     console.log(result)
+    return new Promise(function wait(resolve, reject) {
+      setTimeout(function waitTime() {
+        resolve(null)
+      }, 10000)
+    })
+  })
+  .then(function (result) {
+    log(chalk.green( ))
     aschService.stop()
     return new Promise(function (resolve, reject) {
       setTimeout(function timeout() {
