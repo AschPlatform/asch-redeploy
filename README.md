@@ -22,6 +22,7 @@ asch-redeploy .
 * BUG: Restart didn't worked! (after dapp registration)
 * SendMoney move to own file
   * Send only money, when not enough money (this way is faster)
+  * 
 * Integrate chalk package for colorful console-output
 * Do I need to create a softlink in asch/public/dapps? (I think the asch-binaries should be built before)
     * Softlink in /home/ma/asch/public/dist/dapps/a7ef9cd0707fe94f583334d434e39570113a43e3647c8ee730bf21ec2fe08c97
