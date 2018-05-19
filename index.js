@@ -44,6 +44,7 @@ log(chalk.red(`You started "asch-redeploy" from directory "${userDevDir}"`))
 let aschService = new service(defaultConfig.node.directory)
 
 aschService.start()
+log(chalk.red('AFTER START'))
 
 aschService.notifier.on('exit', function (code){
   console.log(`aschService terminated with code ${code}`)
@@ -52,12 +53,9 @@ aschService.notifier.on('exit', function (code){
 setTimeout(function () {
   log(chalk.red('CALLING STOP'))
   aschService.stop()
-}, 5000)
+}, 2000)
 
 // let dep = new deploy(defaultConfig)
-
-
-for (let i = 0; i < 1e10; ++i) {}
 
 
   // .then(function startServer(result) {
