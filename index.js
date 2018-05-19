@@ -8,22 +8,30 @@ const deploy = require('./src/deploy')
 const service = require('./src/asch-service')
 
 
+// https://www.exratione.com/2013/05/die-child-process-die/
 process.on('SIGTERM', function () {
+  // kill
   log(chalk.blue('SIGTERM'))
   aschService.execute('stop')
   .then(function (result) {
     log(chalk.blue(result))
-    process.exit()
+    process.exit(0)
   })
 })
 process.on('SIGINT', function () {
+  // ctrl+c
   log(chalk.blue('SIGTERM'))
   aschService.execute('stop')
     .then(function (result) {
       log(chalk.blue(result))
-      process.exit()
+      process.exit(0)
     })
 })
+// process.on('SIGKILL', function () {
+//   // kill -9
+//   log(chalk.blue('SIGKILL'))
+//   process.exit(0)
+// })
 
 // config
 const config = require('config')
@@ -39,44 +47,45 @@ let dep = new deploy(defaultConfig)
 
 
 aschService.execute('start')
-  .then(function startServer(result) {
-    log(chalk.green(result))
-    return dep.sendMoney()
-  })
-  .then(function sendMoneyFinished(response) {
-    if (response.status !== 200) {
-      Promise.reject('Could not send money')
-    }
-    if (response.data.success === false) {
-      Promise.reject(response.data.error)
-    }
-    log(chalk.green(`successful created money transaction: ${response.data.transactionId}`))
-    return null
-  })
-  .then(function timeOutAfterMoneyTransfer() {
-    return new Promise(function (resolve, reject) {
-      setTimeout(function () {
-        resolve(dep.registerDapp())
-      }, 10000)
-    })
-  })
-  .then(function registerDappFinished(response) {
-    if (response.status !== 200) {
-      throw new Error('Could not register dapp')
-    }
-    if (response.data.success === false) {
-      throw new Error(response.data.error)
-    }
-    log(chalk.green(`\nDAPP registered, DappId: ${response.data.transactionId}\n`))
-    return dep.copyFiles(response.data.transactionId)
-  })
-  .then(function copyingFilesFinished(result) {
-    return aschService.execute('restart')
-  })
-  .then (function restartResult(result) {
-    log(chalk.green(result))
-  })
-  .catch(function errorOccured(error) {
-    log(chalk.red('ERROR OCCURED'))
-    log(chalk.red(error.message))
-  })
+
+  // .then(function startServer(result) {
+  //   log(chalk.green(result))
+  //   return dep.sendMoney()
+  // })
+  // .then(function sendMoneyFinished(response) {
+  //   if (response.status !== 200) {
+  //     Promise.reject('Could not send money')
+  //   }
+  //   if (response.data.success === false) {
+  //     Promise.reject(response.data.error)
+  //   }
+  //   log(chalk.green(`successful created money transaction: ${response.data.transactionId}`))
+  //   return null
+  // })
+  // .then(function timeOutAfterMoneyTransfer() {
+  //   return new Promise(function (resolve, reject) {
+  //     setTimeout(function () {
+  //       resolve(dep.registerDapp())
+  //     }, 10000)
+  //   })
+  // })
+  // .then(function registerDappFinished(response) {
+  //   if (response.status !== 200) {
+  //     throw new Error('Could not register dapp')
+  //   }
+  //   if (response.data.success === false) {
+  //     throw new Error(response.data.error)
+  //   }
+  //   log(chalk.green(`\nDAPP registered, DappId: ${response.data.transactionId}\n`))
+  //   return dep.copyFiles(response.data.transactionId)
+  // })
+  // .then(function copyingFilesFinished(result) {
+  //   return aschService.execute('restart')
+  // })
+  // .then (function restartResult(result) {
+  //   log(chalk.green(result))
+  // })
+  // .catch(function errorOccured(error) {
+  //   log(chalk.red('ERROR OCCURED'))
+  //   log(chalk.red(error.message))
+  // })

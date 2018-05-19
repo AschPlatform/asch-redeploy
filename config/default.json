@@ -16,7 +16,7 @@
       ]
     },
     "node": {
-      "directory": "/home/matt/test/asch/",
+      "directory": "/home/matt/test/asch",
       "host": "http://localhost",
       "port": 4096,
       "magic": "594fe0f3",
