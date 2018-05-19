@@ -2,7 +2,9 @@
   "config": {
     "watch": [ 
       "interface/**.js",
-      "model/**js"
+      "model/**.js",
+      "contract/**.js",
+      "init.js"
     ],
     "dapp": {
       "masterAccountPassword": "sentence weasel match weather apple onion release keen lens deal fruit matrix",

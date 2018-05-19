@@ -14,38 +14,6 @@ let deploy = function (config) {
     version: ''
   }
 
-  this.sendMoney = function () {
-    let genesisSecret = this.config.node.genesisAccount
-    let toSecret = this.config.dapp.masterAccountPassword
-    let toAddress = aschJS.crypto.getAddress(aschJS.crypto.getKeys(toSecret).publicKey)
-
-    let amount = 1000
-    console.log(`Sending ${amount} XAS to "${toAddress}"...`)
-
-    let self = this
-    return new Promise(function (resolve, reject) {
-      var trs = aschJS.transaction.createTransaction(
-        toAddress,
-        Number(amount * 1e8),
-        null,
-        genesisSecret,
-        null
-      )
-      console.log(self.header)
-
-      resolve(axios({
-        method: 'POST',
-        url: self.peerTransactionUrl,
-        headers: self.header,
-        data: {
-          transaction: trs
-        }
-      }))
-    
-    })
-  } // end sendMoney
-
-
   this.registerDapp = function (callback) {
     let secret = this.config.dapp.masterAccountPassword
     let secondSecret = this.config.dapp.masterAccountPassword2nd

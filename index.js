@@ -6,6 +6,8 @@ const shelljs = require('shelljs')
 
 const deploy = require('./src/deploy')
 const service = require('./src/asch-service')
+const sendMoney = require('./src/sendMoney')
+
 
 if (process.platform !== 'linux') {
   log(chalk.red('This program can currently run only on linux'))
@@ -52,21 +54,19 @@ aschService.notifier.on('exit', function (code){
 })
 
 let dep = new deploy(defaultConfig)
+let money = new sendMoney(defaultConfig)
 
-new Promise(function wait(resolve, reject) {
+
+new Promise(function waitAfterNodeStart(resolve, reject) {
   setTimeout(function waitTime() {
-    resolve(dep.sendMoney())
+    resolve(null)
   }, 12000)
 })
+  .then(function (result) {
+    return money.sendMoney()
+  })
   .then(function sendMoneyFinished(response) {
-    if (response.status !== 200) {
-      Promise.reject('Could not send money')
-    }
-    if (response.data.success === false) {
-      Promise.reject(response.data.error)
-    }
-    log(chalk.green(`successful created money transaction: ${response.data.transactionId}`))
-    return null
+    return response
   })
   .then(function timeOutAfterMoneyTransfer() {
     return new Promise(function (resolve, reject) {
