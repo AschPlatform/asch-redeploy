@@ -17,6 +17,7 @@ asch-redeploy .
 
 
 # TODO
+* Make sure, that only this program runs on linux
 * Only watch on some folders and filetypes
 * retry when not enough money
 * BUG: Restart didn't worked! (after dapp registration)

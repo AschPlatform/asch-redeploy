@@ -27,11 +27,11 @@ process.on('SIGINT', function () {
       process.exit(0)
     })
 })
-// process.on('SIGKILL', function () {
-//   // kill -9
-//   log(chalk.blue('SIGKILL'))
-//   process.exit(0)
-// })
+process.once("uncaughtException", function (error) {
+  log(chalk.red('UNCAUGHT EXCEPTION'))
+  log(error)
+})
+
 
 // config
 const config = require('config')
@@ -43,10 +43,22 @@ log(chalk.red(`You started "asch-redeploy" from directory "${userDevDir}"`))
 
 let aschService = new service(defaultConfig.node.directory)
 
-let dep = new deploy(defaultConfig)
+aschService.start()
+
+aschService.notifier.on('exit', function (code){
+  console.log(`aschService terminated with code ${code}`)
+})
+
+setTimeout(function () {
+  log(chalk.red('CALLING STOP'))
+  aschService.stop()
+}, 5000)
+
+// let dep = new deploy(defaultConfig)
 
 
-aschService.execute('start')
+for (let i = 0; i < 1e10; ++i) {}
+
 
   // .then(function startServer(result) {
   //   log(chalk.green(result))
