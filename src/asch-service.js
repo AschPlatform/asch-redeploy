@@ -2,7 +2,7 @@ const shelljs = require('shelljs')
 const fork = require('child_process').fork
 const path = require('path')
 const EventEmitter = require('events');
-
+const fs = require('fs')
 
 // api:
 // start
@@ -19,13 +19,15 @@ let aschService = function (aschNodeDir) {
     let aschPath = path.join(this.aschNodeDir, 'app.js')
     this.process = fork(aschPath, [], {
       cwd: this.aschNodeDir,
-      // stdio: 'pipe',
-      stdout: 'inherit',
+      silent: true,
+      // stdout: 'inherit',
       execArgv: []
     })
 
-    // this.process.stdin.on('data', this.onStdIn)
-    // this.process.stdout.on('data', this.onStdOut)
+    let logStream = fs.createWriteStream('./debug.log', { flags: 'a' })
+
+    this.process.stdout.pipe(logStream)
+    this.process.stderr.pipe(logStream)
     this.process.on('error', this.onError)
     this.process.on('exit', this.onExit)
     this.process.on('message', this.onMessage)

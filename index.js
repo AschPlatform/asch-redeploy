@@ -46,13 +46,16 @@ let aschService = new service(defaultConfig.node.directory)
 aschService.start()
 
 aschService.notifier.on('exit', function (code){
-  console.log(`aschService terminated with code ${code}`)
-  process.exit(code)
+  console.log(`asch-node terminated with code ${code}`)
 })
 
 let dep = new deploy(defaultConfig)
 
-dep.sendMoney()
+new Promise(function wait(resolve, reject) {
+  setTimeout(function waitTime() {
+    resolve(dep.sendMoney())
+  }, 5000)
+})
   .then(function sendMoneyFinished(response) {
     if (response.status !== 200) {
       Promise.reject('Could not send money')
@@ -103,5 +106,6 @@ dep.sendMoney()
   })
   .catch(function errorOccured(error) {
     log(chalk.red('ERROR OCCURED'))
+    log(chalk.red(error))
     log(chalk.red(error.message))
   })

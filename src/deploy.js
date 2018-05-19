@@ -10,7 +10,7 @@ let deploy = function (config) {
 
   this.peerTransactionUrl = `${config.node.host}:${config.node.port}/peer/transactions`
   this.header = {
-    magic: this.config.magic,
+    magic: this.config.node.magic,
     version: ''
   }
 
@@ -31,6 +31,7 @@ let deploy = function (config) {
         genesisSecret,
         null
       )
+      console.log(self.header)
 
       resolve(axios({
         method: 'POST',
@@ -67,9 +68,14 @@ let deploy = function (config) {
 
   this.copyFiles = function (dappId) {
     let self = this
+    console.log(`dappId: ${dappId}`)
     return new Promise(function (resolve, reject) {
       let dappParentDir = path.join(self.config.node.directory, 'dapps')
+      console.log(`dappParentDir: ${dappParentDir}`)
+
       let existsDappDir = fs.existsSync(dappParentDir)
+      console.log(`existsDappDir ${existsDappDir}`)
+
       if(existsDappDir === false) {
         fs.mkdirSync(dappParentDir)
       }
@@ -84,7 +90,7 @@ let deploy = function (config) {
       dappConfig.secrets.push(...self.config.dapp.delegates)
       fs.writeFileSync(dappConfigPath, JSON.stringify(dappConfig, null, 2), 'utf8')
   
-      ncp(self.config.executionDir, newDappDirectory, function (err) {
+      ncp(self.config.userDevDir, newDappDirectory, function (err) {
         if (err) {
           reject(err)
         } else {
