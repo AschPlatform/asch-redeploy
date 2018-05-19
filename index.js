@@ -2,7 +2,7 @@ const path = require('path')
 process.env["NODE_CONFIG_DIR"] = path.join(__dirname, "config")
 const chalk = require('chalk')
 const log = console.log
-
+const shelljs = require('shelljs')
 
 const deploy = require('./src/deploy')
 const service = require('./src/asch-service')
@@ -14,9 +14,11 @@ if (process.platform !== 'linux') {
 
 // config
 const config = require('config')
-let userDevDir = __dirname
+let userDevDir = shelljs.pwd().stdout
 let defaultConfig = config.get('config')
 defaultConfig.userDevDir = userDevDir
+
+log(chalk.red(`userDevDir: ${userDevDir}`))
 
 log(chalk.red(`You started "asch-redeploy" from directory "${userDevDir}"`))
 
