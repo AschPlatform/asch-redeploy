@@ -67,12 +67,11 @@ Promise.delay(12000)
   .then(function sendMoneyFinished(response) {
     return response
   })
-  .then(function timeOutAfterMoneyTransfer() {
-    return new Promise(function (resolve, reject) {
-      setTimeout(function () {
-        resolve(dep.registerDapp())
-      }, 10000)
-    })
+  .then(function wait() {
+    return Promise.delay(10000)
+  })
+  .then(function () {
+    return dep.registerDapp()
   })
   .then(function registerDappFinished(response) {
     if (response.status !== 200) {
@@ -86,38 +85,26 @@ Promise.delay(12000)
     log(chalk.green(`\nDAPP registered, DappId: ${response.data.transactionId}\n`))
     return dep.copyFiles(response.data.transactionId)
   })
-  .then(function copyingFilesFinished(result) {
+  .then(function wait(result) {
     console.log(result)
-    return new Promise(function wait(resolve, reject) {
-      setTimeout(function waitTime() {
-        resolve(result)
-      }, 10000)
-    })
+    return Promise.delay(10000)
   })
   .then(function (result) {
     log(chalk.green('stopping asch-Server for restart'))
     aschService.stop()
-    return new Promise(function (resolve, reject) {
-      setTimeout(function timeout() {
-        log(chalk.green('asch-server stopped'))
-        resolve(result)
-      }, 5000)
-    })
+    return Promise.delay(5000)
   })
   .then(function afterStopChangeAschConfig(result) {
+    log(chalk.green('asch-server stopped'))
     return dep.changeAschConfig(result)
   })
   .then(function (result){
     console.log(result)
     aschService.start()
-    return new Promise(function (resolve, reject) {
-      setTimeout(function timeout() {
-        resolve('aschService started')
-      }, 5000)
-    })
+    return Promise.delay(5000)
   })
-  .then (function restartResult(result) {
-    log(chalk.green(result))
+  .then (function restartResult() {
+    log(chalk.green('aschService started'))
   })
   .catch(function errorOccured(error) {
     log(chalk.red('ERROR OCCURED'))
