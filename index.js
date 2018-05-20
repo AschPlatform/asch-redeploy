@@ -3,12 +3,12 @@ process.env["NODE_CONFIG_DIR"] = path.join(__dirname, "config")
 const chalk = require('chalk')
 const log = console.log
 const shelljs = require('shelljs')
+const Promise = require('bluebird')
 
 const deploy = require('./src/deploy')
 const service = require('./src/asch-service')
 const sendMoney = require('./src/sendMoney')
-const w = require('./src/wait')
-const wait = new w()
+
 
 
 if (process.platform !== 'linux') {
@@ -59,13 +59,8 @@ let dep = new deploy(defaultConfig)
 let money = new sendMoney(defaultConfig)
 
 
-// new Promise(function waitAfterNodeStart(resolve, reject) {
-//   setTimeout(function waitTime() {
-//     resolve(null)
-//   }, 12000)
-// })
-wait.new(12000)
-  .then(wait.new(10000))
+
+Promise.delay(12000)
   .then(function (result) {
     return money.sendMoney()
   })

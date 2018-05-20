@@ -1,6 +1,7 @@
 const axios = require('axios')
 const aschJS = require('asch-js')
 const chalk = require('chalk')
+const Promise = require('bluebird')
 
 // ctor
 let sendMoney = function (config) {
