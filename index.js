@@ -7,6 +7,8 @@ const shelljs = require('shelljs')
 const deploy = require('./src/deploy')
 const service = require('./src/asch-service')
 const sendMoney = require('./src/sendMoney')
+const w = require('./src/wait')
+const wait = new w()
 
 
 if (process.platform !== 'linux') {
@@ -57,11 +59,13 @@ let dep = new deploy(defaultConfig)
 let money = new sendMoney(defaultConfig)
 
 
-new Promise(function waitAfterNodeStart(resolve, reject) {
-  setTimeout(function waitTime() {
-    resolve(null)
-  }, 12000)
-})
+// new Promise(function waitAfterNodeStart(resolve, reject) {
+//   setTimeout(function waitTime() {
+//     resolve(null)
+//   }, 12000)
+// })
+wait.new(12000)
+  .then(wait.new(10000))
   .then(function (result) {
     return money.sendMoney()
   })
