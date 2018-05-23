@@ -33,3 +33,10 @@ asch-redeploy .
 ```
 ln -s /home/matt/test/asch/dapps/efc789be7881c014773629eb955e527367d247e2885d6f00f6030137fc5e8d35/public /home/matt/test/asch/public/dist/dapps/efc789be7881c014773629eb955e527367d247e2885d6f00f6030137fc5e8d35
 ```
+
+
+# Contributing
+If the following error displays:
+ `Error: listen EADDRINUSE 0.0.0.0:4096`, this means the the asch-node is already running and must be terminated.
+ 
+`fuser --kill 4096/tcp`
