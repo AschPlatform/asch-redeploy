@@ -3,11 +3,6 @@ const path = require('path')
 const EventEmitter = require('events')
 const fs = require('fs')
 
-// api:
-// start
-// end
-// onExit
-
 // ctor
 let aschService = function (aschNodeDir, logDir) {
   this.aschNodeDir = aschNodeDir

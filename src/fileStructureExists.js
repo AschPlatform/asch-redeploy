@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 
 // ctor
-let exists = function (userDevDir) {
+let Exists = function (userDevDir) {
   if (!(typeof userDevDir === 'string')) {
     throw new Error('param userDevDir must be of type string')
   }
@@ -41,4 +41,4 @@ let exists = function (userDevDir) {
   }
 }
 
-module.exports = exists
+module.exports = Exists

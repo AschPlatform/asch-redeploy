@@ -36,5 +36,6 @@
   "bugs": {
     "url": "https://github.com/a1300/asch-redeploy/issues"
   },
-  "homepage": "https://github.com/a1300/asch-redeploy#readme"
+  "homepage": "https://github.com/a1300/asch-redeploy#readme",
+  "preferGlobal": true
 }

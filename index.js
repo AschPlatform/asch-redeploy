@@ -41,6 +41,10 @@ process.once('uncaughtException', function (error) {
   log(error)
 })
 
+let CheckFileStructure = require('./src/fileStructureExists')
+let check = new CheckFileStructure(defaultConfig.userDevDir)
+check.check()
+
 let logDir = path.join(__dirname, 'logs')
 let aschService = new Service(defaultConfig.node.directory, logDir)
 
