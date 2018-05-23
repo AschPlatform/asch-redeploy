@@ -1,7 +1,6 @@
-const shelljs = require('shelljs')
 const fork = require('child_process').fork
 const path = require('path')
-const EventEmitter = require('events');
+const EventEmitter = require('events')
 const fs = require('fs')
 
 // api:
@@ -27,8 +26,6 @@ let aschService = function (aschNodeDir, logDir) {
       execArgv: [],
       stdio: [ 'ignore', logStream, logStream, 'ipc' ]
     })
-
-
 
     // this.process.stdout.pipe(logStream)
     // this.process.stderr.pipe(logStream)

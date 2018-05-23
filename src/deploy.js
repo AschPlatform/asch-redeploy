@@ -18,12 +18,11 @@ let deploy = function (config) {
   this.registerDapp = function (callback) {
     let secret = this.config.dapp.masterAccountPassword
     let secondSecret = this.config.dapp.masterAccountPassword2nd
-  
+
     let dappJsFile = path.join(config.userDevDir, 'dapp.json')
     // todo check if file exists
     var dapp = JSON.parse(fs.readFileSync(dappJsFile, 'utf8'))
     let trs = aschJS.dapp.createDApp(dapp, secret, secondSecret)
-
 
     return axios({
       method: 'POST',
@@ -45,20 +44,20 @@ let deploy = function (config) {
       let existsDappDir = fs.existsSync(dappParentDir)
       console.log(`existsDappDir ${existsDappDir}`)
 
-      if(existsDappDir === false) {
+      if (existsDappDir === false) {
         fs.mkdirSync(dappParentDir)
       }
 
       let newDappDirectory = path.join(self.config.node.directory, 'dapps', dappId)
       fs.mkdirSync(newDappDirectory)
-  
-      let dappConfigPath = path.join(self.config.userDevDir,  'config.json')
+
+      let dappConfigPath = path.join(self.config.userDevDir, 'config.json')
       let dappConfig = JSON.parse(fs.readFileSync(dappConfigPath, 'utf8'))
-  
+
       dappConfig.secrets = []
       dappConfig.secrets.push(...self.config.dapp.delegates)
       fs.writeFileSync(dappConfigPath, JSON.stringify(dappConfig, null, 2), 'utf8')
-  
+
       ncp(self.config.userDevDir, newDappDirectory, function (err) {
         if (err) {
           reject(err)
@@ -67,8 +66,6 @@ let deploy = function (config) {
         }
       })
     })
-
-    
   } // end copyFiles
 
   this.changeAschConfig = function () {
@@ -77,14 +74,13 @@ let deploy = function (config) {
       let aschNodeConfigPath = path.join(self.config.node.directory, 'config.json')
       let aschConfig = JSON.parse(fs.readFileSync(aschNodeConfigPath, 'utf8'))
 
-      let newOption =  [self.config.dapp.masterAccountPassword]
+      let newOption = [self.config.dapp.masterAccountPassword]
       aschConfig.dapp.params[self.dappId] = newOption
 
       fs.writeFileSync(aschNodeConfigPath, JSON.stringify(aschConfig, null, 2), 'utf8')
       resolve('wrote asch/config.json successfully')
     })
   } // end changeAschConfig
-
 }
 
 module.exports = deploy
