@@ -13,7 +13,7 @@ let Exists = function (userDevDir) {
     return new Promise(function (resolve, reject) {
       let contractDir = path.join(self.userDevDir, 'contract')
       if (!fs.existsSync(contractDir)) {
-        Promise.reject(new Error('contract directory doesn\'t exist'))
+        throw new Error('contract directory doesn\'t exist')
       }
 
       let interfaceDir = path.join(self.userDevDir, 'interface')

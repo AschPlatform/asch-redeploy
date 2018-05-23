@@ -8,6 +8,7 @@ npm install -g asch-redeploy
 
 # Usage
 ```bash
+# clone a dapp repository
 git clone https://github.com/aschplatform/asch-dapp-helloworld
 cd asch-dapp-helloworld
 

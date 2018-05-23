@@ -1,5 +1,6 @@
 const path = require('path')
 process.env['NODE_CONFIG_DIR'] = path.join(__dirname, 'config')
+
 const chalk = require('chalk')
 const log = console.log
 const shelljs = require('shelljs')
@@ -18,6 +19,8 @@ const config = require('config')
 let userDevDir = shelljs.pwd().stdout
 let defaultConfig = config.get('config')
 defaultConfig.userDevDir = userDevDir
+
+log(defaultConfig)
 
 log(chalk.red(`userDevDir: ${userDevDir}`))
 
@@ -44,6 +47,10 @@ process.once('uncaughtException', function (error) {
 let CheckFileStructure = require('./src/fileStructureExists')
 let check = new CheckFileStructure(defaultConfig.userDevDir)
 check.check()
+  .catch(function errorAfterConfigCheck (error) {
+    log(chalk.yellow('The configuration is not valid:'), chalk.red(error.message))
+    process.kill(process.pid, 'SIGINT')
+  })
 
 let logDir = path.join(__dirname, 'logs')
 let aschService = new Service(defaultConfig.node.directory, logDir)
