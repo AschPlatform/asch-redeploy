@@ -17,8 +17,12 @@ asch-redeploy .
 
 
 # TODO
-* Make sure, that only this program runs on linux
+* Check with z-schema if every configuration is set
+  * Print configuration
+  * Do all config values exists (e.g folders, files...)
 * Only watch on some folders and filetypes
+  * Restart on changes
+* Write current `<dappId>` into a file
 * retry when not enough money
 * BUG: Restart didn't worked! (after dapp registration)
 * Do I need to create a softlink in asch/public/dapps? (I think the asch-binaries should be built before)
