@@ -45,8 +45,8 @@ process.once("uncaughtException", function (error) {
   log(error)
 })
 
-
-let aschService = new service(defaultConfig.node.directory)
+let logDir = path.join(__dirname, 'logs')
+let aschService = new service(defaultConfig.node.directory, logDir)
 
 // start asch node
 aschService.start()

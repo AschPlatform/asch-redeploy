@@ -10,24 +10,28 @@ const fs = require('fs')
 // onExit
 
 // ctor
-let aschService = function (aschNodeDir) {
+let aschService = function (aschNodeDir, logDir) {
   this.aschNodeDir = aschNodeDir
-
+  this.logDir = logDir
   this.notifier = new EventEmitter()
 
   this.start = function () {
+    let logFile = path.join(this.logDir, 'debug.log')
+    console.log(`logFile: ${logFile}`)
+    let logStream = fs.openSync(logFile, 'a')
+
     let aschPath = path.join(this.aschNodeDir, 'app.js')
     this.process = fork(aschPath, [], {
       cwd: this.aschNodeDir,
-      silent: true,
-      // stdout: 'inherit',
-      execArgv: []
+      // silent: true,
+      execArgv: [],
+      stdio: [ 'ignore', logStream, logStream, 'ipc' ]
     })
 
-    let logStream = fs.createWriteStream('./debug.log', { flags: 'a' })
 
-    this.process.stdout.pipe(logStream)
-    this.process.stderr.pipe(logStream)
+
+    // this.process.stdout.pipe(logStream)
+    // this.process.stderr.pipe(logStream)
     this.process.on('error', this.onError)
     this.process.on('exit', this.onExit)
     this.process.on('message', this.onMessage)
