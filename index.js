@@ -5,10 +5,10 @@ const utils = require('./src/utils')
 
 const chalk = require('chalk')
 const log = console.log
-// const Promise = require('bluebird')
 
 const startUp = require('./src/startUp')
 const Service = require('./src/service')
+const Conductor = require('./src/conductor')
 let aschService = null
 let appConfig = null
 
@@ -43,7 +43,11 @@ startUp()
 
     return aschService.start()
   })
-  .catch((err) => {
+  .then(() => {
+    let conductor = new Conductor()
+    return conductor.orchestrate()
+  })
+  .catch((err) => { // last error handler
     console.log(err)
     utils.endProcess()
   })
