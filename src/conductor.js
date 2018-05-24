@@ -8,7 +8,6 @@ let Conductor = function (service, config) {
   this.pendingTasks = []
 
   this.orchestrate = function () {
-    
   }
 }
 
