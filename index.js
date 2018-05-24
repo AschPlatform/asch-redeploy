@@ -1,12 +1,13 @@
 process.env['NODE_ENV'] = 'development'
 
 const path = require('path')
+const utils = require('./src/utils')
 
 const chalk = require('chalk')
 const log = console.log
 // const Promise = require('bluebird')
 
-let startUp = require('./src/startUp')
+const startUp = require('./src/startUp')
 const Service = require('./src/service')
 let aschService = null
 let appConfig = null
@@ -41,6 +42,10 @@ startUp()
     })
 
     return aschService.start()
+  })
+  .catch((err) => {
+    console.log(err)
+    utils.endProcess()
   })
 
 // const Deploy = require('./src/deploy')

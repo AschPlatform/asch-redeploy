@@ -3,6 +3,7 @@ const chalk = require('chalk')
 const utils = require('./utils')
 let IsConfigValid = require('./isConfigValid')
 let CheckFileStructure = require('./checkFileStructure')
+let checkArch = require('./checkArch')
 const shelljs = require('shelljs')
 let log = console.log
 
@@ -15,6 +16,9 @@ let getUserDevDir = () => {
 let startUp = () => {
   let userDevDir = getUserDevDir()
   let check = new CheckFileStructure(userDevDir)
+
+  checkArch()
+
   return check.check() // checkFileStructure
     .catch((er) => {
       log(chalk.yellow(er.message), chalk.red(er.stack))
