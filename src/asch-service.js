@@ -2,6 +2,7 @@ const fork = require('child_process').fork
 const path = require('path')
 const EventEmitter = require('events')
 const fs = require('fs')
+const Promise = require('bluebird')
 
 // ctor
 let aschService = function (aschNodeDir, logDir) {
@@ -10,31 +11,33 @@ let aschService = function (aschNodeDir, logDir) {
   this.notifier = new EventEmitter()
 
   this.start = function () {
-    let logFile = path.join(this.logDir, 'debug.log')
-    console.log(`logFile: ${logFile}`)
-    let logStream = fs.openSync(logFile, 'a')
+    return new Promise((resolve, reject) => {
+      let logFile = path.join(this.logDir, 'debug.log')
+      console.log(`logFile: ${logFile}`)
+      let logStream = fs.openSync(logFile, 'a')
 
-    let aschPath = path.join(this.aschNodeDir, 'app.js')
-    this.process = fork(aschPath, [], {
-      cwd: this.aschNodeDir,
-      // silent: true,
-      execArgv: [],
-      stdio: [ 'ignore', logStream, logStream, 'ipc' ]
+      let aschPath = path.join(this.aschNodeDir, 'app.js')
+      this.process = fork(aschPath, [], {
+        cwd: this.aschNodeDir,
+        // silent: true,
+        execArgv: [],
+        stdio: [ 'ignore', logStream, logStream, 'ipc' ]
+      })
+
+      this.process.on('error', this.onError)
+      this.process.on('exit', this.onExit)
+      this.process.on('message', this.onMessage)
+      resolve(true)
     })
-
-    // this.process.stdout.pipe(logStream)
-    // this.process.stderr.pipe(logStream)
-    this.process.on('error', this.onError)
-    this.process.on('exit', this.onExit)
-    this.process.on('message', this.onMessage)
   }
 
   this.stop = function () {
-    console.log('sending SIGTERM signal to child process')
-    this.process.kill('SIGTERM')
+    return new Promise((resolve, reject) => {
+      console.log('sending SIGTERM signal to child process')
+      this.process.kill('SIGTERM')
+      resolve(true)
+    })
   }
-
-  let self = this
 
   this.onStdIn = function (data) {
     console.log(`stdin: ${data}`)
@@ -45,9 +48,9 @@ let aschService = function (aschNodeDir, logDir) {
   this.onError = function (err) {
     console.log(`error: ${err}`)
   }
-  this.onExit = function (code) {
+  this.onExit = (code) => {
     console.log(`EXIT exitCode: ${code}`)
-    self.notifier.emit('exit', code)
+    this.notifier.emit('exit', code)
   }
   this.onMessage = function (message) {
     console.log(`aschMessage: ${message}`)

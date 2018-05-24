@@ -1,5 +1,6 @@
 const path = require('path')
 const fs = require('fs')
+const Promise = require('bluebird')
 
 // ctor
 let Exists = function (userDevDir) {
@@ -11,6 +12,12 @@ let Exists = function (userDevDir) {
   this.check = function () {
     let self = this
     return new Promise(function (resolve, reject) {
+      console.log(process.env['NODE_ENV'])
+      if (process.env['NODE_ENV'] === 'debug') {
+        resolve(true)
+        return
+      }
+
       let contractDir = path.join(self.userDevDir, 'contract')
       if (!fs.existsSync(contractDir)) {
         throw new Error('contract directory doesn\'t exist')

@@ -2,77 +2,48 @@ const path = require('path')
 
 const chalk = require('chalk')
 const log = console.log
-const Promise = require('bluebird')
+// const Promise = require('bluebird')
 
-// const Deploy = require('./src/deploy')
+let startUp = require('./src/startUp')
 const Service = require('./src/asch-service')
-// const SendMoney = require('./src/sendMoney')
-
-if (process.platform !== 'linux') {
-  log(chalk.red('This program can currently run only on linux'))
-}
-
-let endProcess = function () {
-  process.kill(process.pid, 'SIGINT')
-}
-
-// asch node
-// new Service(defaultConfig.node.directory, logDir)
-let aschService = function () {
-  this.stop = function () {}
-  this.start = function () {}
-}
+let aschService = null
 
 // https://www.exratione.com/2013/05/die-child-process-die/
-process.on('SIGTERM', function () {
-  // kill
-  log(chalk.blue('SIGTERM'))
-  aschService.stop()
-  process.exit(0)
-})
-process.on('SIGINT', function () {
-  // ctrl+c
-  log(chalk.blue('SIGTERM'))
-  aschService.stop()
-  process.exit(0)
-})
 process.once('uncaughtException', function (error) {
   log(chalk.red('UNCAUGHT EXCEPTION'))
   log(error)
 })
 
-// config
-let defaultConfig = {}
-let IsConfigValid = require('./src/isConfigValid')
-let config = new IsConfigValid()
-
-// load configuration and review correctness
-config.getConfig()
+startUp()
   .then((config) => {
-    console.log('GOT CONFIG!!!')
-    defaultConfig = config
-    return null
-  })
-  .catch(function configNotValid (notValid) {
-    endProcess()
-  })
-  .then(function checkFileStructure () { // checkFileStructure
-    let CheckFileStructure = require('./src/fileStructureExists')
-    let check = new CheckFileStructure(defaultConfig.userDevDir)
-    return check.check()
-  })
-  .catch(function errorAfterConfigCheck (error) {
-    log(chalk.yellow('The configuration is not valid:'), chalk.red(error.message))
-    endProcess()
-  })
-  .then(function startAschNode () { // start asch node
     let logDir = path.join(__dirname, 'logs')
-    aschService = new Service(defaultConfig.node.directory, logDir)
+    aschService = new Service(config.node.directory, logDir)
     aschService.notifier.on('exit', function (code) {
       console.log(`asch-node terminated with code ${code}`)
     })
-    aschService.start()
+    process.on('SIGTERM', function () {
+      log(chalk.blue('SIGTERM'))
+      aschService.stop()
+      process.exit(0)
+    })
+    process.on('SIGINT', function () {
+      // ctrl+c
+      log(chalk.blue('SIGTERM'))
+      aschService.stop()
+      process.exit(0)
+    })
+
+    return aschService.start()
   })
+
+// const Deploy = require('./src/deploy')
+
+// const SendMoney = require('./src/sendMoney')
+
+// asch node
+// new Service(defaultConfig.node.directory, logDir)
+
+// load configuration and review correctness
 
 // let dep = new Deploy(defaultConfig)
 // let money = new SendMoney(defaultConfig)
@@ -128,8 +99,3 @@ config.getConfig()
 //     log(chalk.red(error))
 //     log(chalk.red(error.message))
 //   })
-
-// test
-setTimeout(() => {
-  console.log('EXITING...')
-}, 10000000)

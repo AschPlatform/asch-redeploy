@@ -6,11 +6,9 @@ const Promise = require('bluebird')
 
 // ctor
 let IsConfigValid = function () {
-  let loadConfig = function () {
+  let loadConfig = function (userDevDir) {
     let mainDir = getParentDirectory(__dirname)
     process.env['NODE_CONFIG_DIR'] = path.join(mainDir, 'config')
-    let userDevDir = shelljs.pwd().stdout
-    console.log(chalk.red(`userDevDir: ${userDevDir}`))
 
     let defaultConfig = config.get('config')
     defaultConfig.userDevDir = userDevDir
