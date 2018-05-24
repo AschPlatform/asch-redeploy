@@ -13,7 +13,7 @@ let Exists = function (userDevDir) {
     let self = this
     return new Promise(function (resolve, reject) {
       console.log(process.env['NODE_ENV'])
-      if (process.env['NODE_ENV'] === 'debug') {
+      if (process.env['NODE_ENV'] === 'development') {
         resolve(true)
         return
       }

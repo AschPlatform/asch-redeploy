@@ -1,6 +1,6 @@
 // const Promise = require('bluebird')
 const chalk = require('chalk')
-const { endProcess } = require('./utils')
+const utils = require('./utils')
 let IsConfigValid = require('./isConfigValid')
 let CheckFileStructure = require('./checkFileStructure')
 const shelljs = require('shelljs')
@@ -18,15 +18,15 @@ let startUp = () => {
   return check.check() // checkFileStructure
     .catch((er) => {
       log(chalk.yellow(er.message), chalk.red(er.stack))
-      endProcess()
+      utils.endProcess()
     })
     .then(() => {
-      let config = new IsConfigValid()
-      return config.getConfig(userDevDir)
+      let config = new IsConfigValid(userDevDir)
+      return config.getConfig()
     })
     .catch((error) => {
       log(chalk.yellow('The configuration is not valid:'), chalk.red(error.message))
-      endProcess()
+      utils.endProcess()
     })
 }
 

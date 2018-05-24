@@ -1,17 +1,23 @@
 const path = require('path')
 const config = require('config')
-const shelljs = require('shelljs')
 const chalk = require('chalk')
+const utils = require('./utils')
 const Promise = require('bluebird')
 
 // ctor
-let IsConfigValid = function () {
-  let loadConfig = function (userDevDir) {
-    let mainDir = getParentDirectory(__dirname)
+let IsConfigValid = function (userDevDir) {
+
+  if (typeof userDevDir !== 'string') {
+    throw new Error('userDevDir must be of type string')
+  }
+  this.userDevDir = userDevDir
+
+  let loadConfig = () => {
+    let mainDir = utils.getParentDirectory(__dirname)
     process.env['NODE_CONFIG_DIR'] = path.join(mainDir, 'config')
 
     let defaultConfig = config.get('config')
-    defaultConfig.userDevDir = userDevDir
+    defaultConfig.userDevDir = this.userDevDir
 
     console.log(chalk.green(JSON.stringify(defaultConfig, null, 2)))
     return defaultConfig
@@ -23,7 +29,7 @@ let IsConfigValid = function () {
   }
 
   this.getConfig = function () {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       let loadedConfig = loadConfig()
       let result = isValid(loadedConfig)
       if (result === true) {
@@ -33,10 +39,7 @@ let IsConfigValid = function () {
       }
     })
   }
-  let getParentDirectory = function (directory) {
-    let split = directory.split(path.sep)
-    return split.slice(0, (split.length - 1)).join(path.sep)
-  }
+
 }
 
 module.exports = IsConfigValid
