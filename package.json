@@ -11,7 +11,8 @@
     "config": "^1.30.0",
     "ncp": "^2.0.0",
     "node-watch": "^0.5.8",
-    "shelljs": "^0.8.2"
+    "shelljs": "^0.8.2",
+    "z-schema": "^3.22.0"
   },
   "devDependencies": {
     "eslint": "^4.19.1",

@@ -3,10 +3,10 @@ const config = require('config')
 const chalk = require('chalk')
 const utils = require('./utils')
 const Promise = require('bluebird')
+const ZSchema = require('z-schema')
 
 // ctor
 let IsConfigValid = function (userDevDir) {
-
   if (typeof userDevDir !== 'string') {
     throw new Error('userDevDir must be of type string')
   }
@@ -24,6 +24,13 @@ let IsConfigValid = function (userDevDir) {
   }
 
   let isValid = function (configuration) {
+    let validator = new ZSchema()
+    let schema = require('./configSchema')
+
+    let valid = validator.validate(configuration, JSON.stringify(schema))
+    console.log(valid.isValid)
+    var errors = validator.getLastErrors()
+    console.log(errors)
     // TODO Check
     return true
   }
@@ -39,7 +46,6 @@ let IsConfigValid = function (userDevDir) {
       }
     })
   }
-
 }
 
 module.exports = IsConfigValid
