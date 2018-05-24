@@ -18,6 +18,7 @@ asch-redeploy .
 
 
 # TODO
+* Dapp-Name and Dapp-Link can not 
 * Check with z-schema if every configuration is set
   * Print configuration
   * Do all config values exists (e.g folders, files...)
