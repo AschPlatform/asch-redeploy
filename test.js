@@ -16,7 +16,6 @@ let pong = (num) => {
 }
 
 let recurse = (amount) => {
-  // Base case - just return the promise
   if (amount === 0) {
     return amount
   }
