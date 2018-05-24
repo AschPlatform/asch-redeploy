@@ -23,8 +23,8 @@ let deploy = function (config) {
     let dappJsFile = path.join(config.userDevDir, 'dapp.json')
     // todo check if file exists
     var dapp = JSON.parse(fs.readFileSync(dappJsFile, 'utf8'))
-    dapp.name = utils.generateRandomString(15)
-    dapp.link = 'http://' + utils.generateRandomString(15) + '.zip'
+    dapp.name = `${dapp.name}-${utils.generateRandomString(15)}`
+    dapp.link = `${dapp.link.replace('.zip', '')}-${utils.generateRandomString(15)}.zip`
     console.log(dapp)
     let trs = aschJS.dapp.createDApp(dapp, secret, secondSecret)
 
