@@ -2,6 +2,7 @@ process.env['NODE_ENV'] = 'development'
 
 const path = require('path')
 const utils = require('./src/utils')
+const Promise = require('bluebird')
 
 const chalk = require('chalk')
 const log = console.log
@@ -44,7 +45,10 @@ startUp()
     return aschService.start()
   })
   .then(() => {
-    let conductor = new Conductor()
+    return Promise.delay(7000)
+  })
+  .then(() => {
+    let conductor = new Conductor(aschService, appConfig)
     return conductor.orchestrate()
   })
   .catch((err) => { // last error handler
