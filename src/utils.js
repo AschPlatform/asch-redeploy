@@ -1,5 +1,6 @@
 const chalk = require('chalk')
 const path = require('path')
+let randomstring = require('randomstring')
 let log = console.log
 
 let endProcess = function () {
@@ -12,7 +13,16 @@ let getParentDirectory = function (directory) {
   return split.slice(0, (split.length - 1)).join(path.sep)
 }
 
+let generateRandomString = function (length) {
+  var newRandom = randomstring.generate({
+    length: 12,
+    charset: 'alphabetic'
+  })
+  return newRandom
+}
+
 module.exports = {
   endProcess,
-  getParentDirectory
+  getParentDirectory,
+  generateRandomString
 }

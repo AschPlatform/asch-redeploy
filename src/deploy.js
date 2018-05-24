@@ -4,6 +4,7 @@ const path = require('path')
 const axios = require('axios')
 const ncp = require('ncp').ncp
 const Promise = require('bluebird')
+const utils = require('./utils')
 
 // constructor
 let deploy = function (config) {
@@ -15,13 +16,16 @@ let deploy = function (config) {
     version: ''
   }
 
-  this.registerDapp = function (callback) {
+  this.registerDapp = function () {
     let secret = this.config.dapp.masterAccountPassword
     let secondSecret = this.config.dapp.masterAccountPassword2nd
 
     let dappJsFile = path.join(config.userDevDir, 'dapp.json')
     // todo check if file exists
     var dapp = JSON.parse(fs.readFileSync(dappJsFile, 'utf8'))
+    dapp.name = utils.generateRandomString(15)
+    dapp.link = 'http://' + utils.generateRandomString(15) + '.zip'
+    console.log(dapp)
     let trs = aschJS.dapp.createDApp(dapp, secret, secondSecret)
 
     return axios({
