@@ -16,7 +16,7 @@ let IsConfigValid = function (userDevDir) {
     let mainDir = utils.getParentDirectory(__dirname)
     process.env['NODE_CONFIG_DIR'] = path.join(mainDir, 'config')
 
-    let defaultConfig = config.get('config')
+    let defaultConfig = config.util.toObject(config.get('config'))
     defaultConfig.userDevDir = this.userDevDir
 
     console.log(chalk.green(JSON.stringify(defaultConfig, null, 2)))
@@ -24,13 +24,22 @@ let IsConfigValid = function (userDevDir) {
   }
 
   let isValid = function (configuration) {
-    let validator = new ZSchema()
+    let validator = new ZSchema({
+      reportPathAsArray: true,
+      breakOnFirstError: false
+    })
     let schema = require('./configSchema')
+    try {
+      // let jsonConfig = JSON.stringify(configuration)
+      let valid = validator.validate(configuration, schema)
+      console.log(valid.isValid)
+      var errors = validator.getLastErrors()
+      console.log(errors)
+    } catch (err) {
+      console.log(err)
+      return false
+    }
 
-    let valid = validator.validate(configuration, JSON.stringify(schema))
-    console.log(valid.isValid)
-    var errors = validator.getLastErrors()
-    console.log(errors)
     // TODO Check
     return true
   }

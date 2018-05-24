@@ -2,9 +2,18 @@
 let schema = {
   type: 'object',
   properties: {
+    userDevDir: {
+      type: 'string',
+      minLength: 5
+    },
     watch: {
       type: 'array',
-      minItems: 1
+      minItems: 1,
+      items: [
+        {
+          type: 'string'
+        }
+      ]
     },
     dapp: {
       type: 'object',
@@ -14,12 +23,16 @@ let schema = {
           minLength: 20
         },
         masterAccountPassword2nd: {
-          type: 'string', // nullable,
-          minLength: 0
+          type: 'string'
         },
         delegates: {
           type: 'array',
-          minItems: 5
+          minItems: 4,
+          items: [
+            {
+              type: 'string'
+            }
+          ]
         }
       },
       required: ['masterAccountPassword', 'delegates']
@@ -40,7 +53,7 @@ let schema = {
         },
         magic: {
           type: 'string',
-          minLength: 5
+          minLength: 3
         },
         genesisAccount: {
           type: 'string',
@@ -50,7 +63,7 @@ let schema = {
       required: ['directory', 'host', 'port', 'magic', 'genesisAccount']
     }
   },
-  required: ['watch', 'dapp', 'node']
+  required: ['userDevDir', 'watch', 'dapp', 'node']
 }
 
 module.exports = schema
