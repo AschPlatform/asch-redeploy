@@ -5,7 +5,7 @@ const fs = require('fs')
 const Promise = require('bluebird')
 
 // ctor
-let aschService = function (aschNodeDir, logDir) {
+let Service = function (aschNodeDir, logDir) {
   this.aschNodeDir = aschNodeDir
   this.logDir = logDir
   this.notifier = new EventEmitter()
@@ -57,4 +57,4 @@ let aschService = function (aschNodeDir, logDir) {
   }
 }
 
-module.exports = aschService
+module.exports = Service

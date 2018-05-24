@@ -7,7 +7,7 @@ const log = console.log
 // const Promise = require('bluebird')
 
 let startUp = require('./src/startUp')
-const Service = require('./src/asch-service')
+const Service = require('./src/service')
 let aschService = null
 
 // https://www.exratione.com/2013/05/die-child-process-die/
