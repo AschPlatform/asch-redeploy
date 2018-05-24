@@ -29,19 +29,14 @@ let IsConfigValid = function (userDevDir) {
       breakOnFirstError: false
     })
     let schema = require('./configSchema')
-    try {
-      // let jsonConfig = JSON.stringify(configuration)
-      let valid = validator.validate(configuration, schema)
-      console.log(valid.isValid)
-      var errors = validator.getLastErrors()
-      console.log(errors)
-    } catch (err) {
-      console.log(err)
+    let valid = validator.validate(configuration, schema)
+    if (valid === true) {
+      return true
+    } else {
+      let errors = valid.getLastErrors()
+      console.log(chalk.red(JSON.stringify(errors)))
       return false
     }
-
-    // TODO Check
-    return true
   }
 
   this.getConfig = function () {
