@@ -9,6 +9,7 @@ const log = console.log
 let startUp = require('./src/startUp')
 const Service = require('./src/service')
 let aschService = null
+let appConfig = null
 
 // https://www.exratione.com/2013/05/die-child-process-die/
 process.once('uncaughtException', function (error) {
@@ -18,8 +19,12 @@ process.once('uncaughtException', function (error) {
 
 startUp()
   .then((config) => {
+    appConfig = config
+    return appConfig.node.directory
+  })
+  .then((aschDirectory) => {
     let logDir = path.join(__dirname, 'logs')
-    aschService = new Service(config.node.directory, logDir)
+    aschService = new Service(aschDirectory, logDir)
     aschService.notifier.on('exit', function (code) {
       console.log(`asch-node terminated with code ${code}`)
     })
