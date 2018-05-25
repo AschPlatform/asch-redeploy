@@ -65,6 +65,9 @@ let IsConfigValid = function (userDevDir) {
           .then((config) => {
             return isPortAvailable(config.node.port)
               .then((status) => {
+                if (status === false) {
+                  throw new Error(`port ${config.node.port} is is already in use. Do you have a asch-node already running?`)
+                }
                 console.log(`status ${status}`)
                 return config
               })
