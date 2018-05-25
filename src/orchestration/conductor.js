@@ -22,7 +22,7 @@ let Conductor = function (service, config) {
       resolve(workflow(this.service, this.config))
     })
       .then(() => {
-        log(chalk.magenta('sleepint for 3sec'))
+        log(chalk.magenta('sleep for 3sec'))
         return Promise.delay(3000)
       })
       .catch((error) => {

@@ -3,18 +3,10 @@ A hassle-free local asch environment
 
 # Install
 ```bash
-npm install -g asch-redeploy@0.0.1
-```
-
-# Folder Structure
-Your work directory should have the following structure
-```
-/home/user
-└───────asch
-        └───app.js
-        └───aschd
-└───────asch-dapp-helloworld
-        └───(run asch-redeploy here)
+npm install asch-redeploy
+cd asch-redeploy
+# use asch-redeploy as a global package
+npm link
 ```
 
 # Usage
@@ -27,3 +19,14 @@ cd asch-dapp-helloworld
 asch-redeploy .
 ```
 
+# Folder Structure
+Your work directory should have the following structure
+```
+/home/user
+└───────asch
+        └───app.js
+        └───aschd
+└───────asch-dapp-helloworld
+        └───(run asch-redeploy here)
+└───────asch-redeploy
+```

@@ -43,7 +43,6 @@ let deploy = function (config) {
     console.log(`dappId: ${dappId}`)
     return new Promise(function (resolve, reject) {
       let dappParentDir = path.join(self.config.node.directory, 'dapps')
-      console.log(`dappParentDir: ${dappParentDir}`)
 
       let existsDappDir = fs.existsSync(dappParentDir)
       console.log(`existsDappDir ${existsDappDir}`)
