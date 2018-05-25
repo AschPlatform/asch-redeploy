@@ -9,7 +9,7 @@ const Promise = require('bluebird')
 const chalk = require('chalk')
 const log = console.log
 
-const startUp = require('./src/startUp')
+const startUp = require('./src/startup/startup')
 const Service = require('./src/service')
 const Conductor = require('./src/conductor')
 let aschService = null

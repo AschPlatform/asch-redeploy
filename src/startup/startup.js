@@ -1,6 +1,6 @@
 // const Promise = require('bluebird')
 const chalk = require('chalk')
-const utils = require('./utils')
+const utils = require('../utils')
 let IsConfigValid = require('./isConfigValid')
 let CheckFileStructure = require('./checkFileStructure')
 let checkArch = require('./checkArch')
@@ -13,7 +13,7 @@ let getUserDevDir = () => {
   return userDevDir
 }
 
-let startUp = () => {
+let startup = () => {
   let userDevDir = getUserDevDir()
   let check = new CheckFileStructure(userDevDir)
 
@@ -34,4 +34,4 @@ let startUp = () => {
     })
 }
 
-module.exports = startUp
+module.exports = startup

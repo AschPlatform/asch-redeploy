@@ -1,6 +1,6 @@
 const path = require('path')
 const chalk = require('chalk')
-const utils = require('./utils')
+const utils = require('../utils')
 const Promise = require('bluebird')
 const ZSchema = require('z-schema')
 const customValidators = require('./customValidators')
@@ -13,7 +13,8 @@ let IsConfigValid = function (userDevDir) {
   this.userDevDir = userDevDir
 
   let loadConfig = () => {
-    let mainDir = utils.getParentDirectory(__dirname)
+    let startupDir = utils.getParentDirectory(__dirname)
+    let mainDir = utils.getParentDirectory(startupDir)
     process.env['NODE_CONFIG_DIR'] = path.join(mainDir, 'config')
     const config = require('config')
 
