@@ -4,7 +4,7 @@ const utils = require('../utils')
 const Promise = require('bluebird')
 const ZSchema = require('z-schema')
 const customValidators = require('./customValidators')
-const isPortAvailable = require('is-port-available');
+const isPortAvailable = require('is-port-available')
 
 // ctor
 let IsConfigValid = function (userDevDir) {
@@ -62,11 +62,14 @@ let IsConfigValid = function (userDevDir) {
             reject(new Error('configuration is not valid!'))
           }
         })
+          .then((config) => {
+            return isPortAvailable(config.node.port)
+              .then((status) => {
+                console.log(`status ${status}`)
+                return config
+              })
+          })
       })
-      .then((config) => {
-        return isPortAvailable(config.node.port)
-      })
-      .then(() >)= 
   }
 }
 
