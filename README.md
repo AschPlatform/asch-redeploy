@@ -27,5 +27,3 @@ cd asch-dapp-helloworld
 asch-redeploy .
 ```
 
-
-
