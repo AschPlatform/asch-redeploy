@@ -18,6 +18,8 @@ asch-redeploy .
 
 
 # TODO
+* Create bug in [z-schema-repo](https://github.com/zaggino/z-schema) because format-validation for custom registered format only validates the first item in an array
+* 
 * Dapp-Name and Dapp-Link can not 
 * Check with z-schema if every configuration is set
   * Print configuration
