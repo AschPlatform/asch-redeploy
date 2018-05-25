@@ -1,5 +1,4 @@
 const path = require('path')
-const config = require('config')
 const chalk = require('chalk')
 const utils = require('./utils')
 const Promise = require('bluebird')
@@ -16,6 +15,7 @@ let IsConfigValid = function (userDevDir) {
   let loadConfig = () => {
     let mainDir = utils.getParentDirectory(__dirname)
     process.env['NODE_CONFIG_DIR'] = path.join(mainDir, 'config')
+    const config = require('config')
 
     let defaultConfig = config.util.toObject(config.get('config'))
     defaultConfig.userDevDir = this.userDevDir
