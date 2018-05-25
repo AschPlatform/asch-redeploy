@@ -10,6 +10,7 @@
     "bluebird": "3.5.1",
     "chalk": "2.4.1",
     "config": "1.30.0",
+    "is-port-available": "^0.1.5",
     "ncp": "2.0.0",
     "node-watch": "0.5.8",
     "randomstring": "1.1.5",

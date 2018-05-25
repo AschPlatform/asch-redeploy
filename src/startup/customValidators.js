@@ -44,7 +44,7 @@ let areNewFormatsRegistered = () => {
   var registeredFormats = ZSchema.getRegisteredFormats()
   return registeredFormats &&
     registeredFormats.indexOf('bip39') > -1 &&
-    registeredFormats.indexOf('aschNodeDirectory') > -1
+    registeredFormats.indexOf('aschNodeDirectory') > -1 &&
 }
 
 module.exports = {
