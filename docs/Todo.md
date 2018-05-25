@@ -4,6 +4,8 @@
 * Prettify console output!
   * Consistent output
 * Write tests
+* Refactor directory structure
+  * More sub-directory in src/
 * Optimize delay times
   * Between transactions
   * Between startup/shutdowns

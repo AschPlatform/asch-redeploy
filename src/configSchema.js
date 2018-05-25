@@ -44,7 +44,7 @@ let schema = {
       properties: {
         directory: {
           type: 'string',
-          format: 'file'
+          format: 'aschNodeDirectory'
         },
         host: {
           type: 'string',
