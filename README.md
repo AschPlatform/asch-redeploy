@@ -6,6 +6,17 @@ A hassle-free local asch environment
 npm install -g asch-redeploy
 ```
 
+# Folder Structure
+Your work directory should have the following structure
+```
+/home/user
+└───────asch
+        └───app.js
+        └───aschd
+└───────asch-dapp-helloworld
+        └───(run asch-redeploy here)
+```
+
 # Usage
 ```bash
 # clone a dapp repository
@@ -15,7 +26,6 @@ cd asch-dapp-helloworld
 # watch for changes
 asch-redeploy .
 ```
-
 
 
 

@@ -43,5 +43,6 @@
   "preferGlobal": true,
   "bin": {
     "asch-redeploy": "./bin/asch-redeploy"
-  }
+  },
+  "os": ["linux"]
 }
