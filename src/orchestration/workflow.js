@@ -25,6 +25,8 @@ let workflow = (service, config) => {
       return deploy.registerDapp()
     })
     .then(function registerDappFinished (response) {
+      console.log('response after dapp-registration')
+      console.log(response)
       if (response.status !== 200) {
         throw new Error('Could not register dapp')
       }
@@ -59,8 +61,8 @@ let workflow = (service, config) => {
     })
     .catch(function errorOccured (error) {
       log(chalk.red('ERROR OCCURED'))
-      log(chalk.red(error))
       log(chalk.red(error.message))
+      log(chalk.red(error.stack))
     })
 }
 

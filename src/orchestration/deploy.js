@@ -20,7 +20,10 @@ let deploy = function (config) {
     let secret = this.config.dapp.masterAccountPassword
     let secondSecret = this.config.dapp.masterAccountPassword2nd
 
-    let dappJsFile = path.join(config.userDevDir, 'dapp.json')
+    let srcDir = utils.getParentDirectory(__dirname)
+    let mainDir = utils.getParentDirectory(srcDir)
+    console.log(`maindir: ${mainDir}`)
+    let dappJsFile = path.join(mainDir, 'dapp.json')
     // todo check if file exists
     var dapp = JSON.parse(fs.readFileSync(dappJsFile, 'utf8'))
     dapp.name = `${dapp.name}-${utils.generateRandomString(15)}`
