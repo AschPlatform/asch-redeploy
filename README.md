@@ -3,10 +3,12 @@ A hassle-free local asch environment
 
 # Install
 ```bash
-npm install asch-redeploy
+git clone https://github.com/a1300/asch-redeploy
 cd asch-redeploy
+
 # use asch-redeploy as a global package
-npm link
+npm install
+npm link # important
 ```
 
 # Usage
