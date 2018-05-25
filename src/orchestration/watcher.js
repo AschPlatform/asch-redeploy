@@ -1,5 +1,7 @@
 const watch = require('chokidar')
 const EventEmitter = require('events')
+const chalk = require('chalk')
+const log = console.log
 
 // ctor
 function watcher (config) {
@@ -8,13 +10,14 @@ function watcher (config) {
   this.notifier = new EventEmitter()
 
   this.watch = function () {
-    this.ef = chokidar.watch(userDevDir.watch)
+    this.ef = watch.watch(this.config.watch)
+
     this.ef.on('add', (path) => {
-      console.log(`${path} has been added`)
+      log(chalk.underline.green(`${path}`), chalk.yellow('has been added'))
       this.notifier.emit('fileChanged')
     })
     this.ef.on('change', (path) => {
-      console.log(`${path} has been changed`)
+      log(chalk.underline.magenta(`${path}`), chalk.yellow('has been changed'))
       this.notifier.emit('fileChanged')
     })
   }

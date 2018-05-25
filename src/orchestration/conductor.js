@@ -1,6 +1,7 @@
 const Promise = require('bluebird')
 const chalk = require('chalk')
 const workflow = require('./workflow')
+const Watcher = require('./watcher')
 const log = console.log
 
 // ctor
@@ -11,12 +12,22 @@ let Conductor = function (service, config) {
   this.taskInProgress = false
   this.pendingTasks = []
 
+  let watcher = new Watcher(config)
+  watcher.watch()
+  this.notifier = watcher.notifier
+
+  this.notifier.on('fileChanged', () => {
+    console.log('received filechanged in conductor.js')
+    this.pendingTasks.push('change')
+  })
+
   this.getLatestTask = () => {
     let newTask = this.pendingTasks.pop()
     this.pendingTasks = []
     return newTask
   }
 
+  // recursive
   this.waiting = () => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -26,6 +37,7 @@ let Conductor = function (service, config) {
           resolve(this.waiting())
         } else {
           console.log('orchestrat()')
+          this.pendingTasks = []
           resolve(this.orchestrate())
         }
       }, 3000)

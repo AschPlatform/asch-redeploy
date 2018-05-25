@@ -1,4 +1,9 @@
 # TODO
+* Watching not precise enough
+  * Watcher should be with __userDevDir + filePath__
+* Track how many times the orchestrate function was called
+* On first orchestration there are already pending tasks! Delete them!
+
 * Check if port is already in use [link](https://www.npmjs.com/package/is-port-available)
 * Overwrite configuration in file
 * Overwrite NODE_ENV
