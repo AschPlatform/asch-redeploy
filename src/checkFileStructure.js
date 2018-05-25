@@ -12,7 +12,7 @@ let Exists = function (userDevDir) {
   this.check = function () {
     let self = this
     return new Promise(function (resolve, reject) {
-      console.log(process.env['NODE_ENV'])
+      console.log(`NODE_ENV: ${process.env['NODE_ENV']}`)
       if (process.env['NODE_ENV'] === 'development') {
         resolve(true)
         return

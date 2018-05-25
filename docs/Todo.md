@@ -1,4 +1,6 @@
 # TODO
+* Overwrite configuration in file
+* Overwrite NODE_ENV
 * Only watch on some folders and filetypes
   * Restart on changes
 * Prettify console output!
