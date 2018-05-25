@@ -20,7 +20,7 @@ let schema = {
       properties: {
         masterAccountPassword: {
           type: 'string',
-          minLength: 20
+          format: 'bip39'
         },
         masterAccountPassword2nd: {
           type: 'string'
@@ -30,7 +30,8 @@ let schema = {
           minItems: 4,
           items: [
             {
-              type: 'string'
+              type: 'string',
+              format: 'bip39'
             }
           ]
         }
@@ -42,7 +43,7 @@ let schema = {
       properties: {
         directory: {
           type: 'string',
-          minLength: 3
+          format: 'file'
         },
         host: {
           type: 'string',
@@ -57,7 +58,7 @@ let schema = {
         },
         genesisAccount: {
           type: 'string',
-          minLength: 15
+          format: 'bip39'
         }
       },
       required: ['directory', 'host', 'port', 'magic', 'genesisAccount']

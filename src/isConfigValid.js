@@ -4,6 +4,7 @@ const chalk = require('chalk')
 const utils = require('./utils')
 const Promise = require('bluebird')
 const ZSchema = require('z-schema')
+const customValidators = require('./customValidators')
 
 // ctor
 let IsConfigValid = function (userDevDir) {
@@ -28,12 +29,17 @@ let IsConfigValid = function (userDevDir) {
       reportPathAsArray: true,
       breakOnFirstError: false
     })
+
+    if (!customValidators.areNewFormatsRegistered()) {
+      throw new Error('z-schema validators bip39 and file are not registered')
+    }
+
     let schema = require('./configSchema')
     let valid = validator.validate(configuration, schema)
     if (valid === true) {
       return true
     } else {
-      let errors = valid.getLastErrors()
+      let errors = validator.getLastErrors()
       console.log(chalk.red(JSON.stringify(errors)))
       return false
     }
