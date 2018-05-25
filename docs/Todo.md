@@ -1,6 +1,12 @@
 # TODO
 * Only watch on some folders and filetypes
   * Restart on changes
+* Prettify console output!
+  * Consistent output
+* Write tests
+* Optimize delay times
+  * Between transactions
+  * Between startup/shutdowns
 * Write current `<dappId>` into a file
 * retry when not enough money
 * BUG: Restart didn't worked! (after dapp registration)
