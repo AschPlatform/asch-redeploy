@@ -17,6 +17,21 @@ let Conductor = function (service, config) {
     return newTask
   }
 
+  this.waiting = () => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        console.log('waited for 3000ms')
+        if (this.pendingTasks.length === 0) {
+          console.log('waiting()')
+          resolve(this.waiting())
+        } else {
+          console.log('orchestrat()')
+          resolve(this.orchestrate())
+        }
+      }, 3000)
+    })
+  }
+
   this.orchestrate = () => {
     return new Promise((resolve, reject) => {
       resolve(workflow(this.service, this.config))
@@ -29,7 +44,8 @@ let Conductor = function (service, config) {
         throw error
       })
       .then(() => {
-        return this.orchestrate()
+        console.log('calling waiting() for the first time')
+        return this.waiting()
       })
   }
 }

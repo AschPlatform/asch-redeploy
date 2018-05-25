@@ -1,12 +1,21 @@
-const watch = require('node-watch')
+const watch = require('chokidar')
+const EventEmitter = require('events')
 
 // ctor
-function watcher (userDevDir) {
-  this.userDevDir = userDevDir
+function watcher (config) {
+  this.config = config
+
+  this.notifier = new EventEmitter()
 
   this.watch = function () {
-    watch(this.executionDir, { recursive: true }, function (event, name) {
-      console.log(`changed: ${name}`)
+    this.ef = chokidar.watch(userDevDir.watch)
+    this.ef.on('add', (path) => {
+      console.log(`${path} has been added`)
+      this.notifier.emit('fileChanged')
+    })
+    this.ef.on('change', (path) => {
+      console.log(`${path} has been changed`)
+      this.notifier.emit('fileChanged')
     })
   }
 }
