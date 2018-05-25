@@ -19,9 +19,9 @@ let startUp = () => {
 
   checkArch()
 
-  return check.check() // checkFileStructure
-    .catch((er) => {
-      log(chalk.yellow(er.message), chalk.red(er.stack))
+  return check.check()
+    .catch((err) => {
+      console.log(chalk.red.underline.bold(`\n${err.message}`))
       utils.endProcess()
     })
     .then(() => {

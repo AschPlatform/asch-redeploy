@@ -4,6 +4,8 @@ const path = require('path')
 const utils = require('./src/utils')
 const Promise = require('bluebird')
 
+// https://www.npmjs.com/package/is-port-available
+
 const chalk = require('chalk')
 const log = console.log
 
