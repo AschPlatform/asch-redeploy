@@ -27,7 +27,8 @@ let IsConfigValid = function (userDevDir) {
   let isValid = function (configuration) {
     let validator = new ZSchema({
       reportPathAsArray: true,
-      breakOnFirstError: false
+      breakOnFirstError: false,
+      forceItems: true
     })
 
     if (!customValidators.areNewFormatsRegistered()) {

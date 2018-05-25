@@ -5,6 +5,7 @@ const chalk = require('chalk')
 const log = console.log
 
 ZSchema.registerFormat('bip39', (secret) => {
+  log(chalk.yellow(`validating: "${secret}"`))
   let isBip39 = false
   try {
     isBip39 = Mnemonic.isValid(secret)
