@@ -1,4 +1,5 @@
 # TODO
+* Check if port is already in use [link](https://www.npmjs.com/package/is-port-available)
 * Overwrite configuration in file
 * Overwrite NODE_ENV
 * Only watch on some folders and filetypes

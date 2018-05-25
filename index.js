@@ -1,17 +1,13 @@
-// process.env['NODE_ENV'] = 'development'
-
 const path = require('path')
 const utils = require('./src/utils')
 const Promise = require('bluebird')
-
-// https://www.npmjs.com/package/is-port-available
 
 const chalk = require('chalk')
 const log = console.log
 
 const startUp = require('./src/startup/startup')
-const Service = require('./src/service')
-const Conductor = require('./src/conductor')
+const Service = require('./src/orchestration/service')
+const Conductor = require('./src/orchestration/conductor')
 let aschService = null
 let appConfig = null
 

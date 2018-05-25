@@ -15,7 +15,7 @@ let Service = function (aschNodeDir, logDir) {
   this.start = () => {
     return new Promise((resolve, reject) => {
       let logFile = path.join(this.logDir, 'debug.log')
-      log(`logFile: ${logFile}`)
+      log(chalk.magenta(`asch-node logging to: ${logFile}`))
       let logStream = fs.openSync(logFile, 'a')
 
       let aschPath = path.join(this.aschNodeDir, 'app.js')

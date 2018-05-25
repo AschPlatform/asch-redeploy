@@ -3,7 +3,7 @@ A hassle-free local asch environment
 
 # Install
 ```bash
-npm install -g asch-redeploy
+npm install -g asch-redeploy@0.0.1
 ```
 
 # Folder Structure

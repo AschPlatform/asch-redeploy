@@ -4,7 +4,7 @@ const path = require('path')
 const axios = require('axios')
 const ncp = require('ncp').ncp
 const Promise = require('bluebird')
-const utils = require('./utils')
+const utils = require('../utils')
 
 // constructor
 let deploy = function (config) {
