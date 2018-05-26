@@ -9,7 +9,6 @@ let Conductor = function (service, config) {
   this.service = service
   this.config = config
 
-  this.taskInProgress = false
   this.pendingTasks = []
   this.timesRestarted = 0
 
@@ -30,6 +29,8 @@ let Conductor = function (service, config) {
           resolve(this.waiting())
         } else {
           console.log('start to orchestrate()')
+          log(chalk.green('pending Tasks'))
+          console.log(this.pendingTasks)
           this.pendingTasks = []
           resolve(this.orchestrate())
         }
@@ -39,10 +40,12 @@ let Conductor = function (service, config) {
 
   this.orchestrate = () => {
     return new Promise((resolve, reject) => {
+
       if (this.timesRestarted === 0) {
         this.pendingTasks = []
       }
-
+      this.timesRestarted++
+      console.log(chalk.yellow(`times Restarted ${this.timesRestarted}`))
       resolve(workflow(this.service, this.config))
     })
       .then(() => {
