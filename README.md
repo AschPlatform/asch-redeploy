@@ -18,7 +18,10 @@ git clone https://github.com/aschplatform/asch-dapp-helloworld
 cd asch-dapp-helloworld
 
 # watch for changes
-asch-redeploy .
+asch-redeploy 
+
+# point to asch-directory (whtere app.js file lives)
+ASCH_NODE_DIR='/pathToAschDir' asch-redeploy
 ```
 
 # Folder Structure

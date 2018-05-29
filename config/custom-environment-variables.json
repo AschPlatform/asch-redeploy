@@ -1,0 +1,7 @@
+{
+  "config": {
+    "node": {
+      "directory": "ASCH_NODE_DIR"
+    }
+  }
+}

@@ -56,6 +56,7 @@ let IsConfigValid = function (userDevDir) {
       .then((config) => {
         return new Promise((resolve, reject) => {
           let result = isValid(config)
+          console.log(process.argv)
           if (result === true) {
             resolve(config)
           } else {
