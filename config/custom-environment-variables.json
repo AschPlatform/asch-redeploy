@@ -3,6 +3,9 @@
     "node": {
       "directory": "ASCH_NODE_DIR",
       "port": "ASCH_NODE_PORT"
+    },
+    "output": {
+      "file": "OUTPUT_FILE"
     }
   }
 }
