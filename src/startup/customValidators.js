@@ -52,12 +52,22 @@ ZSchema.registerFormat('port', (rawPort) => {
   }
 })
 
+ZSchema.registerFormat('file', (filePath) => {
+  let exists = fs.existsSync(filePath)
+  if (exists === true) {
+    return true
+  } else {
+    throw new Error(`file ${filePath} doesn't exist`)
+  }
+})
+
 let areNewFormatsRegistered = () => {
   var registeredFormats = ZSchema.getRegisteredFormats()
   return registeredFormats &&
     registeredFormats.indexOf('bip39') > -1 &&
     registeredFormats.indexOf('aschNodeDirectory') > -1 &&
-    registeredFormats.indexOf('port') > -1
+    registeredFormats.indexOf('port') > -1 &&
+    registeredFormats.indexOf('file') > -1
 }
 
 module.exports = {

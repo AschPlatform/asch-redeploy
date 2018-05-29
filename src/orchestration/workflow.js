@@ -3,6 +3,7 @@ const log = console.log
 const chalk = require('chalk')
 const Deploy = require('./deploy')
 const SendMoney = require('./sendMoney')
+const writeOutput = require('./writeOutput')
 
 let workflow = (service, config) => {
   this.service = service
@@ -35,6 +36,10 @@ let workflow = (service, config) => {
 
       log(chalk.green(`\nDAPP registered, DappId: ${response.data.transactionId}\n`))
       return deploy.copyFiles(response.data.transactionId)
+    })
+    .then(function writeOutputfile (result) {
+      console.log(result)
+      return writeOutput(config, deploy.dappId)
     })
     .then(function wait (result) {
       console.log(result)

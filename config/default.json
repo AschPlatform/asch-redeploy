@@ -23,6 +23,9 @@
       "port": "4096",
       "magic": "594fe0f3",
       "genesisAccount": "someone manual strong movie roof episode eight spatial brown soldier soup motor"
+    },
+    "output": {
+      "file": "/home/matt/test/asch-dapp-helloworld/development/src/dappConfig.json"
     }
   }
 }

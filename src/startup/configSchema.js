@@ -60,6 +60,15 @@ let schema = {
         }
       },
       required: ['directory', 'host', 'port', 'magic', 'genesisAccount']
+    },
+    output: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'file'
+        }
+      }
     }
   },
   required: ['userDevDir', 'watch', 'dapp', 'node']
