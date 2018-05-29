@@ -20,11 +20,13 @@ process.once('uncaughtException', function (error) {
 startUp()
   .then((config) => {
     appConfig = config
-    return appConfig.node.directory
+    return appConfig
   })
-  .then((aschDirectory) => {
+  .then((config) => {
     let logDir = path.join(__dirname, 'logs')
-    aschService = new Service(aschDirectory, logDir)
+    let aschDirectory = config.node.directory
+    let port = config.node.port
+    aschService = new Service(aschDirectory, logDir, port)
     aschService.notifier.on('exit', function (code) {
       console.log(`asch-node terminated with code ${code}`)
     })

@@ -1,7 +1,8 @@
 {
   "config": {
     "node": {
-      "directory": "ASCH_NODE_DIR"
+      "directory": "ASCH_NODE_DIR",
+      "port": "ASCH_NODE_PORT"
     }
   }
 }

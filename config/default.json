@@ -20,7 +20,7 @@
     "node": {
       "directory": "/home/matt/test/asch",
       "host": "http://localhost",
-      "port": 4096,
+      "port": "4096",
       "magic": "594fe0f3",
       "genesisAccount": "someone manual strong movie roof episode eight spatial brown soldier soup motor"
     }

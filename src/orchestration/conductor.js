@@ -46,7 +46,6 @@ let Conductor = function (service, config) {
 
           if (this.timesRestarted === 0) {
             console.log(chalk.red('clearing pending tasks!'))
-            console.log(this.pendingTasks)
             this.pendingTasks = []
           }
           console.log(chalk.yellow(`times Restarted ${this.timesRestarted}`))

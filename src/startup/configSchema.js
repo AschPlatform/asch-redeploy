@@ -51,7 +51,8 @@ let schema = {
           minLength: 5
         },
         port: {
-          type: 'integer'
+          type: 'string',
+          format: 'port'
         },
         magic: {
           type: 'string',

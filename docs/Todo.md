@@ -1,27 +1,28 @@
 # TODO
 * Use winston-logging library
     * Use to files in the log-folders for asch-node and asch-redeploy output
-* Start asch-node on the port that was provided per Environment-variable ASCH_NODE_PORT
-   * app.js must be called with `node app.js --port 5000`
+* ~~Start asch-node on the port that was provided per Environment-variable ASCH_NODE_PORT~~
+   * ~~app.js must be called with `node app.js --port 5000`~~
 
-* ~~Track how many times the orchestrate function was called~~
-* ~~Check if port is already in use [link](https://www.npmjs.com/package/is-port-available)~~
-* ~~Overwrite configuration in file~~
+
 * Overwrite NODE_ENV
 * ~~Only watch on some folders and filetypes~~
   * ~~Restart on changes~~
 * Prettify console output!
   * Consistent output
 * Write tests
+  * Add App-veyor build on commit!
 * ~~Refactor directory structure~~
   * ~~More sub-directory in src/~~
 * Optimize delay times
   * Between transactions
   * Between startup/shutdowns
-
 * retry when not enough money
+* Add GIF-Image to README.md to show usage and console output
 
-
+* ~~Track how many times the orchestrate function was called~~
+* ~~Check if port is already in use [link](https://www.npmjs.com/package/is-port-available)~~
+* ~~Overwrite configuration in file~~
 * Start asch-node only when stopped
 * ~~What happens if a the watcher is watching for changes in model/**js but a .txt file is added~~
 * ~~On the first run the watchers shouldn't run twice! (BUG)~~

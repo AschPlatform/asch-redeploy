@@ -40,11 +40,25 @@ ZSchema.registerFormat('aschNodeDirectory', (dir) => {
   }
 })
 
+ZSchema.registerFormat('port', (rawPort) => {
+  let port = parseInt(rawPort)
+  if (isNaN(port)) {
+    throw new Error(`port "${rawPort}" is not an integer`)
+  }
+  if (port >= 1 && port <= 65535) {
+    return true
+  } else {
+    throw new Error(`port "${port}" is not in the range of 1 and 65535`)
+  }
+})
+
 let areNewFormatsRegistered = () => {
   var registeredFormats = ZSchema.getRegisteredFormats()
+  console.log(registeredFormats)
   return registeredFormats &&
     registeredFormats.indexOf('bip39') > -1 &&
-    registeredFormats.indexOf('aschNodeDirectory') > -1
+    registeredFormats.indexOf('aschNodeDirectory') > -1 &&
+    registeredFormats.indexOf('port') > -1
 }
 
 module.exports = {

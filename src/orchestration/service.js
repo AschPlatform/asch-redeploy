@@ -7,9 +7,10 @@ const chalk = require('chalk')
 let log = console.log
 
 // ctor
-let Service = function (aschNodeDir, logDir) {
+let Service = function (aschNodeDir, logDir, port) {
   this.aschNodeDir = aschNodeDir
   this.logDir = logDir
+  this.port = port
   this.notifier = new EventEmitter()
 
   this.start = () => {
@@ -19,7 +20,8 @@ let Service = function (aschNodeDir, logDir) {
       let logStream = fs.openSync(logFile, 'a')
 
       let aschPath = path.join(this.aschNodeDir, 'app.js')
-      this.process = fork(aschPath, [], {
+      log(chalk.magenta(`starting asch-node in `), chalk.green.underline(`${aschPath} `), chalk.magenta(`on port `), chalk.green.underline(`${this.port}`))
+      this.process = fork(aschPath, ['--port', parseInt(this.port)], {
         cwd: this.aschNodeDir,
         execArgv: [],
         stdio: [ 'ignore', logStream, logStream, 'ipc' ]
