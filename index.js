@@ -17,6 +17,10 @@ process.once('uncaughtException', function (error) {
   log(error)
 })
 
+// test
+const logger = require('./src/logger')
+logger.info('HELLOOOOOOOOO')
+
 startUp()
   .then((config) => {
     appConfig = config
