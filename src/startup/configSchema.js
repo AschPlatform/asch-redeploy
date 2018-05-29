@@ -9,11 +9,9 @@ let schema = {
     watch: {
       type: 'array',
       minItems: 1,
-      items: [
-        {
-          type: 'string'
-        }
-      ]
+      items: {
+        type: 'string'
+      }
     },
     dapp: {
       type: 'object',
@@ -29,12 +27,10 @@ let schema = {
           type: 'array',
           minItems: 5,
           uniqueItems: true,
-          items: [
-            {
-              type: 'string',
-              format: 'bip39'
-            }
-          ]
+          items: {
+            type: 'string',
+            format: 'bip39'
+          }
         }
       },
       required: ['masterAccountPassword', 'delegates']
