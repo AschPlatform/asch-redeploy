@@ -1,7 +1,5 @@
 # TODO
-* Write dappId to file
-   * Add new configuration setting
-   * add new custom validation "file", check if file exists
+
 * Logs should log to userDevdir
    * One log-file for verbose console output
    * And one log-file for asch-node output 
@@ -36,6 +34,9 @@
    * ~~Softlink in /home/ma/asch/public/dist/dapps/a7ef9cd0707fe94f583334d434e39570113a43e3647c8ee730bf21ec2fe08c97~~
    * ~~points to /home/ma/asch/dapps/a7ef9cd0707fe94f583334d434e39570113a43e3647c8ee730bf21ec2fe08c97/public~~
       * No
+* ~~Write dappId to file~~
+   * ~~Add new configuration setting~~
+   * ~~add new custom validation "file", check if file exists~~
 * Create Sybolic-link 
 ```bash
 inln -s /home/matt/test/asch/dapps/efc789be7881c014773629eb955e527367d247e2885d6f00f6030137fc5e8d35/public /home/matt/test/asch/public/dist/dapps/efc789be7881c014773629eb955e527367d247e2885d6f00f6030137fc5e8d35

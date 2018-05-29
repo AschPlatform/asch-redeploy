@@ -23,7 +23,7 @@ startUp()
     return appConfig
   })
   .then((config) => {
-    let logDir = path.join(__dirname, 'logs')
+    let logDir = path.join(config.userDevDir, 'logs')
     let aschDirectory = config.node.directory
     let port = config.node.port
     aschService = new Service(aschDirectory, logDir, port)

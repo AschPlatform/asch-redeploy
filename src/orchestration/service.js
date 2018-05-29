@@ -1,9 +1,11 @@
 const fork = require('child_process').fork
 const path = require('path')
 const EventEmitter = require('events')
+const utils = require('../utils')
 const fs = require('fs')
 const Promise = require('bluebird')
 const chalk = require('chalk')
+const moment = require('moment')
 let log = console.log
 
 // ctor
@@ -13,10 +15,26 @@ let Service = function (aschNodeDir, logDir, port) {
   this.port = port
   this.notifier = new EventEmitter()
 
+  this.createLogDirIfNotExists = (logFile) => {
+    let logDir = utils.getParentDirectory(logFile)
+    let dirExists = fs.existsSync(logDir)
+    if (dirExists === false) {
+      fs.mkdirSync(logDir)
+    }
+  }
+
+  this.createLogFileName = () => {
+    let today = moment().format('YYYY-MM-DD')
+    let logFile = path.join(this.logDir, `asch-node-${today}.log`)
+    return logFile
+  }
+
   this.start = () => {
     return new Promise((resolve, reject) => {
-      let logFile = path.join(this.logDir, 'debug.log')
-      log(chalk.magenta(`asch-node logging to: ${logFile}`))
+      let logFile = this.createLogFileName()
+      this.createLogDirIfNotExists(logFile)
+
+      log(chalk.magenta('asch-node logs to:'), chalk.green.underline(logFile))
       let logStream = fs.openSync(logFile, 'a')
 
       let aschPath = path.join(this.aschNodeDir, 'app.js')
