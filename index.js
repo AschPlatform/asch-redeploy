@@ -35,13 +35,13 @@ startUp()
       console.log(`asch-node terminated with code ${code}`)
     })
     process.on('SIGTERM', function () {
-      log(chalk.blue('SIGTERM'))
+      log(chalk.blue.inverse('SIGTERM'))
       aschService.stop()
       process.exit(0)
     })
     process.on('SIGINT', function () {
       // ctrl+c
-      log(chalk.blue('SIGTERM'))
+      log(chalk.blue.inverse('SIGTERM'))
       aschService.stop()
       process.exit(0)
     })

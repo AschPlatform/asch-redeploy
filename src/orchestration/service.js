@@ -53,17 +53,17 @@ let Service = function (aschNodeDir, logDir, port) {
 
   this.stop = () => {
     return new Promise((resolve, reject) => {
-      log(chalk.blue('sending SIGTERM signal to child process'))
+      log(chalk.blue.inverse('sending SIGTERM signal to child process'))
       this.process.kill('SIGTERM')
       resolve(true)
     })
   }
 
   this.onError = (err) => {
-    log(chalk.blue(`error: ${err}`))
+    log(chalk.blue.inverse(`error: ${err}`))
   }
   this.onExit = (code) => {
-    log(chalk.blue(`CHILD EXIT exitCode: ${code}`))
+    log(chalk.blue.inverse(`CHILD EXIT exitCode: ${code}`))
     this.notifier.emit('exit', code)
   }
 }
