@@ -25,7 +25,11 @@ ASCH_NODE_DIR='/pathToAschDir' asch-redeploy
 
 # start asch-node on different port
 ASCH_NODE_PORT='5000' asch-redeploy
+
+# write dappId to file (for frontend-development)
+OUTPUT_FILE='/home/user/asch-dapp-helloworld/src/dappConfig.json' asch-redeploy
 ```
+
 
 # Folder Structure
 Your work directory should have the following structure

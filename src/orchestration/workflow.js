@@ -17,6 +17,7 @@ let workflow = (service, config) => {
       return money.sendMoney()
     })
     .then(function sendMoneyFinished (response) {
+      log(chalk.red(response))
       return response
     })
     .then(function wait () {

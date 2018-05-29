@@ -21,7 +21,7 @@ let sendMoney = function (config) {
   this.enoughMoney = function (response) {
     let min = 1000
     if (response.status === 200 && response.data.success === true && (response.data.balance / 1e8) >= min) {
-      console.log('enough money on account. No transfer')
+      console.log(chalk.magenta('enough money on account. No transfer needed. Balance is '), chalk.green.underline(response.data.balance / 1e8))
       throw new Error('enough_money')
     } else {
       return null
