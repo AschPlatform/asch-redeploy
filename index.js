@@ -20,6 +20,7 @@ process.once('uncaughtException', function (error) {
 // test
 const logger = require('./src/logger')
 logger.info('HELLOOOOOOOOO')
+logger.warn('WARNING')
 
 startUp()
   .then((config) => {

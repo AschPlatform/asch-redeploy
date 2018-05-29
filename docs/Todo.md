@@ -7,11 +7,10 @@
 * Use winston-logging library
     * Use to files in the log-folders for asch-node and asch-redeploy output
 * Overwrite NODE_ENV
-* Output asch balance
 * Prettify console output!
   * Consistent output
 * Write tests
-  * Add travis-ci build on commit!
+  * Add travis-ci build on commit!Add travis-ci build on commit!
   * Add `.travis.yml` file
 * Optimize delay times
   * Between transactions

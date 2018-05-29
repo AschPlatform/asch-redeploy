@@ -3,7 +3,7 @@ const winston = require('winston')
 const moment = require('moment')
 const chalk = require('chalk')
 
-module.exports = new (winston.Logger)({
+let logger = new (winston.Logger)({
   transports: [
     new (winston.transports.Console)({
       timestamp: function () {
@@ -49,6 +49,11 @@ module.exports = new (winston.Logger)({
 
         return output.join(' ')
       }
+    }),
+    new (winston.transports.File)({
+      filename: 'asch-redeploy.log'
     })
   ]
 })
+
+module.exports = logger
