@@ -54,7 +54,6 @@ ZSchema.registerFormat('port', (rawPort) => {
 
 let areNewFormatsRegistered = () => {
   var registeredFormats = ZSchema.getRegisteredFormats()
-  console.log(registeredFormats)
   return registeredFormats &&
     registeredFormats.indexOf('bip39') > -1 &&
     registeredFormats.indexOf('aschNodeDirectory') > -1 &&

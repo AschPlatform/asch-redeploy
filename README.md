@@ -22,6 +22,9 @@ asch-redeploy
 
 # point to asch-directory (whtere app.js file lives)
 ASCH_NODE_DIR='/pathToAschDir' asch-redeploy
+
+# start asch-node on different port
+ASCH_NODE_PORT='5000' asch-redeploy
 ```
 
 # Folder Structure
