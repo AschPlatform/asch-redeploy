@@ -16,7 +16,7 @@
     "ncp": "2.0.0",
     "randomstring": "1.1.5",
     "shelljs": "0.8.2",
-    "winston": "^2.4.2",
+    "winston": "^3.0.0-rc5",
     "z-schema": "3.22.0"
   },
   "devDependencies": {

@@ -19,8 +19,8 @@ process.once('uncaughtException', function (error) {
 
 // test
 const logger = require('./src/logger')
-logger.info('HELLOOOOOOOOO')
-logger.warn('WARNING')
+logger.info('INFO MSG')
+logger.verbose('verbose')
 
 startUp()
   .then((config) => {

@@ -1,59 +1,60 @@
 
-const winston = require('winston')
+const { createLogger, format, transports } = require('winston')
+const { combine, timestamp, printf } = format
 const moment = require('moment')
 const chalk = require('chalk')
 
-let logger = new (winston.Logger)({
-  transports: [
-    new (winston.transports.Console)({
-      timestamp: function () {
-        return moment().format('YYYY-MM-DD HH:mm:SSS')
-      },
-      formatter: function (options) {
-        var message = ''
+let logger = createLogger()
 
-        if (options.message !== undefined) {
-          message = options.message
-        }
+let consoleLogLevel = 'info'
+if (process.env['NODE_ENV'] === 'development') {
+  consoleLogLevel = 'verbose'
+}
 
-        var meta = ''
-
-        if (options.meta && Object.keys(options.meta).length) {
-          meta = '\n\t' + JSON.stringify(options.meta)
-        }
-
-        var level = options.level.toUpperCase()
-
-        switch (level) {
-          case 'INFO':
-            level = chalk.cyan(level)
-            break
-
-          case 'WARN':
-            level = chalk.yellow(level)
-            break
-
-          case 'ERROR':
-            level = chalk.red(level)
-            break
-
-          default:
-            break
-        }
-
-        var output = [
-          '[' + options.timestamp() + '][' + level + ']',
-          message,
-          meta
-        ]
-
-        return output.join(' ')
-      }
-    }),
-    new (winston.transports.File)({
-      filename: 'asch-redeploy.log'
-    })
-  ]
+const customFormat = printf(info => {
+  let formattedDate = moment(info.timestamp).format('YYYY-MM-DD HH:mm:SSS')
+  let level = info.level.toUpperCase()
+  switch (level) {
+    case 'SILLY':
+      level = chalk.cyanBright(level)
+      break
+    case 'DEBUG':
+      level = chalk.blueBright(level)
+      break
+    case 'VERBOSE':
+      level = chalk.magenta(level)
+      break
+    case 'INFO':
+      level = chalk.cyan(level)
+      break
+    case 'WARN':
+      level = chalk.yellow(level)
+      break
+    case 'ERROR':
+      level = chalk.red(level)
+      break
+    default:
+      break
+  }
+  return `[${formattedDate}][${level}] ${info.message}`
 })
+
+let con = new transports.Console({
+  level: consoleLogLevel,
+  timestamp: function (dat) {
+    console.log(dat)
+    return moment().format('YYYY-MM-DD HH:mm:SSS')
+  },
+  format: combine(
+    timestamp(),
+    customFormat
+  )
+})
+logger.add(con)
+
+// let file = new transports.File({
+//   filename: 'asch-redeploy.log'
+// })
+// logger.add(file)
 
 module.exports = logger
