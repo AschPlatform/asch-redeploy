@@ -18,21 +18,19 @@ let Conductor = function (service, config) {
 
   this.notifier.on('changed', (data) => {
     log(chalk.magenta('received filechanged!'))
-    this.pendingTasks.push(data)
+    if (this.timesRestarted > 0) {
+      this.pendingTasks.push(data)
+    }
   })
 
   // recursive
   this.waiting = () => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        console.log('waiting()')
-        console.log(this.pendingTasks)
         if (this.pendingTasks.length === 0) {
           resolve(this.waiting()) // recursive
         } else {
           console.log('start to orchestrate()')
-          log(chalk.green('pending Tasks'))
-          console.log(this.pendingTasks)
           this.pendingTasks = []
           resolve(this.orchestrate())
         }
@@ -41,18 +39,21 @@ let Conductor = function (service, config) {
   }
 
   this.orchestrate = () => {
-    return new Promise((resolve, reject) => {
-      console.log('orchestrate()')
+    return Promise.delay(3000)
+      .then(() => {
+        return new Promise((resolve, reject) => {
+          console.log('orchestrate()')
 
-      if (this.timesRestarted === 0) {
-        console.log(chalk.red('clearing pending tasks!'))
-        console.log(this.pendingTasks)
-        this.pendingTasks = []
-      }
-      console.log(chalk.yellow(`times Restarted ${this.timesRestarted}`))
-      this.timesRestarted++
-      resolve(workflow(this.service, this.config))
-    })
+          if (this.timesRestarted === 0) {
+            console.log(chalk.red('clearing pending tasks!'))
+            console.log(this.pendingTasks)
+            this.pendingTasks = []
+          }
+          console.log(chalk.yellow(`times Restarted ${this.timesRestarted}`))
+          this.timesRestarted++
+          resolve(workflow(this.service, this.config))
+        })
+      })
       .then(() => {
         log(chalk.magenta('sleep for 3sec'))
         return Promise.delay(3000)
