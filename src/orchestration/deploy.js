@@ -43,12 +43,10 @@ let deploy = function (config) {
 
   this.copyFiles = function (dappId) {
     let self = this
-    console.log(`dappId: ${dappId}`)
     return new Promise(function (resolve, reject) {
       let dappParentDir = path.join(self.config.node.directory, 'dapps')
 
       let existsDappDir = fs.existsSync(dappParentDir)
-      console.log(`existsDappDir ${existsDappDir}`)
 
       if (existsDappDir === false) {
         fs.mkdirSync(dappParentDir)

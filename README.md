@@ -4,9 +4,9 @@ A hassle-free local asch environment
 # Install
 ```bash
 git clone https://github.com/a1300/asch-redeploy
-cd asch-redeploy
 
 # use asch-redeploy as a global package
+cd asch-redeploy
 npm install
 npm link # important
 ```

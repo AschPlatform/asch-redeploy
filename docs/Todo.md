@@ -1,9 +1,13 @@
 # TODO
-* Watching not precise enough
-  * Watcher should be with __userDevDir + filePath__
-* Track how many times the orchestrate function was called
-* On first orchestration there are already pending tasks! Delete them!
+* ~~What happens if a the watcher is watching for changes in model/**js but a .txt file is added~~
+* On the first run the watchers shouldn't run twice! (BUG)
+   * On first orchestration there are already pending tasks! Delete them!
+* Test what happens if...
+* Use winston-logging library
+    * Use to files in the log-folders for asch-node and asch-redeploy output
+* Create the asch-node on another port, if the configuration was changed from 4096 to another  number
 
+* Track how many times the orchestrate function was called
 * Check if port is already in use [link](https://www.npmjs.com/package/is-port-available)
 * Overwrite configuration in file
 * Overwrite NODE_ENV

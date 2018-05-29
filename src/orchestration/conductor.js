@@ -14,19 +14,21 @@ let Conductor = function (service, config) {
 
   let watcher = new Watcher(config)
   watcher.watch()
-  this.notifier = watcher.notifier
+  this.notifier = watcher.notify
 
-  this.notifier.on('fileChanged', () => {
+  this.notifier.on('changed', (data) => {
     log(chalk.magenta('received filechanged!'))
-    this.pendingTasks.push('change')
+    this.pendingTasks.push(data)
   })
 
   // recursive
   this.waiting = () => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
+        console.log('waiting()')
+        console.log(this.pendingTasks)
         if (this.pendingTasks.length === 0) {
-          resolve(this.waiting())
+          resolve(this.waiting()) // recursive
         } else {
           console.log('start to orchestrate()')
           log(chalk.green('pending Tasks'))
@@ -40,12 +42,15 @@ let Conductor = function (service, config) {
 
   this.orchestrate = () => {
     return new Promise((resolve, reject) => {
+      console.log('orchestrate()')
 
       if (this.timesRestarted === 0) {
+        console.log(chalk.red('clearing pending tasks!'))
+        console.log(this.pendingTasks)
         this.pendingTasks = []
       }
-      this.timesRestarted++
       console.log(chalk.yellow(`times Restarted ${this.timesRestarted}`))
+      this.timesRestarted++
       resolve(workflow(this.service, this.config))
     })
       .then(() => {

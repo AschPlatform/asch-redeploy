@@ -7,18 +7,22 @@ const log = console.log
 function watcher (config) {
   this.config = config
 
-  this.notifier = new EventEmitter()
+  this.notify = new EventEmitter()
 
   this.watch = function () {
-    this.ef = watch.watch(this.config.watch)
-
-    this.ef.on('add', (path) => {
-      log(chalk.underline.green(`${path}`), chalk.yellow('has been added'))
-      this.notifier.emit('fileChanged')
+    console.log(chalk.green(`files are watched in userDevDir: ${this.config.userDevDir}`))
+    this.chokidar = watch.watch(this.config.watch, {
+      cwd: this.config.userDevDir,
+      interval: 3000,
+      depth: 10
     })
-    this.ef.on('change', (path) => {
-      log(chalk.underline.magenta(`${path}`), chalk.yellow('has been changed'))
-      this.notifier.emit('fileChanged')
+
+    this.chokidar.on('all', (event, name) => {
+      log(chalk.underline.green(`${name}`), chalk.yellow(' has been'), chalk.green(` ${event}`))
+      this.notify.emit('changed', {
+        event,
+        name
+      })
     })
   }
 }
