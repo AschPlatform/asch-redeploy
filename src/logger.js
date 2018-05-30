@@ -9,12 +9,9 @@ let logger = createLogger()
 
 let styleText = function (text, meta) {
   if (meta) {
-    let styles = meta.split('.')
-    for (let i = 0; i < styles.length; ++i) {
-      if (styles[i] in chalk) {
-        text = chalk[styles[i]](text)
-      }
-    }
+    console.log(`meta: ${meta}`)
+    let result = eval(meta) // eslint-disable-line
+    text = result(text)
   }
   return text
 }
@@ -22,37 +19,43 @@ let styleText = function (text, meta) {
 const customFormat = printf(info => {
   let formattedDate = moment(info.timestamp).format('YYYY-MM-DD HH:mm:SSS')
   let level = info.level.toUpperCase()
-  let message = info.message
+  let chalkMessageBuild = ['chalk']
   switch (level) {
     case 'SILLY':
       level = chalk.cyanBright(level)
-      message = chalk.cyanBright(message)
+      chalkMessageBuild.push('cyanBright')
       break
     case 'DEBUG':
       level = chalk.blueBright(level)
-      message = chalk.blueBright(message)
+      chalkMessageBuild.push('blueBright')
       break
     case 'VERBOSE':
       level = chalk.magenta(level)
-      message = chalk.magenta(message)
+      chalkMessageBuild.push('magenta')
       break
     case 'INFO':
       level = chalk.cyan(level)
-      message = chalk.cyan(message)
+      chalkMessageBuild.push('cyan')
       break
     case 'WARN':
       level = chalk.yellow(level)
-      message = chalk.yellow(message)
+      chalkMessageBuild.push('yellow')
       break
     case 'ERROR':
       level = chalk.red(level)
-      message = chalk.red(message)
+      chalkMessageBuild.push('red')
       break
     default:
       break
   }
 
-  message = styleText(message, info.meta)
+  if (info.meta && info.meta.length > 1) {
+    let separated = info.meta.split('.')
+    chalkMessageBuild.push(...separated)
+  }
+  let styles = chalkMessageBuild.join('.')
+
+  let message = styleText(info.message, styles)
 
   // pass metadata to logger -> logger.info('test', { meta: 'meta' })
   let output = `[${chalk.blue(formattedDate)}][${level}] ${message}`
