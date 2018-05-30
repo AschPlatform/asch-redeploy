@@ -1,9 +1,8 @@
 const Promise = require('bluebird')
-const log = console.log
-const chalk = require('chalk')
 const Deploy = require('./deploy')
 const SendMoney = require('./sendMoney')
 const writeOutput = require('./writeOutput')
+const logger = require('../logger')
 
 let workflow = (service, config) => {
   this.service = service
@@ -17,7 +16,7 @@ let workflow = (service, config) => {
       return money.sendMoney()
     })
     .then(function sendMoneyFinished (response) {
-      log(chalk.red(response))
+      logger.info(`sendMoneyfinished: ${response}`)
       return response
     })
     .then(function wait () {
@@ -35,38 +34,40 @@ let workflow = (service, config) => {
       }
       deploy.dappId = response.data.transactionId
 
-      log(chalk.green(`\nDAPP registered, DappId: ${response.data.transactionId}\n`))
+      logger.info(`DAPP registered, DappId: ${response.data.transactionId}`, { meta: 'green.inverse' })
       return deploy.copyFiles(response.data.transactionId)
     })
     .then(function writeOutputfile (result) {
-      console.log(result)
       return writeOutput(config, deploy.dappId)
     })
     .then(function wait (result) {
-      console.log(result)
-      return Promise.delay(10000)
+      logger.info(`wrote dappId to: ${result}`)
+      let ms = 10000
+      logger.verbose(`wait for: ${ms}`)
+      return Promise.delay(ms)
     })
     .then((result) => {
-      log(chalk.green('stopping asch-Server for restart'))
+      logger.verbose('stopping asch-Server for restart', { meta: 'green.inverse' })
       this.service.stop()
       return Promise.delay(5000)
     })
     .then(function afterStopChangeAschConfig (result) {
-      log(chalk.green('asch-server stopped'))
+      logger.verbose('asch-server stopped', { meta: 'green.inverse' })
       return deploy.changeAschConfig(result)
     })
     .then((result) => {
-      console.log(result)
+      logger.verbose(`result: ${result}`)
       this.service.start()
       return Promise.delay(5000)
     })
     .then(function restartResult () {
-      log(chalk.green('aschService started'))
+      logger.info('aschService started', { meta: 'green.inverse' })
     })
     .catch(function errorOccured (error) {
-      log(chalk.red('ERROR OCCURED'))
-      log(chalk.red(error.message))
-      log(chalk.red(error.stack))
+      logger.verbose('error in worklflow.js errorOccured()')
+      logger.error('ERROR OCCURED')
+      logger.error(error.message)
+      logger.error(error.stack)
     })
 }
 

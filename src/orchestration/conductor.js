@@ -1,8 +1,7 @@
 const Promise = require('bluebird')
-const chalk = require('chalk')
 const workflow = require('./workflow')
 const Watcher = require('./watcher')
-const log = console.log
+const logger = require('../logger')
 
 // ctor
 let Conductor = function (service, config) {
@@ -17,7 +16,7 @@ let Conductor = function (service, config) {
   this.notifier = watcher.notify
 
   this.notifier.on('changed', (data) => {
-    log(chalk.magenta('received filechanged!'))
+    logger.info(`${data.name} has been "${data.event}"`, { meta: 'green.inverse' })
     if (this.timesRestarted > 0) {
       this.pendingTasks.push(data)
     }
@@ -30,7 +29,7 @@ let Conductor = function (service, config) {
         if (this.pendingTasks.length === 0) {
           resolve(this.waiting()) // recursive
         } else {
-          console.log('start to orchestrate()')
+          logger.silly('start to orchestrate()')
           this.pendingTasks = []
           resolve(this.orchestrate())
         }
@@ -42,26 +41,27 @@ let Conductor = function (service, config) {
     return Promise.delay(3000)
       .then(() => {
         return new Promise((resolve, reject) => {
-          console.log('orchestrate()')
+          logger.verbose('orchestrate()')
 
           if (this.timesRestarted === 0) {
-            console.log(chalk.red('clearing pending tasks!'))
+            logger.verbose('clearing pending tasks!')
             this.pendingTasks = []
           }
-          console.log(chalk.yellow(`times Restarted ${this.timesRestarted}`))
+          logger.verbose(`Times restarted ${this.timesRestarted}`)
           this.timesRestarted++
           resolve(workflow(this.service, this.config))
         })
       })
       .then(() => {
-        log(chalk.magenta('sleep for 3sec'))
-        return Promise.delay(3000)
+        let ms = 3000
+        logger.verbose(`sleep for ${ms}ms`)
+        return Promise.delay(ms)
       })
       .catch((error) => {
         throw error
       })
       .then(() => {
-        console.log('waiting for file changes...')
+        logger.info('waiting for file changes...')
         return this.waiting()
       })
   }

@@ -1,10 +1,9 @@
-const chalk = require('chalk')
 const path = require('path')
-let randomstring = require('randomstring')
-let log = console.log
+const randomstring = require('randomstring')
+const logger = require('./logger')
 
 let endProcess = function () {
-  log(chalk.yellow('SIGINT send'))
+  logger.info('SIGINT send', { meta: 'blue.inverse' })
   process.kill(process.pid, 'SIGINT')
 }
 

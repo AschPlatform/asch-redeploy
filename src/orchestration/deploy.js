@@ -5,6 +5,7 @@ const axios = require('axios')
 const ncp = require('ncp').ncp
 const Promise = require('bluebird')
 const utils = require('../utils')
+const logger = require('../logger')
 
 // constructor
 let deploy = function (config) {
@@ -22,13 +23,12 @@ let deploy = function (config) {
 
     let srcDir = utils.getParentDirectory(__dirname)
     let mainDir = utils.getParentDirectory(srcDir)
-    console.log(`maindir: ${mainDir}`)
+    logger.silly(`maindir: ${mainDir}`)
     let dappJsFile = path.join(mainDir, 'dapp.json')
     // todo check if file exists
     var dapp = JSON.parse(fs.readFileSync(dappJsFile, 'utf8'))
     dapp.name = `${dapp.name}-${utils.generateRandomString(15)}`
     dapp.link = `${dapp.link.replace('.zip', '')}-${utils.generateRandomString(15)}.zip`
-    console.log(dapp)
     let trs = aschJS.dapp.createDApp(dapp, secret, secondSecret)
 
     return axios({

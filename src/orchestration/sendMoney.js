@@ -1,7 +1,7 @@
 const axios = require('axios')
 const aschJS = require('asch-js')
-const chalk = require('chalk')
 const Promise = require('bluebird')
+const logger = require('../logger')
 
 // ctor
 let sendMoney = function (config) {
@@ -21,7 +21,7 @@ let sendMoney = function (config) {
   this.enoughMoney = function (response) {
     let min = 1000
     if (response.status === 200 && response.data.success === true && (response.data.balance / 1e8) >= min) {
-      console.log(chalk.magenta('enough money on account. No transfer needed. Balance is '), chalk.green.underline(response.data.balance / 1e8))
+      logger.verbose(`enough money on account. No transfer needed. Balance is ${response.data.balance}`)
       throw new Error('enough_money')
     } else {
       return null
@@ -61,7 +61,7 @@ let sendMoney = function (config) {
     if (response.data.success === false) {
       Promise.reject(new Error(response.data.error))
     }
-    console.log(chalk.green(`successful created money transaction: ${response.data.transactionId}`))
+    logger.verbose(`successful created money transaction: ${response.data.transactionId}`)
     return null
   } // handleTransfer
 
