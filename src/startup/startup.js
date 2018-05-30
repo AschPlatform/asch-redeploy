@@ -1,15 +1,13 @@
-// const Promise = require('bluebird')
-const chalk = require('chalk')
 const utils = require('../utils')
-let IsConfigValid = require('./isConfigValid')
-let CheckFileStructure = require('./checkFileStructure')
-let checkArch = require('./checkArch')
+const IsConfigValid = require('./isConfigValid')
+const CheckFileStructure = require('./checkFileStructure')
+const checkArch = require('./checkArch')
 const shelljs = require('shelljs')
-let log = console.log
+const logger = require('../logger')
 
 let getUserDevDir = () => {
   let userDevDir = shelljs.pwd().stdout
-  console.log(chalk.red(`userDevDir: ${userDevDir}`))
+  logger.verbose(`UserDevelopmentDirectory: ${userDevDir}`)
   return userDevDir
 }
 
@@ -21,7 +19,7 @@ let startup = () => {
 
   return check.check()
     .catch((err) => {
-      console.log(chalk.red.underline.bold(`\n${err.message}`))
+      logger.error(err.message, { meta: 'underline' })
       utils.endProcess()
     })
     .then(() => {
@@ -29,7 +27,7 @@ let startup = () => {
       return config.getConfig()
     })
     .catch((error) => {
-      log(chalk.yellow('The configuration is not valid:'), chalk.red(error.message))
+      logger.error(`The configuration is not valid: ${error.message}`, { meta: 'underline' })
       utils.endProcess()
     })
 }

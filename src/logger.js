@@ -4,7 +4,6 @@ const { combine, timestamp, printf, label } = format
 require('winston-daily-rotate-file')
 const moment = require('moment')
 const chalk = require('chalk')
-chalk.enabled = true
 
 let logger = createLogger()
 
