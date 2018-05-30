@@ -8,10 +8,22 @@ chalk.enabled = true
 
 let logger = createLogger()
 
+let styleText = function (text, meta) {
+  if (meta) {
+    let styles = meta.split('.')
+    for (let i = 0; i < styles.length; ++i) {
+      if (styles[i] in chalk) {
+        text = chalk[styles[i]](text)
+      }
+    }
+  }
+  return text
+}
+
 const customFormat = printf(info => {
   let formattedDate = moment(info.timestamp).format('YYYY-MM-DD HH:mm:SSS')
   let level = info.level.toUpperCase()
-  let message = info.message
+  let message = styleText(info.message, info.meta)
   switch (level) {
     case 'SILLY':
       level = chalk.cyanBright(level)
