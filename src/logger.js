@@ -59,7 +59,7 @@ const customFormat = printf(info => {
   let message = styleText(info.message, styles)
 
   // pass metadata to logger -> logger.info('test', { meta: 'meta' })
-  let output = `[${chalk.blue(formattedDate)}][${level}] ${message}`
+  let output = `[${chalk.rgb(30, 144, 255)(formattedDate)}][${level}] ${message}`
   return output
 })
 

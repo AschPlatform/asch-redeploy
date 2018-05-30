@@ -52,7 +52,7 @@ let Service = function (aschNodeDir, logDir, port) {
 
   this.stop = () => {
     return new Promise((resolve, reject) => {
-      logger.warn('sending SIGTERM signal to child process', { meta: 'inverse' })
+      logger.warn('sending SIGTERM signal to child process', { meta: 'inverse.blue' })
       this.process.kill('SIGTERM')
       resolve(true)
     })
@@ -64,7 +64,7 @@ let Service = function (aschNodeDir, logDir, port) {
     this.process.kill('SIGTERM')
   }
   this.onExit = (code) => {
-    logger.info(`asch-node exited wite code: "${code}"`, { meta: 'inverse' })
+    logger.info(`asch-node exited wite code: "${code}"`, { meta: 'inverse.blue' })
     this.notifier.emit('exit', code)
   }
 }

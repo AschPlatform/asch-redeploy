@@ -11,6 +11,8 @@ let workflow = (service, config) => {
   const deploy = new Deploy(config)
   const money = new SendMoney(config)
 
+  logger.info('check balance...', { meta: 'green' })
+
   return Promise.delay(12000)
     .then(function (result) {
       return money.sendMoney()
@@ -19,6 +21,7 @@ let workflow = (service, config) => {
       return response
     })
     .then(function wait () {
+      logger.info('starting to register Dapp...', { meta: 'green' })
       return Promise.delay(10000)
     })
     .then(function () {
