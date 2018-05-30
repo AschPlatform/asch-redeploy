@@ -18,11 +18,11 @@ git clone https://github.com/aschplatform/asch-dapp-helloworld
 cd asch-dapp-helloworld
 
 # watch for changes
-asch-redeploy 
+asch-redeploy                                     # in asch-dapp-helloworld
 
-##################################################
-### or you can set different ENVIRONMENT variables
-##################################################
+###################################################
+### you can set different ENVIRONMENT variables ###
+###################################################
 
 # point to asch-directory (whtere app.js file lives)
 ASCH_NODE_DIR='/pathToAschDir' asch-redeploy

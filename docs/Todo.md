@@ -1,4 +1,7 @@
 # TODO
+* Write tests
+  * Add travis-ci build on commit!Add travis-ci build on commit!
+  * Add `.travis.yml` file
 * Uninstall old unused Dapps
   * Save on memory and asch startup time 
 * Logs
@@ -8,9 +11,6 @@
 * Does silly-log-level works?
 * Overwrite NODE_ENV
 * Consistent output
-* Write tests
-  * Add travis-ci build on commit!Add travis-ci build on commit!
-  * Add `.travis.yml` file
 * Optimize delay times
   * Between transactions
   * Between startup/shutdowns

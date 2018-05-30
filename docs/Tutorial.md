@@ -11,12 +11,14 @@ npm install --global asch-redeploy@1.0.0
 mkdir ide
 cd ide
 
-# clone asch
+# clone asch node
 git clone https://github.com/aschplatform/asch.git asch && cd asch && npm install && cd ..
 
-# clone asch-dapp-helloworld (a dapp-starter-kit)
-git clone https://github.com/AschPlatform/asch-dapp-helloworld.git && cd development && npm install && cd ../..
-
+# clone dapp-starter-kit
+git clone https://github.com/AschPlatform/asch-dapp-helloworld.git && \
+  cd 'asch-dapp-helloworld/development' && \
+  npm install && \
+  cd ../..
 ```
 
 You should have the following folder structure
@@ -31,6 +33,8 @@ ide
     └───development              # frontend
         └───Vue.js app
 ```
+
+
 
 
 ## Work on Dapp Backend
