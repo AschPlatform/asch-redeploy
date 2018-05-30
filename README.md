@@ -1,5 +1,5 @@
 # asch-redeploy
-A hassle-free local asch environment
+A hassle-free local asch environment. Watch for changes on your Dapp and re-deploy it automatically.
 
 # Install
 ```bash
@@ -20,6 +20,10 @@ cd asch-dapp-helloworld
 # watch for changes
 asch-redeploy 
 
+##################################################
+### or you can set different ENVIRONMENT variables
+##################################################
+
 # point to asch-directory (whtere app.js file lives)
 ASCH_NODE_DIR='/pathToAschDir' asch-redeploy
 
@@ -28,8 +32,17 @@ ASCH_NODE_PORT='5000' asch-redeploy
 
 # write dappId to file (for frontend-development)
 OUTPUT_FILE='/home/user/asch-dapp-helloworld/src/dappConfig.json' asch-redeploy
+
+
+
+# or use all together
+ASCH_NODE_DIR='/pathToAschDir' \
+ASCH_NODE_PORT='5000' \
+OUTPUT_FILE='/home/user/asch-dapp-helloworld/src/dappConfig.json' asch-redeploy
 ```
 
+
+[Tutorial](./docs/Tutorial.md)
 
 # Folder Structure
 Your work directory should have the following structure

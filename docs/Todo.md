@@ -1,7 +1,8 @@
 # TODO
-
-* ~~Logs should log to userDevdir~~
-   * One log-file for verbose console output
+* Uninstall old unused Dapps
+  * Save on memory and asch startup time 
+* Logs
+   * Create one log-file for verbose console output
    * And one log-file for asch-node output 
    * Add date output
 * Does silly-log-level works?
