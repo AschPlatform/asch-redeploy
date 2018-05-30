@@ -30,13 +30,13 @@ startUp()
       logger.warn(`asch-node terminated with code ${code}`)
     })
     process.on('SIGTERM', function () {
-      logger.warn('SIGTERM')
+      logger.warn('SIGTERM', { meta: 'inverse' })
       aschService.stop()
       process.exit(0)
     })
     process.on('SIGINT', function () {
       // ctrl+c
-      logger.warn('SIGTERM')
+      logger.warn('SIGTERM', { meta: 'inverse' })
       aschService.stop()
       process.exit(0)
     })

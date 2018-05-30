@@ -16,7 +16,7 @@ let Conductor = function (service, config) {
   this.notifier = watcher.notify
 
   this.notifier.on('changed', (data) => {
-    logger.info(`${data.name} has been "${data.event}"`, { meta: 'green.inverse' })
+    logger.info(`${data.event} ${data.name}`, { meta: 'reset.underline' })
     if (this.timesRestarted > 0) {
       this.pendingTasks.push(data)
     }
@@ -41,8 +41,6 @@ let Conductor = function (service, config) {
     return Promise.delay(3000)
       .then(() => {
         return new Promise((resolve, reject) => {
-          logger.verbose('orchestrate()')
-
           if (this.timesRestarted === 0) {
             logger.verbose('clearing pending tasks!')
             this.pendingTasks = []

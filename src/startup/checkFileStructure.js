@@ -18,7 +18,7 @@ let Exists = function (userDevDir) {
     message += '\n\t\t\t\t model/'
     message += '\n\t\t\t\t public/'
     message += '\n\t\t\t\t init.js'
-    logger.info(message, { meta: 'underline' })
+    logger.info(message, { meta: 'inverse' })
   }
 
   this.check = function () {

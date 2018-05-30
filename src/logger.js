@@ -5,11 +5,12 @@ require('winston-daily-rotate-file')
 const moment = require('moment')
 const chalk = require('chalk')
 
-let logger = createLogger()
+let logger = createLogger({
+  exitOnError: false
+})
 
 let styleText = function (text, meta) {
   if (meta) {
-    console.log(`meta: ${meta}`)
     let result = eval(meta) // eslint-disable-line
     text = result(text)
   }

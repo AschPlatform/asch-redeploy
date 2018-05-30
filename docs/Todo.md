@@ -4,11 +4,9 @@
    * One log-file for verbose console output
    * And one log-file for asch-node output 
    * Add date output
-* Use winston-logging library
-    * Use to files in the log-folders for asch-node and asch-redeploy output
+* Does silly-log-level works?
 * Overwrite NODE_ENV
-* Prettify console output!
-  * Consistent output
+* Consistent output
 * Write tests
   * Add travis-ci build on commit!Add travis-ci build on commit!
   * Add `.travis.yml` file

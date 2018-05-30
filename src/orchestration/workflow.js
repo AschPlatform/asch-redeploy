@@ -16,7 +16,6 @@ let workflow = (service, config) => {
       return money.sendMoney()
     })
     .then(function sendMoneyFinished (response) {
-      logger.info(`sendMoneyfinished: ${response}`)
       return response
     })
     .then(function wait () {

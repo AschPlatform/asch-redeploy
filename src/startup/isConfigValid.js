@@ -5,6 +5,7 @@ const ZSchema = require('z-schema')
 const customValidators = require('./customValidators')
 const isPortAvailable = require('is-port-available')
 const logger = require('../logger')
+const yaml = require('js-yaml')
 
 // ctor
 let IsConfigValid = function (userDevDir) {
@@ -22,7 +23,8 @@ let IsConfigValid = function (userDevDir) {
     let defaultConfig = config.util.toObject(config.get('config'))
     defaultConfig.userDevDir = this.userDevDir
 
-    logger.info(JSON.stringify(defaultConfig, null, 2), { meta: 'inverse' })
+    logger.info('Configuration:', { meta: 'inverse' })
+    logger.info(`\n${yaml.safeDump(defaultConfig)}`, { meta: 'white.inverse' })
     return defaultConfig
   }
 
