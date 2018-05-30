@@ -22,7 +22,7 @@ let styleText = function (text, meta) {
 const customFormat = printf(info => {
   let formattedDate = moment(info.timestamp).format('YYYY-MM-DD HH:mm:SSS')
   let level = info.level.toUpperCase()
-  let message = styleText(info.message, info.meta)
+  let message = info.message
   switch (level) {
     case 'SILLY':
       level = chalk.cyanBright(level)
@@ -51,6 +51,9 @@ const customFormat = printf(info => {
     default:
       break
   }
+
+  message = styleText(message, info.meta)
+
   // pass metadata to logger -> logger.info('test', { meta: 'meta' })
   let output = `[${chalk.blue(formattedDate)}][${level}] ${message}`
   return output

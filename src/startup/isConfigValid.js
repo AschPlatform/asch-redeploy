@@ -1,10 +1,10 @@
 const path = require('path')
-const chalk = require('chalk')
 const utils = require('../utils')
 const Promise = require('bluebird')
 const ZSchema = require('z-schema')
 const customValidators = require('./customValidators')
 const isPortAvailable = require('is-port-available')
+const logger = require('../logger')
 
 // ctor
 let IsConfigValid = function (userDevDir) {
@@ -22,7 +22,7 @@ let IsConfigValid = function (userDevDir) {
     let defaultConfig = config.util.toObject(config.get('config'))
     defaultConfig.userDevDir = this.userDevDir
 
-    console.log(chalk.green(JSON.stringify(defaultConfig, null, 2)))
+    logger.info(JSON.stringify(defaultConfig, null, 2), { meta: 'inverse' })
     return defaultConfig
   }
 
@@ -43,7 +43,7 @@ let IsConfigValid = function (userDevDir) {
       return true
     } else {
       let errors = validator.getLastErrors()
-      console.log(chalk.red(JSON.stringify(errors)))
+      logger.error(JSON.stringify(errors), { meta: 'underline' })
       return false
     }
   }
@@ -56,7 +56,6 @@ let IsConfigValid = function (userDevDir) {
       .then((config) => {
         return new Promise((resolve, reject) => {
           let result = isValid(config)
-          console.log(process.argv)
           if (result === true) {
             resolve(config)
           } else {

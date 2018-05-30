@@ -1,23 +1,21 @@
 const ZSchema = require('z-schema')
 const Mnemonic = require('bitcore-mnemonic')
 const fs = require('fs')
-const chalk = require('chalk')
-const log = console.log
+const logger = require('../logger')
 
 ZSchema.registerFormat('bip39', (secret) => {
   let isBip39 = false
   try {
     isBip39 = Mnemonic.isValid(secret)
   } catch (err) {
-    log(chalk.red(`secret "${secret}" is not bip39 complient`))
-    log(chalk.red(err.message))
+    logger.error(`secret "${secret}" is not bip39 complient`)
+    logger.error(err.message)
     throw err
   }
   return isBip39
 })
 
 ZSchema.registerFormat('aschNodeDirectory', (dir) => {
-  console.log(dir)
   let exists = fs.existsSync(dir)
 
   if (exists === true) {
