@@ -17,6 +17,7 @@
     "randomstring": "1.1.5",
     "shelljs": "0.8.2",
     "winston": "^3.0.0-rc5",
+    "winston-daily-rotate-file": "^3.2.0",
     "z-schema": "3.22.0"
   },
   "devDependencies": {

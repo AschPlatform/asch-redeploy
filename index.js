@@ -1,8 +1,10 @@
 const path = require('path')
 const utils = require('./src/utils')
 const Promise = require('bluebird')
+const logger = require('./src/logger')
 
 const chalk = require('chalk')
+chalk.enabled = true
 const log = console.log
 
 const startUp = require('./src/startup/startup')
@@ -16,11 +18,6 @@ process.once('uncaughtException', function (error) {
   log(chalk.red('UNCAUGHT EXCEPTION'))
   log(error)
 })
-
-// test
-const logger = require('./src/logger')
-logger.info('INFO MSG')
-logger.verbose('verbose')
 
 startUp()
   .then((config) => {
