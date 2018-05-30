@@ -4,9 +4,8 @@ const EventEmitter = require('events')
 const utils = require('../utils')
 const fs = require('fs')
 const Promise = require('bluebird')
-const chalk = require('chalk')
 const moment = require('moment')
-let log = console.log
+const logger = require('../logger')
 
 // ctor
 let Service = function (aschNodeDir, logDir, port) {
@@ -34,11 +33,11 @@ let Service = function (aschNodeDir, logDir, port) {
       let logFile = this.createLogFileName()
       this.createLogDirIfNotExists(logFile)
 
-      log(chalk.magenta('asch-node logs to:'), chalk.green.underline(logFile))
+      logger.info(`asch-node logs are saved in "${logFile}"`)
       let logStream = fs.openSync(logFile, 'a')
 
       let aschPath = path.join(this.aschNodeDir, 'app.js')
-      log(chalk.magenta(`starting asch-node in `), chalk.green.underline(`${aschPath} `), chalk.magenta(`on port `), chalk.green.underline(`${this.port}`))
+      logger.info(`starting asch-node in "${aschPath}" on port ${this.port}`)
       this.process = fork(aschPath, ['--port', parseInt(this.port)], {
         cwd: this.aschNodeDir,
         execArgv: [],
@@ -53,17 +52,19 @@ let Service = function (aschNodeDir, logDir, port) {
 
   this.stop = () => {
     return new Promise((resolve, reject) => {
-      log(chalk.blue.inverse('sending SIGTERM signal to child process'))
+      logger.warn('sending SIGTERM signal to child process', { meta: 'inverse' })
       this.process.kill('SIGTERM')
       resolve(true)
     })
   }
 
   this.onError = (err) => {
-    log(chalk.blue.inverse(`error: ${err}`))
+    logger.error(`error in asch-node ${err.message}`)
+    logger.error(err.stack)
+    this.process.kill('SIGTERM')
   }
   this.onExit = (code) => {
-    log(chalk.blue.inverse(`CHILD EXIT exitCode: ${code}`))
+    logger.info(`asch-node exited wite code: "${code}"`, { meta: 'inverse' })
     this.notifier.emit('exit', code)
   }
 }

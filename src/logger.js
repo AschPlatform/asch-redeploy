@@ -41,7 +41,7 @@ const customFormat = printf(info => {
       break
   }
   // pass metadata to logger -> logger.info('test', { meta: 'meta' })
-  let output = `[${formattedDate}][${level}] ${message}`
+  let output = `[${chalk.blue(formattedDate)}][${level}] ${message}`
   return output
 })
 

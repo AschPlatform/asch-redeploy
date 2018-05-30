@@ -3,10 +3,6 @@ const utils = require('./src/utils')
 const Promise = require('bluebird')
 const logger = require('./src/logger')
 
-const chalk = require('chalk')
-chalk.enabled = true
-const log = console.log
-
 const startUp = require('./src/startup/startup')
 const Service = require('./src/orchestration/service')
 const Conductor = require('./src/orchestration/conductor')
@@ -15,10 +11,11 @@ let appConfig = null
 
 // https://www.exratione.com/2013/05/die-child-process-die/
 process.once('uncaughtException', function (error) {
-  log(chalk.red('UNCAUGHT EXCEPTION'))
-  log(error)
+  logger.error('UNCAUGHT EXCEPTION')
+  logger.error(error.stack)
 })
 
+logger.verbose('starting asch-redeploy...')
 startUp()
   .then((config) => {
     appConfig = config
@@ -30,16 +27,16 @@ startUp()
     let port = config.node.port
     aschService = new Service(aschDirectory, logDir, port)
     aschService.notifier.on('exit', function (code) {
-      console.log(`asch-node terminated with code ${code}`)
+      logger.warn(`asch-node terminated with code ${code}`)
     })
     process.on('SIGTERM', function () {
-      log(chalk.blue.inverse('SIGTERM'))
+      logger.warn('SIGTERM')
       aschService.stop()
       process.exit(0)
     })
     process.on('SIGINT', function () {
       // ctrl+c
-      log(chalk.blue.inverse('SIGTERM'))
+      logger.warn('SIGTERM')
       aschService.stop()
       process.exit(0)
     })
@@ -47,13 +44,17 @@ startUp()
     return aschService.start()
   })
   .then(() => {
-    return Promise.delay(7000)
+    let ms = 7000
+    logger.verbose(`waiting for ${ms}ms`)
+    return Promise.delay(ms)
   })
   .then(() => {
+    logger.verbose('starting to orchestrate...')
     let conductor = new Conductor(aschService, appConfig)
     return conductor.orchestrate()
   })
   .catch((err) => { // last error handler
-    console.log(err)
+    logger.error(err.message)
+    logger.error(err.stack)
     utils.endProcess()
   })
