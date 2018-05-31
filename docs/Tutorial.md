@@ -22,18 +22,8 @@ git clone https://github.com/AschPlatform/asch-dapp-helloworld.git && \
 ```
 
 You should have the following folder structure
-```
-ide
-└───asch
-    └───app.js                   # asch-node
-└───asch-dapp-helloworld
-    └───init.js                  # backend
-    └───model                    # backend
-    └───interface                # backend
-    └───development              # frontend
-        └───Vue.js app
-```
 
+![File structure](./blob/initial_file_structrue.png)
 
 
 
