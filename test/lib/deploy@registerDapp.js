@@ -20,11 +20,17 @@ describe('deploy@registerDapp', function () {
     }
   }
 
-  // prepare axiosMock
-  let axiosResponse = { success: true, transactionId: 'veryLongTransactionId' }
   let axiosMock = new MockAdapter(axios)
-  axiosMock.onPost('http://localhost:4096/peer/transactions')
-    .reply(200, axiosResponse)
+  let axiosResponse = { success: true, transactionId: 'veryLongTransactionId' }
+
+  before(function () {
+    axiosMock.onPost('http://localhost:4096/peer/transactions')
+      .reply(200, axiosResponse)
+  })
+
+  after(function () {
+    axiosMock.restore()
+  })
 
   it('setup of deploy.js', function (done) {
     // act

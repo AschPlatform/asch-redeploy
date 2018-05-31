@@ -12,11 +12,13 @@ let sendMoney = function (config) {
   this.getBalance = function () {
     let self = this
     let url = `${self.config.node.host}:${self.config.node.port}/api/accounts/getBalance`
-    return axios.get(url, {
-      params: {
-        address: toAddress
+    return axios.get(url,
+      {
+        params: {
+          address: toAddress
+        }
       }
-    })
+    )
   } // getBalance
 
   this.enoughMoney = function (response) {
