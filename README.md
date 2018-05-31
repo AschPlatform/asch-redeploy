@@ -1,6 +1,11 @@
 # asch-redeploy
 A hassle-free local asch environment. Watch for changes on your Dapp and re-deploy it automatically.
 
+- [Installation](#installation)
+- [Setup Development Environment](#setup-development-environment)
+  - [Start Dapp Backend](#start-dapp-backend)
+  - [Start Dapp Frontend](#start-dapp-frontend)
+
 
 # Installation
 
