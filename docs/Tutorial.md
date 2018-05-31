@@ -29,9 +29,16 @@ You should have the following folder structure
 
 ## Work on Dapp Backend
 
+Start the Dapp Backend on listen for file changes.
+
+![File](./blob/backend.gif)
+
 The Dapp-Backend is in the `asch-dapp-helloworld` folder. If you change something in one of the files, a new Dapp will be deployed to the localnet.
 
 ## Work on Dapp Frontend
+
+Start the frontend Vue.js App from the Dapp-Starterkit.
+![File](./blob/frontend.gif)
 
 The Dapp-Frontened is in the `asch-dapp-helloworld/development` folder.
 
