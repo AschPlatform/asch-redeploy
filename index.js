@@ -1,3 +1,6 @@
+// load global container
+require('./src/container')
+
 const path = require('path')
 const utils = require('./src/utils')
 const Promise = require('bluebird')

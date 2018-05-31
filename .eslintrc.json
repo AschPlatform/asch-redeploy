@@ -9,5 +9,8 @@
     ],
     "rules": {
       "mocha/no-exclusive-tests": "error"
+    },
+    "globals": {
+      "container": true
     }
 }

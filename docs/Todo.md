@@ -1,4 +1,6 @@
 # TODO
+* Use a dependency injection container that will passed to every constructor
+  * after that make 
 * Write tests
   * Add travis-ci build on commit!Add travis-ci build on commit!
   * Add `.travis.yml` file

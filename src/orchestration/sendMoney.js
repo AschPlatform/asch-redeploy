@@ -47,7 +47,7 @@ let sendMoney = function (config) {
       magic: config.node.magic,
       version: ''
     }
-    return axios({
+    return container.axios({
       method: 'POST',
       url: peerTransactionUrl,
       headers: header,
