@@ -4,21 +4,29 @@ const Deploy = require('../../src/orchestration/deploy')
 const axios = require('axios')
 const MockAdapter = require('axios-mock-adapter')
 const should = require('should')
+const sinon = require('sinon/pkg/sinon')
+const aschJS = require('asch-js')
 
-describe('Dapp registration', function () {
-  it('setup of deploy.js', function (done) {
-    // setup
-    let config = {
-      dapp: {
-        masterAccountPassword: 'sentence weasel match weather apple onion release keen lens deal fruit matrix',
-        masterAccountPassword2nd: ''
-      },
-      node: {
-        host: 'http://localhost',
-        port: '4096',
-        magic: 'something'
-      }
+describe('deploy@registerDapp', function () {
+  let config = {
+    dapp: {
+      masterAccountPassword: 'sentence weasel match weather apple onion release keen lens deal fruit matrix',
+      masterAccountPassword2nd: ''
+    },
+    node: {
+      host: 'http://localhost',
+      port: '4096',
+      magic: 'something'
     }
+  }
+
+  // prepare axiosMock
+  let axiosResponse = { success: true, transactionId: 'veryLongTransactionId' }
+  let axiosMock = new MockAdapter(axios)
+  axiosMock.onPost('http://localhost:4096/peer/transactions')
+    .reply(200, axiosResponse)
+
+  it('setup of deploy.js', function (done) {
     // act
     let deploy = new Deploy(config)
     // assert
@@ -26,33 +34,31 @@ describe('Dapp registration', function () {
     done()
   })
 
-  it('call registerDapp function', function (done) {
-    // setup
-    let config = {
-      dapp: {
-        masterAccountPassword: 'sentence weasel match weather apple onion release keen lens deal fruit matrix',
-        masterAccountPassword2nd: ''
-      },
-      node: {
-        host: 'http://localhost',
-        port: '4096',
-        magic: 'something'
-      }
-    }
+  it('calls localnet endpoint for dapp registration', function (done) {
     let deploy = new Deploy(config)
-
-    // prepare mock
-    let response = { success: true, transactionId: 'fiaigh' }
-    let mock = new MockAdapter(axios)
-    mock.onPost('http://localhost:4096/peer/transactions')
-      .reply(200, response)
 
     deploy.registerDapp()
       .then(function (res) {
-        console.log(res.data)
       })
       .then(function () {
         done()
       }, done)
+  })
+
+  it('aschJS gets called from dapp-registration', function (done) {
+    let deploy = new Deploy(config)
+
+    let mock = sinon.mock(aschJS.dapp)
+    mock.expects('createDApp').once()
+
+    deploy.registerDapp()
+      .then(function (res) {
+        done()
+      })
+      .catch(function (err) {
+        console.log(err)
+        mock.verify()
+        done()
+      })
   })
 })
