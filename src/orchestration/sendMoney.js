@@ -11,10 +11,11 @@ let sendMoney = function (config) {
 
   this.getBalance = function () {
     let self = this
-    let url = `${self.config.node.host}:${self.config.node.port}/api/accounts/getBalance?address=${toAddress}`
-    return axios({
-      method: 'GET',
-      url: url
+    let url = `${self.config.node.host}:${self.config.node.port}/api/accounts/getBalance`
+    return axios.get(url, {
+      params: {
+        address: toAddress
+      }
     })
   } // getBalance
 
@@ -74,7 +75,7 @@ let sendMoney = function (config) {
         if (error && error.message === 'enough_money') {
           return null
         }
-        throw new Error('couldn \'t transfer money')
+        throw error
       })
   }
 }
