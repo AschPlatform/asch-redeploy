@@ -56,6 +56,7 @@ let Conductor = function (service, config) {
         return Promise.delay(ms)
       })
       .catch((error) => {
+        logger.verbose('throw in conductor.js line 62')
         throw error
       })
       .then(() => {

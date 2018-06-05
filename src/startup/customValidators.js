@@ -51,6 +51,11 @@ ZSchema.registerFormat('port', (rawPort) => {
 })
 
 ZSchema.registerFormat('file', (filePath) => {
+  if (process.env['NODE_ENV'] === 'development') {
+    logger.verbose(`skipping check for file "${filePath}"`)
+    return true
+  }
+
   let exists = fs.existsSync(filePath)
   if (exists === true) {
     return true
