@@ -57,7 +57,10 @@ cd asch-dapp-helloworld
 
 # execute (watch for changes)
 asch-redeploy
+```
 
+You can set different ENVIRONMENT variables:
+```
 ###################################################
 ### you can set different ENVIRONMENT variables ###
 ###################################################
