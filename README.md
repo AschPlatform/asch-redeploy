@@ -1,11 +1,14 @@
 # asch-redeploy
 A hassle-free local asch environment. Watch for changes on your Dapp and re-deploy it automatically.
 
+- [Warning](#warning)
 - [Installation](#installation)
 - [Setup Development Environment](#setup-development-environment)
   - [Start Dapp Backend](#start-dapp-backend)
   - [Start Dapp Frontend](#start-dapp-frontend)
 
+# Warning
+This program is currently only ready for local Dapp development. Do __not__ use it in production.
 
 # Installation
 
