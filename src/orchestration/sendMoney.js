@@ -1,7 +1,11 @@
 
 // ctor
-let sendMoney = function (config) {
+let sendMoney = function (config, logger, axios, aschJS, promise) {
   this.config = config
+  this.logger = logger
+  this.axios = axios
+  this.aschJS = aschJS
+  this.Promise = promise
 
   if (typeof config !== 'object') {
     throw new Error('config must be of type object')
@@ -11,10 +15,10 @@ let sendMoney = function (config) {
   this.dappAccount = {}
 
   this.fetchAddressAndBalancewithSecret = function (secret) {
-    container.logger.info('in fetchAddressAndBalancewithSecret()')
+    this.logger.info('in fetchAddressAndBalancewithSecret()')
     let url = `${this.config.node.host}:${this.config.node.port}/api/accounts/open`
-    container.logger.verbose(`get account information from "${secret}"`)
-    return container.axios.post(url, {
+    this.logger.verbose(`get account information from "${secret}"`)
+    return this.axios.post(url, {
       secret: secret
     })
       .then(function (response) {
@@ -31,9 +35,9 @@ let sendMoney = function (config) {
   } // fetchAddressAndBalancewithSecret
 
   this.hasGenesisAccountEnoughMoney = function (response) {
-    container.logger.info('in hasGenesisAccountEnoughMoney()')
+    this.logger.info('in hasGenesisAccountEnoughMoney()')
     let minBalance = 50000
-    container.logger.verbose(`has genesisAccount a balance greater ${minBalance}?`)
+    this.logger.verbose(`has genesisAccount a balance greater ${minBalance}?`)
     let balance = (response.balance / 1e8)
     if (balance >= minBalance) {
       return response
@@ -43,34 +47,34 @@ let sendMoney = function (config) {
   } // hasGenesisAccountEnoughMoney
 
   this.saveGenesisAccountData = function (response) {
-    container.logger.info('in saveGenesisAccountData()')
+    this.logger.info('in saveGenesisAccountData()')
     this.genesisAccount = response
   } // saveGenesisAccountData
 
   this.hasDappAccountEnoughMoney = function (response) {
-    container.logger.info('in hasDappAccountEnoughMoney()')
+    this.logger.info('in hasDappAccountEnoughMoney()')
     let minBalance = 1000
-    container.logger.verbose(`has dappAccount a balance greater ${minBalance}?`)
+    this.logger.verbose(`has dappAccount a balance greater ${minBalance}?`)
     let balance = (response.balance / 1e8)
     if (balance >= minBalance) {
-      container.logger.verbose(`enough money on account. No transfer needed. Balance is ${balance}`)
+      this.logger.verbose(`enough money on account. No transfer needed. Balance is ${balance}`)
       throw new Error('enough_money')
     } else {
-      container.logger.verbose(`dappAccount has only balance of ${balance} XAS. Account needs a recharge`)
+      this.logger.verbose(`dappAccount has only balance of ${balance} XAS. Account needs a recharge`)
       return response
     }
   } // enoughMoney
 
   this.saveDappAccountData = function (response) {
-    container.logger.info('in saveDappAccountData()')
+    this.logger.info('in saveDappAccountData()')
     this.dappAccount = response
   } // saveDappAccountData
 
   this.transfer = function (toAddress, fromSecret) {
-    container.logger.info('in transfer()')
+    this.logger.info('in transfer()')
     let amount = 20000
 
-    var trs = container.aschJS.transaction.createTransaction(
+    var trs = this.aschJS.transaction.createTransaction(
       toAddress,
       Number(amount * 1e8),
       null,
@@ -82,7 +86,7 @@ let sendMoney = function (config) {
       magic: config.node.magic,
       version: ''
     }
-    return container.axios.post(peerTransactionUrl, {
+    return this.axios.post(peerTransactionUrl, {
       headers: header,
       data: {
         transaction: trs
@@ -91,19 +95,19 @@ let sendMoney = function (config) {
   } // transfer
 
   this.handleTransferResponse = function (response) {
-    container.logger.info('in handleTransferResponse()')
+    this.logger.info('in handleTransferResponse()')
     if (response.status !== 200) {
-      container.Promise.reject(new Error('Could not send money'))
+      this.Promise.reject(new Error('Could not send money'))
     }
     if (response.data.success === false) {
-      container.Promise.reject(new Error(response.data.error))
+      this.Promise.reject(new Error(response.data.error))
     }
-    container.logger.verbose(`successful created money transaction: ${response.data.transactionId}`)
+    this.logger.verbose(`successful created money transaction: ${response.data.transactionId}`)
     return null
   } // handleTransfer
 
   this.sendMoney = function () {
-    container.logger.info('in sendMoney()')
+    this.logger.info('in sendMoney()')
     let genesisSecret = this.config.node.genesisAccount
     let dappSecret = this.config.dapp.masterAccountPassword
 

@@ -1,32 +1,99 @@
-const realAxios = require('axios')
-const realBlueBird = require('bluebird')
-const realAschJS = require('asch-js')
-const realFS = require('fs')
-const realPath = require('fs')
+/* eslint-disable */
 
-const realUtils = require('./utils')
-const realLogger = require('./logger')
+const inversify = require('inversify')
+const helpers = require('inversify-vanillajs-helpers').helpers
+require('reflect-metadata')
 
-let container = {
-  axios: realAxios,
-  Promise: realBlueBird,
-  aschJS: realAschJS,
-  fs: realFS,
-  path: realPath,
+const SendMoney = require('./orchestration/sendMoney')
 
-  utils: realUtils,
-  logger: realLogger,
 
-  reset: () => {
-    this.axios = realAxios
-    this.Promise = realBlueBird
-    this.aschJS = realAschJS
-    this.fs = realFS
-    this.path = realPath
+const FILETYPES = {
+  SendMoney: 'SendMoney'
+}
 
-    this.utils = realUtils
-    this.logger = realLogger
+const DEPENDENCIES = {
+  Config: 'Config',
+  Logger: 'Logger',
+  Axios: 'Axios',
+  AschJS: 'AschJS',
+  Promise: 'Promise'
+}
+
+
+// register config
+let Config = require('config').config
+console.log(`config: ${JSON.stringify(Config)}`)
+
+
+var container = new inversify.Container()
+
+
+var registerConstantValue = helpers.registerConstantValue(container);
+registerConstantValue(DEPENDENCIES.Config, Config)
+
+
+
+// TODO Annotate the dependencies
+
+// config, logger, axios, aschJS, promise
+// helpers.annotate(SendMoney, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Axios, DEPENDENCIES.AschJS, DEPENDENCIES.Promise])
+
+let resolvedConfig = container.get(DEPENDENCIES.Config)
+console.log(`\nresolvedConfig: ${JSON.stringify(resolvedConfig)}`)
+
+
+process.exit(0)
+
+
+
+var TYPES = {
+  Ninja: 'Ninja',
+  Katana: 'Katana',
+  Shuriken: 'Shuriken'
+}
+
+
+const Katana = function () {
+  this.hit = function () {
+    return 'cut!'
+  }
+}
+helpers.annotate(Katana)
+
+
+const Shuriken = function () {
+  this.throw = function () {
+    return 'hit!'
   }
 }
 
-global.container = container
+helpers.annotate(Shuriken);
+
+
+const Ninja = function (katana, shuriken) {
+  this._katana = katana;
+  this._shuriken = shuriken;
+
+  this.fight = function () {
+    return this._katana.hit() 
+  }
+
+  this.sneak = function () {
+    return this._shuriken.throw()
+  }
+}
+
+helpers.annotate(Ninja, [TYPES.Katana, TYPES.Shuriken]);
+
+// Declare bindings
+var container = new inversify.Container()
+container.bind(TYPES.Ninja).to(Ninja);
+container.bind(TYPES.Katana).to(Katana);
+container.bind(TYPES.Shuriken).to(Shuriken);
+
+// Resolve dependencies
+var ninja = container.get(TYPES.Ninja);
+console.log(ninja.fight(), ninja.sneak());
+
+let shiru = container.get(TYPES.Shuriken)
+console.log(shiru.throw())
