@@ -2,40 +2,75 @@
 // ctor
 let sendMoney = function (config) {
   this.config = config
-  let toSecret = this.config.dapp.masterAccountPassword
-  let toAddress = container.aschJS.crypto.getAddress(container.aschJS.crypto.getKeys(toSecret).publicKey)
 
-  this.getBalance = function () {
-    let self = this
-    let url = `${self.config.node.host}:${self.config.node.port}/api/accounts/getBalance`
-    return container.axios.get(url,
-      {
-        params: {
-          address: toAddress
+  this.genesisAccount = {}
+  this.dappAccount = {}
+
+  this.fetchAddressAndBalancewithSecret = function (secret) {
+    logger.info('in fetchAddressAndBalancewithSecret()')
+    let url = `${this.config.node.host}:${this.config.node.port}/api/accounts/open`
+    logger.verbose(`get account information from "${secret}"`)
+    return axios.post(url, {
+      secret: secret
+    })
+      .then(function (response) {
+        if (response.status === 200 && response.data.success === true) {
+          return {
+            address: response.data.account.address,
+            balance: response.data.account.balance
+          }
         }
-      }
-    )
-  } // getBalance
+      })
+      .catch(function (error) {
+        throw error
+      })
+  } // fetchAddressAndBalancewithSecret
 
-  this.enoughMoney = function (response) {
-    let min = 1000
-    if (response.status === 200 && response.data.success === true && (response.data.balance / 1e8) >= min) {
-      container.logger.verbose(`enough money on account. No transfer needed. Balance is ${response.data.balance}`)
+  this.hasGenesisAccountEnoughMoney = function (response) {
+    logger.info('in hasGenesisAccountEnoughMoney()')
+    let minBalance = 50000
+    logger.verbose(`has genesisAccount a balance greater ${minBalance}?`)
+    let balance = (response.balance / 1e8)
+    if (balance >= minBalance) {
+      return response
+    } else {
+      throw new Error(`config.node.genesisAccount is NOT a genesis account. Genesis account has only balance of ${balance} XAS. Are you using a localnet node?`)
+    }
+  }
+
+  this.saveGenesisAccountData = function (response) {
+    logger.info('in saveGenesisAccountData()')
+    this.genesisAccount = response
+  } // saveGenesisAccountData
+
+  this.hasDappAccountEnoughMoney = function (response) {
+    logger.info('in hasDappAccountEnoughMoney()')
+    let minBalance = 1000
+    logger.verbose(`has dappAccount a balance greater ${minBalance}?`)
+    let balance = (response.balance / 1e8)
+    if (balance >= minBalance) {
+      logger.verbose(`enough money on account. No transfer needed. Balance is ${balance}`)
       throw new Error('enough_money')
     } else {
-      return null
+      logger.verbose(`dappAccount has only balance of ${balance} XAS. Account needs a recharge`)
+      return response
     }
   } // enoughMoney
 
-  this.transfer = function () {
+  this.saveDappAccountData = function (response) {
+    logger.info('in saveDappAccountData()')
+    this.dappAccount = response
+  }
+
+  this.transfer = function (toAddress, fromSecret) {
+    logger.info('in transfer()')
     let amount = 20000
-    let genesisSecret = config.node.genesisAccount
 
     var trs = container.aschJS.transaction.createTransaction(
       toAddress,
       Number(amount * 1e8),
       null,
-      genesisSecret,
+      fromSecret,
       null
     )
     let peerTransactionUrl = `${config.node.host}:${config.node.port}/peer/transactions`
@@ -54,6 +89,7 @@ let sendMoney = function (config) {
   } // transfer
 
   this.handleTransferResponse = function (response) {
+    logger.info('in handleTransferResponse()')
     if (response.status !== 200) {
       container.Promise.reject(new Error('Could not send money'))
     }
@@ -64,11 +100,33 @@ let sendMoney = function (config) {
     return null
   } // handleTransfer
 
-  this.sendMoney = function (amount) {
-    return this.getBalance()
-      .then(this.enoughMoney)
-      .then(this.transfer)
-      .then(this.handleTransferResponse)
+  this.sendMoney = function () {
+    logger.info('in sendMoney()')
+    let genesisSecret = this.config.node.genesisAccount
+    let dappSecret = this.config.dapp.masterAccountPassword
+
+    return this.fetchAddressAndBalancewithSecret(genesisSecret)
+      .then((response) => {
+        return this.hasGenesisAccountEnoughMoney(response)
+      })
+      .then((response) => {
+        return this.saveGenesisAccountData(response)
+      })
+      .then(() => {
+        return this.fetchAddressAndBalancewithSecret(dappSecret)
+      })
+      .then((response) => {
+        return this.hasDappAccountEnoughMoney(response)
+      })
+      .then((response) => {
+        return this.saveDappAccountData(response)
+      })
+      .then(() => {
+        return this.transfer(this.dappAccount.address, genesisSecret)
+      })
+      .then(() => {
+        return this.handleTransferResponse
+      })
       .catch(function (error) {
         if (error && error.message === 'enough_money') {
           return null

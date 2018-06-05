@@ -2,7 +2,8 @@
   "config": {
     "node": {
       "directory": "ASCH_NODE_DIR",
-      "port": "ASCH_NODE_PORT"
+      "port": "ASCH_NODE_PORT",
+      "genesisAccount": "ASCH_GENESIS_ACCOUNT"
     },
     "output": {
       "file": "OUTPUT_FILE"

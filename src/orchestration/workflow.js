@@ -68,8 +68,7 @@ let workflow = (service, config) => {
     .catch(function errorOccured (error) {
       logger.verbose('error in worklflow.js errorOccured()')
       logger.error('ERROR OCCURED')
-      logger.error(error.message)
-      logger.error(error.stack)
+      throw error
     })
 }
 
