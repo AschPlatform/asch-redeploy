@@ -7,10 +7,10 @@ let sendMoney = function (config) {
   this.dappAccount = {}
 
   this.fetchAddressAndBalancewithSecret = function (secret) {
-    logger.info('in fetchAddressAndBalancewithSecret()')
+    container.logger.info('in fetchAddressAndBalancewithSecret()')
     let url = `${this.config.node.host}:${this.config.node.port}/api/accounts/open`
-    logger.verbose(`get account information from "${secret}"`)
-    return axios.post(url, {
+    container.logger.verbose(`get account information from "${secret}"`)
+    return container.axios.post(url, {
       secret: secret
     })
       .then(function (response) {
@@ -27,9 +27,9 @@ let sendMoney = function (config) {
   } // fetchAddressAndBalancewithSecret
 
   this.hasGenesisAccountEnoughMoney = function (response) {
-    logger.info('in hasGenesisAccountEnoughMoney()')
+    container.logger.info('in hasGenesisAccountEnoughMoney()')
     let minBalance = 50000
-    logger.verbose(`has genesisAccount a balance greater ${minBalance}?`)
+    container.logger.verbose(`has genesisAccount a balance greater ${minBalance}?`)
     let balance = (response.balance / 1e8)
     if (balance >= minBalance) {
       return response
@@ -39,31 +39,31 @@ let sendMoney = function (config) {
   }
 
   this.saveGenesisAccountData = function (response) {
-    logger.info('in saveGenesisAccountData()')
+    container.logger.info('in saveGenesisAccountData()')
     this.genesisAccount = response
   } // saveGenesisAccountData
 
   this.hasDappAccountEnoughMoney = function (response) {
-    logger.info('in hasDappAccountEnoughMoney()')
+    container.logger.info('in hasDappAccountEnoughMoney()')
     let minBalance = 1000
-    logger.verbose(`has dappAccount a balance greater ${minBalance}?`)
+    container.logger.verbose(`has dappAccount a balance greater ${minBalance}?`)
     let balance = (response.balance / 1e8)
     if (balance >= minBalance) {
-      logger.verbose(`enough money on account. No transfer needed. Balance is ${balance}`)
+      container.logger.verbose(`enough money on account. No transfer needed. Balance is ${balance}`)
       throw new Error('enough_money')
     } else {
-      logger.verbose(`dappAccount has only balance of ${balance} XAS. Account needs a recharge`)
+      container.logger.verbose(`dappAccount has only balance of ${balance} XAS. Account needs a recharge`)
       return response
     }
   } // enoughMoney
 
   this.saveDappAccountData = function (response) {
-    logger.info('in saveDappAccountData()')
+    container.logger.info('in saveDappAccountData()')
     this.dappAccount = response
   }
 
   this.transfer = function (toAddress, fromSecret) {
-    logger.info('in transfer()')
+    container.logger.info('in transfer()')
     let amount = 20000
 
     var trs = container.aschJS.transaction.createTransaction(
@@ -89,7 +89,7 @@ let sendMoney = function (config) {
   } // transfer
 
   this.handleTransferResponse = function (response) {
-    logger.info('in handleTransferResponse()')
+    container.logger.info('in handleTransferResponse()')
     if (response.status !== 200) {
       container.Promise.reject(new Error('Could not send money'))
     }
@@ -101,7 +101,7 @@ let sendMoney = function (config) {
   } // handleTransfer
 
   this.sendMoney = function () {
-    logger.info('in sendMoney()')
+    container.logger.info('in sendMoney()')
     let genesisSecret = this.config.node.genesisAccount
     let dappSecret = this.config.dapp.masterAccountPassword
 
