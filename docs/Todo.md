@@ -1,6 +1,6 @@
 # TODO
 * Use a dependency injection container that will passed to every constructor
-  * after that make 
+  * after that make
 * Write tests
   * Add travis-ci build on commit!Add travis-ci build on commit!
   * Add `.travis.yml` file
@@ -17,4 +17,4 @@
   * Between transactions
   * Between startup/shutdowns
 * retry when not enough money
-* Add GIF-Image to README.md to show usage and console output
+* Delete old dappId folders for start-up optimization

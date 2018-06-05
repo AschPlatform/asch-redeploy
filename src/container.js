@@ -1,21 +1,32 @@
-const axios = require('axios')
-const bluebird = require('bluebird')
-const aschJS = require('asch-js')
-const fs = require('fs')
-const path = require('fs')
+const realAxios = require('axios')
+const realBlueBird = require('bluebird')
+const realAschJS = require('asch-js')
+const realFS = require('fs')
+const realPath = require('fs')
 
-const utils = require('./utils')
-const logger = require('./logger')
+const realUtils = require('./utils')
+const realLogger = require('./logger')
 
 let container = {
-  axios: axios,
-  Promise: bluebird,
-  aschJS: aschJS,
-  fs: fs,
-  path: path,
+  axios: realAxios,
+  Promise: realBlueBird,
+  aschJS: realAschJS,
+  fs: realFS,
+  path: realPath,
 
-  utils: utils,
-  logger: logger
+  utils: realUtils,
+  logger: realLogger,
+
+  reset: () => {
+    this.axios = realAxios
+    this.Promise = realBlueBird
+    this.aschJS = realAschJS
+    this.fs = realFS
+    this.path = realPath
+
+    this.utils = realUtils
+    this.logger = realLogger
+  }
 }
 
 global.container = container

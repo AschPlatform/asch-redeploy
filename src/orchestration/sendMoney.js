@@ -3,6 +3,10 @@
 let sendMoney = function (config) {
   this.config = config
 
+  if (typeof config !== 'object') {
+    throw new Error('config must be of type object')
+  }
+
   this.genesisAccount = {}
   this.dappAccount = {}
 
@@ -36,7 +40,7 @@ let sendMoney = function (config) {
     } else {
       throw new Error(`config.node.genesisAccount is NOT a genesis account. Genesis account has only balance of ${balance} XAS. Are you using a localnet node?`)
     }
-  }
+  } // hasGenesisAccountEnoughMoney
 
   this.saveGenesisAccountData = function (response) {
     container.logger.info('in saveGenesisAccountData()')
@@ -60,7 +64,7 @@ let sendMoney = function (config) {
   this.saveDappAccountData = function (response) {
     container.logger.info('in saveDappAccountData()')
     this.dappAccount = response
-  }
+  } // saveDappAccountData
 
   this.transfer = function (toAddress, fromSecret) {
     container.logger.info('in transfer()')
@@ -78,9 +82,7 @@ let sendMoney = function (config) {
       magic: config.node.magic,
       version: ''
     }
-    return container.axios({
-      method: 'POST',
-      url: peerTransactionUrl,
+    return container.axios.post(peerTransactionUrl, {
       headers: header,
       data: {
         transaction: trs

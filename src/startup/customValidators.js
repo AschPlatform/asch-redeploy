@@ -56,11 +56,15 @@ ZSchema.registerFormat('file', (filePath) => {
     return true
   }
 
+  if (filePath === '') {
+    return true
+  }
+
   let exists = fs.existsSync(filePath)
   if (exists === true) {
     return true
   } else {
-    throw new Error(`file ${filePath} doesn't exist`)
+    throw new Error(`file "${filePath}" doesn't exist`)
   }
 })
 
