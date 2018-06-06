@@ -82,15 +82,20 @@ let sendMoney = function (config, logger, axios, aschJS, promise) {
       null
     )
     let peerTransactionUrl = `${config.node.host}:${config.node.port}/peer/transactions`
-    let header = {
-      magic: config.node.magic,
-      version: ''
-    }
-    return this.axios.post(peerTransactionUrl, {
-      headers: header,
-      data: {
-        transaction: trs
-      }
+    // let header = {
+    //   magic: config.node.magic,
+    //   version: ''
+    // }
+    return new this.Promise((resolve, reject) => {
+      this.axios.post(peerTransactionUrl, {
+      // headers: header,
+        data: {
+          transaction: trs
+        }
+      })
+        .then((result) => {
+          resolve(result)
+        })
     })
   } // transfer
 
@@ -128,6 +133,7 @@ let sendMoney = function (config, logger, axios, aschJS, promise) {
         return this.saveDappAccountData(response)
       })
       .then(() => {
+        console.log(`calling transfer() with "${this.dappAccount.address}" and "${genesisSecret}"`)
         return this.transfer(this.dappAccount.address, genesisSecret)
       })
       .then((response) => {

@@ -1,6 +1,5 @@
 const Promise = require('bluebird')
 const Deploy = require('./deploy')
-const SendMoney = require('./sendMoney')
 const writeOutput = require('./writeOutput')
 const logger = require('../logger')
 
@@ -9,12 +8,13 @@ let workflow = (service, config) => {
   this.config = config
 
   const deploy = new Deploy(config)
-  const money = new SendMoney(config)
+  const DI = require('../container')
 
   logger.info('check balance...', { meta: 'green' })
 
   return Promise.delay(12000)
     .then(function (result) {
+      let money = DI.container.get(DI.FILETYPES.SendMoney)
       return money.sendMoney()
     })
     .then(function sendMoneyFinished (response) {

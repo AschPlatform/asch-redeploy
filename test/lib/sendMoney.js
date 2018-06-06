@@ -197,6 +197,7 @@ describe('sendMoney', function () {
         })
     })
 
-    it.skip('network error exists with exception')
+    it.skip('network error exists with exception', function (done) {
+    })
   })
 })
