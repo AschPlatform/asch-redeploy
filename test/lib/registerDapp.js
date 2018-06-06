@@ -30,9 +30,6 @@ describe('registerDapp', function () {
       done()
     })
 
-    it.skip('calls localnet endpoint for dapp registration', function (done) {
-    })
-
     it('create random dapp-name and dapp-link', function (done) {
       // config
       let Utils = {
@@ -97,11 +94,53 @@ describe('registerDapp', function () {
       register.register()
         .then((result) => {
           should(AschJS.called).equal(1)
-          console.log(AschJS)
           should(AschJS).have.property('dapp_name')
           should(AschJS).have.property('dapp_link')
           should(AschJS.dapp_name).endWith('aaaaaaaaaaaaaaa')
           should(AschJS.dapp_link).endWith('aaaaaaaaaaaaaaa.zip')
+          done()
+        })
+        .catch((error) => {
+          throw error
+        })
+    })
+
+    it('call to endpoint returns correct transactionId', function (done) {
+      let transactionId = 'd73140080db8fdc838779d0c7ef9e7b3068186b882385acd0bbafc3f0aea29fb'
+      // config
+      let AschJS = {
+        dapp: {
+          createDApp (dapp, secret, secondSecret) {
+            return {
+              id: transactionId
+            }
+          }
+        }
+      }
+      container.unbind(DI.DEPENDENCIES.AschJS)
+      registerConstant(DI.DEPENDENCIES.AschJS, AschJS)
+
+      let Axios = {
+        post (url, data, headers) {
+          return new Promise((resolve, reject) => {
+            resolve({
+              status: 200,
+              data: {
+                success: true,
+                transactionId: transactionId
+              }
+            })
+          })
+        }
+      }
+      container.unbind(DI.DEPENDENCIES.Axios)
+      registerConstant(DI.DEPENDENCIES.Axios, Axios)
+
+      let register = container.get(DI.FILETYPES.RegisterDapp)
+      register.register()
+        .then((result) => {
+          should(result.data).have.property('transactionId')
+          should(result.data.transactionId).equals(transactionId)
           done()
         })
         .catch((error) => {

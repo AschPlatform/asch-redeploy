@@ -17,13 +17,10 @@ let RegisterDapp = function (config, dappConfig, utils, axios, aschJS) {
     let secret = this.config.dapp.masterAccountPassword
     let secondSecret = this.config.dapp.masterAccountPassword2nd
 
-    // todo check if file exists
     var dapp = this.dappConfig
     dapp.name = `${dapp.name}-${utils.generateRandomString(15)}`
     dapp.link = `${dapp.link.replace('.zip', '')}-${utils.generateRandomString(15)}.zip`
-    console.log(`dapp.name ${dapp.name}, dapp.link ${dapp.link}`)
     let trs = aschJS.dapp.createDApp(dapp, secret, secondSecret)
-
     return this.axios.post(this.peerTransactionUrl, { transaction: trs }, {
       headers: this.header
     })
