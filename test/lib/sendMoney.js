@@ -197,7 +197,7 @@ describe('sendMoney', function () {
         })
     })
 
-    it('network error exists with exception', function (done) {
+    it('network error exits with exception', function (done) {
       // config
       let message = 'connect ECONNREFUSED 127.0.0.1:4096'
 
@@ -211,7 +211,6 @@ describe('sendMoney', function () {
           })
         }
       }
-
       DI.container.unbind(DI.DEPENDENCIES.Axios)
       registerConstant(DI.DEPENDENCIES.Axios, Axios)
 

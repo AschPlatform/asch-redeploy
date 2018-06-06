@@ -149,5 +149,31 @@ describe('registerDapp', function () {
   })
 
   describe('sad path', function () {
+    it('on network error return exception', function (done) {
+      // config
+      let message = 'connect ECONNREFUSED 127.0.0.1:4096'
+      const Axios = {
+        called: 0,
+        post (url, config) {
+          this.called++
+          // throw on first request
+          return new Promise((resolve, reject) => {
+            reject(new Error(message))
+          })
+        }
+      }
+      DI.container.unbind(DI.DEPENDENCIES.Axios)
+      registerConstant(DI.DEPENDENCIES.Axios, Axios)
+
+      let register = container.get(DI.FILETYPES.RegisterDapp)
+      register.register()
+        .then((result) => {
+          throw new Error()
+        })
+        .catch((error) => {
+          should(error.message).startWith('connect ECONNREFUSED')
+          done()
+        })
+    })
   })
 })
