@@ -1,15 +1,17 @@
-const axios = require('axios')
-const Bottle = require('bottlejs')
+const DI = require('./src/container')
 
-let bottle = new Bottle()
+const Axios = function () {
+  this.post = function (url, config) {
+    return new Promise((resolve, reject) => {
+      console.log('I am in axios post')
+      resolve(true)
+    })
+  }
+}
 
-console.log(bottle)
-bottle.service('axios', axios)
+DI.helpers.annotate(Axios)
+DI.container.unbind(DI.DEPENDENCIES.Axios)
+DI.container.bind(DI.DEPENDENCIES.Axios).to(Axios)
 
-bottle.service.axios.get('https://www.google.at')
-  .then(function (response) {
-    console.log(response.data)
-  })
-  .catch(function (error) {
-    console.log(error)
-  })
+let sendMoney = DI.container.get(DI.FILETYPES.SendMoney)
+console.log(sendMoney)
