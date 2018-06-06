@@ -76,11 +76,72 @@ describe('sendMoney', function () {
       })
   })
 
-  it.skip('zero balance on dapp-master-account cause a money transfer and returns transactionId', function () {
+  it('zero balance on dapp-master-account cause money transfer and returns transactionId', function (done) {
+    // config
+    let transactionId = 'i300gho34h0hgyxghzzwzdbyzHB34'
+    const Axios = {
+      called: 0,
+      post (url, config) {
+        return new Promise((resolve, reject) => {
+          this.called += 1
+
+          let result = {}
+          if (this.called === 1) {
+            result = {
+              status: 200,
+              data: {
+                success: true,
+                account: {
+                  balance: 100000 * 1e8,
+                  address: '14762548536863074694'
+                }
+              }
+            }
+          }
+          if (this.called === 2) {
+            result = {
+              status: 200,
+              data: {
+                success: true,
+                account: {
+                  balance: 0,
+                  address: 'AHMCKebuL2nRYDgszf9J2KjVZzAw95WUyB'
+                }
+              }
+            }
+          }
+          if (this.called === 3) {
+            result = {
+              status: 200,
+              data: {
+                success: true,
+                transactionId: transactionId
+              }
+            }
+          }
+
+          resolve(result)
+        })
+      }
+    }
+
+    DI.container.unbind(DI.DEPENDENCIES.Axios)
+    registerConstant(DI.DEPENDENCIES.Axios, Axios)
+
+    /* act */
+    let sendMoney = DI.container.get(DI.FILETYPES.SendMoney)
+    sendMoney.sendMoney()
+      .then((result) => {
+        should(result).equals(transactionId)
+        done()
+      })
+      .catch((error) => {
+        throw error
+      })
   })
 
-  it.skip('enough filled dapp-master-account returns "enough_money" message', function () {
+  it.skip('charged dapp-master-account returns "enough_money" message', function () {
   })
 
-  it.skip('network error exists with')
+  it.skip('network error exists with exception')
 })

@@ -130,8 +130,8 @@ let sendMoney = function (config, logger, axios, aschJS, promise) {
       .then(() => {
         return this.transfer(this.dappAccount.address, genesisSecret)
       })
-      .then(() => {
-        return this.handleTransferResponse
+      .then((response) => {
+        return this.handleTransferResponse(response)
       })
       .catch(function (error) {
         if (error && error.message === 'enough_money') {
