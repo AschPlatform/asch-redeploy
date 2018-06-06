@@ -1,45 +1,11 @@
-const aschJS = require('asch-js')
 const fs = require('fs')
 const path = require('path')
-const axios = require('axios')
 const copyDirectory = require('./copyDirectory')
 const Promise = require('bluebird')
-const utils = require('../utils')
-const logger = require('../logger')
 
 // constructor
 let deploy = function (config) {
   this.config = config
-
-  this.peerTransactionUrl = `${config.node.host}:${config.node.port}/peer/transactions`
-  this.header = {
-    magic: this.config.node.magic,
-    version: ''
-  }
-
-  this.registerDapp = function () {
-    let secret = this.config.dapp.masterAccountPassword
-    let secondSecret = this.config.dapp.masterAccountPassword2nd
-
-    let srcDir = utils.getParentDirectory(__dirname)
-    let mainDir = utils.getParentDirectory(srcDir)
-    logger.silly(`maindir: ${mainDir}`)
-    let dappJsFile = path.join(mainDir, 'dapp.json')
-    // todo check if file exists
-    var dapp = JSON.parse(fs.readFileSync(dappJsFile, 'utf8'))
-    dapp.name = `${dapp.name}-${utils.generateRandomString(15)}`
-    dapp.link = `${dapp.link.replace('.zip', '')}-${utils.generateRandomString(15)}.zip`
-    let trs = aschJS.dapp.createDApp(dapp, secret, secondSecret)
-
-    return axios({
-      method: 'POST',
-      url: this.peerTransactionUrl,
-      headers: this.header,
-      data: {
-        transaction: trs
-      }
-    })
-  } // deploy end
 
   this.copyFiles = function (dappId) {
     let self = this

@@ -25,7 +25,8 @@ let workflow = (service, config) => {
       return Promise.delay(10000)
     })
     .then(function () {
-      return deploy.registerDapp()
+      let registerDapp = DI.container.get(DI.FILETYPES.RegisterDapp)
+      return registerDapp.register()
     })
     .then(function registerDappFinished (response) {
       if (response.status !== 200) {
@@ -66,7 +67,7 @@ let workflow = (service, config) => {
       logger.info('aschService started', { meta: 'green.inverse' })
     })
     .catch(function errorOccured (error) {
-      logger.verbose('error in worklflow.js errorOccured()')
+      logger.verbose('error in worklflow.js occured')
       logger.error('ERROR OCCURED')
       throw error
     })
