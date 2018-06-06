@@ -7,7 +7,8 @@ const should = require('should')
 describe('sendMoney', function () {
   const container = DI.container
   const registerConstant = DI.helpers.registerConstantValue(container)
-  before('setup', function () {
+
+  beforeEach('setup', function () {
     // logger
     const Logger = {
       info (text, config) {
@@ -20,8 +21,8 @@ describe('sendMoney', function () {
     registerConstant(DI.DEPENDENCIES.Logger, Logger)
   })
 
-  after('cleanup', function () {
-
+  afterEach('cleanup', function () {
+    DI.resetConstants()
   })
 
   it('injection worked', function (done) {
