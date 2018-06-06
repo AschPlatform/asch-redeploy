@@ -70,7 +70,7 @@ describe('sendMoney', function () {
         throw new Error('should throw exception')
       })
       .catch((error) => {
-        console.log(error)
+        should(error).has.property('message').startWith('genesisAccount_empty')
         done()
       })
   })

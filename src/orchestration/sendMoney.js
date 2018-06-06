@@ -42,7 +42,7 @@ let sendMoney = function (config, logger, axios, aschJS, promise) {
     if (balance >= minBalance) {
       return response
     } else {
-      throw new Error(`config.node.genesisAccount is NOT a genesis account. Genesis account has only balance of ${balance} XAS. Are you using a localnet node?`)
+      throw new Error(`genesisAccount_empty: config.node.genesisAccount is NOT a genesis account. Genesis account has only balance of ${balance} XAS. Are you using a localnet node?`)
     }
   } // hasGenesisAccountEnoughMoney
 
