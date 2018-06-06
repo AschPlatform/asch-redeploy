@@ -1,3 +1,3 @@
 
 require('./lib/deploy@registerDapp')
-require('./lib/sendMoney@getBalance')
+require('./lib/sendMoney')

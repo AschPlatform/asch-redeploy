@@ -103,7 +103,7 @@ let sendMoney = function (config, logger, axios, aschJS, promise) {
       this.Promise.reject(new Error(response.data.error))
     }
     this.logger.verbose(`successful created money transaction: ${response.data.transactionId}`)
-    return null
+    return response.data.transactionId
   } // handleTransfer
 
   this.sendMoney = function () {
@@ -135,7 +135,7 @@ let sendMoney = function (config, logger, axios, aschJS, promise) {
       })
       .catch(function (error) {
         if (error && error.message === 'enough_money') {
-          return null
+          return 'enough_money'
         }
         throw error
       })

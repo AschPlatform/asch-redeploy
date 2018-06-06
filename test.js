@@ -1,7 +1,7 @@
 const DI = require('./src/container')
 
-const Axios = function () {
-  this.post = function (url, config) {
+const Axios = {
+  post (url, config) {
     return new Promise((resolve, reject) => {
       console.log('I am in axios post')
       resolve(true)
@@ -9,9 +9,21 @@ const Axios = function () {
   }
 }
 
-DI.helpers.annotate(Axios)
+const registerConstantValue = DI.helpers.registerConstantValue(DI.container)
 DI.container.unbind(DI.DEPENDENCIES.Axios)
-DI.container.bind(DI.DEPENDENCIES.Axios).to(Axios)
+registerConstantValue(DI.DEPENDENCIES.Axios, Axios)
+
+// DI.helpers.annotate(Axios)
+// DI.container.unbind(DI.DEPENDENCIES.Axios)
+// DI.container.bind(DI.DEPENDENCIES.Axios).to(Axios)
 
 let sendMoney = DI.container.get(DI.FILETYPES.SendMoney)
-console.log(sendMoney)
+sendMoney.axios.post('hallo', { my: 'el' })
+  .then((result) => {
+    console.log(`result: ${result}`)
+  })
+
+// Axios.post('test', { myData: 'hello' })
+//   .then((result) => {
+//     console.log(`result: ${result}`)
+//   })
