@@ -21,6 +21,7 @@ let RegisterDapp = function (config, dappConfig, utils, axios, aschJS) {
     var dapp = this.dappConfig
     dapp.name = `${dapp.name}-${utils.generateRandomString(15)}`
     dapp.link = `${dapp.link.replace('.zip', '')}-${utils.generateRandomString(15)}.zip`
+    console.log(`dapp.name ${dapp.name}, dapp.link ${dapp.link}`)
     let trs = aschJS.dapp.createDApp(dapp, secret, secondSecret)
 
     return this.axios.post(this.peerTransactionUrl, { transaction: trs }, {
