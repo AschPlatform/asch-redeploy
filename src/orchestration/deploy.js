@@ -2,7 +2,7 @@ const aschJS = require('asch-js')
 const fs = require('fs')
 const path = require('path')
 const axios = require('axios')
-const ncp = require('ncp').ncp
+const copyDirectory = require('./copyDirectory')
 const Promise = require('bluebird')
 const utils = require('../utils')
 const logger = require('../logger')
@@ -62,7 +62,7 @@ let deploy = function (config) {
       dappConfig.secrets.push(...self.config.dapp.delegates)
       fs.writeFileSync(dappConfigPath, JSON.stringify(dappConfig, null, 2), 'utf8')
 
-      ncp(self.config.userDevDir, newDappDirectory, function (err) {
+      copyDirectory(self.config.userDevDir, newDappDirectory, function (err) {
         if (err) {
           reject(err)
         } else {
