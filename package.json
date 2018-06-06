@@ -34,6 +34,7 @@
     "eslint-plugin-standard": "3.1.0",
     "jshint": "^2.9.5",
     "mocha": "^5.2.0",
+    "mock-fs": "^4.5.0",
     "should": "^13.2.1"
   },
   "scripts": {
