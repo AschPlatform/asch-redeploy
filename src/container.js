@@ -4,9 +4,11 @@ require('reflect-metadata')
 
 const SendMoney = require('./orchestration/sendMoney')
 const RegisterDapp = require('./orchestration/registerDapp')
+const ChangeAschConfig = require('./orchestration/changeAschConfig')
 const FILETYPES = {
   SendMoney: 'SendMoney',
-  RegisterDapp: 'RegisterDapp'
+  RegisterDapp: 'RegisterDapp',
+  ChangeAschConfig: 'ChangeAschConfig'
 }
 
 const Config = require('config').config
@@ -16,6 +18,8 @@ const AschJS = require('asch-js')
 const Promise = require('bluebird')
 const DappConfig = require('../dapp.json')
 const Utils = require('./utils')
+const Fs = require('fs')
+const Path = require('path')
 
 const DEPENDENCIES = {
   Config: 'Config',
@@ -24,7 +28,9 @@ const DEPENDENCIES = {
   AschJS: 'AschJS',
   Promise: 'Promise',
   DappConfig: 'DappConfig',
-  Utils: 'Utils'
+  Utils: 'Utils',
+  Fs: 'Fs',
+  Path: 'Path'
 }
 
 /* register SendMoney */
@@ -32,6 +38,9 @@ helpers.annotate(SendMoney, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENC
 
 /* register RegisterDapp */
 helpers.annotate(RegisterDapp, [DEPENDENCIES.Config, DEPENDENCIES.DappConfig, DEPENDENCIES.Utils, DEPENDENCIES.Axios, DEPENDENCIES.AschJS, DEPENDENCIES.Logger])
+
+/* register ChangeAschConfig */
+helpers.annotate(ChangeAschConfig, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path])
 
 var container = new inversify.Container()
 
@@ -44,6 +53,8 @@ let setConstants = function () {
   registerConstantValue(DEPENDENCIES.Promise, Promise)
   registerConstantValue(DEPENDENCIES.DappConfig, DappConfig)
   registerConstantValue(DEPENDENCIES.Utils, Utils)
+  registerConstantValue(DEPENDENCIES.Fs, Fs)
+  registerConstantValue(DEPENDENCIES.Path, Path)
 }
 
 let resetConstants = function () {
@@ -54,6 +65,8 @@ let resetConstants = function () {
   container.unbind(DEPENDENCIES.Promise)
   container.unbind(DEPENDENCIES.DappConfig)
   container.unbind(DEPENDENCIES.Utils)
+  container.unbind(DEPENDENCIES.Fs)
+  container.unbind(DEPENDENCIES.Path)
 
   setConstants()
 }
@@ -61,6 +74,7 @@ let resetConstants = function () {
 // bindings
 container.bind(FILETYPES.SendMoney).to(SendMoney)
 container.bind(FILETYPES.RegisterDapp).to(RegisterDapp)
+container.bind(FILETYPES.ChangeAschConfig).to(ChangeAschConfig)
 
 setConstants()
 

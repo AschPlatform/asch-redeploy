@@ -10,7 +10,7 @@ let writeOutput = function (settings, dappId) {
         dappId: dappId
       }
       fs.writeFileSync(settings.output.file, JSON.stringify(config, null, 2), 'utf8')
-      resolve(settings.output.file)
+      resolve(true)
       return
     }
     resolve(false)

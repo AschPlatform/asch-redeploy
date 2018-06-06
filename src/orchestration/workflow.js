@@ -17,9 +17,6 @@ let workflow = (service, config) => {
       let money = DI.container.get(DI.FILETYPES.SendMoney)
       return money.sendMoney()
     })
-    .then(function sendMoneyFinished (response) {
-      return response
-    })
     .then(function wait () {
       logger.info('starting to register Dapp...', { meta: 'green' })
       return Promise.delay(10000)
@@ -30,6 +27,10 @@ let workflow = (service, config) => {
     })
     .then(function startToCopyfiles (transactionId) {
       return deploy.copyFiles(transactionId)
+    })
+    .then(function writeAschConfigFile (transactionId) {
+      let changeAschConfig = DI.container.get(DI.FILETYPES.ChangeAschConfig)
+      return changeAschConfig.add(transactionId)
     })
     .then(function writeOutputfile (result) {
       return writeOutput(config, deploy.dappId)
@@ -47,7 +48,8 @@ let workflow = (service, config) => {
     })
     .then(function afterStopChangeAschConfig (result) {
       logger.verbose('asch-server stopped', { meta: 'green.inverse' })
-      return deploy.changeAschConfig(result)
+      // return deploy.changeAschConfig(result)
+      return Promise.delay(2000)
     })
     .then((result) => {
       logger.verbose(`result: ${result}`)
