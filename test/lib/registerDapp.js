@@ -139,8 +139,7 @@ describe('registerDapp', function () {
       let register = container.get(DI.FILETYPES.RegisterDapp)
       register.register()
         .then((result) => {
-          should(result.data).have.property('transactionId')
-          should(result.data.transactionId).equals(transactionId)
+          should(result).equals(transactionId)
           done()
         })
         .catch((error) => {

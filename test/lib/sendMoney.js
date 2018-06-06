@@ -26,7 +26,7 @@ describe('sendMoney', function () {
   })
 
   describe('happy path', function () {
-    it('injection worked', function (done) {
+    it('DI worked', function (done) {
       let sendMoney = DI.container.get(DI.FILETYPES.SendMoney)
 
       should(sendMoney).be.ok()

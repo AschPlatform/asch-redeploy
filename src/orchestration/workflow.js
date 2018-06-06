@@ -28,17 +28,8 @@ let workflow = (service, config) => {
       let registerDapp = DI.container.get(DI.FILETYPES.RegisterDapp)
       return registerDapp.register()
     })
-    .then(function registerDappFinished (response) {
-      if (response.status !== 200) {
-        throw new Error('Could not register dapp')
-      }
-      if (response.data.success === false) {
-        throw new Error(response.data.error)
-      }
-      deploy.dappId = response.data.transactionId
-
-      logger.info(`DAPP registered, DappId: ${response.data.transactionId}`, { meta: 'green.inverse' })
-      return deploy.copyFiles(response.data.transactionId)
+    .then(function startToCopyfiles (transactionId) {
+      return deploy.copyFiles(transactionId)
     })
     .then(function writeOutputfile (result) {
       return writeOutput(config, deploy.dappId)
