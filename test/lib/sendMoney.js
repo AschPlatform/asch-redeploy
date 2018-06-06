@@ -5,36 +5,19 @@ const DI = require('../../src/container')
 const should = require('should')
 
 describe('sendMoney', function () {
-  let container = DI.container
-
+  const container = DI.container
+  const registerConstant = DI.helpers.registerConstantValue(container)
   before('setup', function () {
-    const registerConstantValue = DI.helpers.registerConstantValue(container)
-
-    // axios
-    const Axios = {
-      post (url, config) {
-        return new Promise((resolve, reject) => {
-          console.log('I am in axios post')
-          resolve(true)
-        })
-      }
-    }
-
-    DI.container.unbind(DI.DEPENDENCIES.Axios)
-    registerConstantValue(DI.DEPENDENCIES.Axios, Axios)
-
     // logger
     const Logger = {
       info (text, config) {
-        console.log(text)
       },
       verbose (text, config) {
-        console.log(text)
       }
     }
 
     DI.container.unbind(DI.DEPENDENCIES.Logger)
-    registerConstantValue(DI.DEPENDENCIES.Logger, Logger)
+    registerConstant(DI.DEPENDENCIES.Logger, Logger)
   })
 
   after('cleanup', function () {
@@ -53,7 +36,43 @@ describe('sendMoney', function () {
     done()
   })
 
-  it.skip('zero balance on genesis-account exits with error', function () {
+  it('zero balance on genesis-account exits with error', function (done) {
+    // config
+    const Axios = {
+      post (url, config) {
+        return new Promise((resolve, reject) => {
+          let result = {
+            status: 200,
+            data: {
+              success: true,
+              account: {
+                balance: 0,
+                address: '14762548536863074694'
+              }
+            }
+          }
+
+          resolve(result)
+        })
+      }
+    }
+
+    DI.container.unbind(DI.DEPENDENCIES.Axios)
+    registerConstant(DI.DEPENDENCIES.Axios, Axios)
+
+    /* act */
+    let sendMoney = DI.container.get(DI.FILETYPES.SendMoney)
+    sendMoney.sendMoney()
+      .then((result) => {
+        console.log(`result: ${result}`)
+      })
+      .then(() => {
+        throw new Error('should throw exception')
+      })
+      .catch((error) => {
+        console.log(error)
+        done()
+      })
   })
 
   it.skip('zero balance on dapp-master-account cause a money transfer and returns transactionId', function () {
