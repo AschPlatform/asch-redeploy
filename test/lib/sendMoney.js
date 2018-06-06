@@ -197,7 +197,33 @@ describe('sendMoney', function () {
         })
     })
 
-    it.skip('network error exists with exception', function (done) {
+    it('network error exists with exception', function (done) {
+      // config
+      let message = 'connect ECONNREFUSED 127.0.0.1:4096'
+
+      const Axios = {
+        called: 0,
+        post (url, config) {
+          this.called++
+          // throw on first request
+          return new Promise((resolve, reject) => {
+            reject(new Error(message))
+          })
+        }
+      }
+
+      DI.container.unbind(DI.DEPENDENCIES.Axios)
+      registerConstant(DI.DEPENDENCIES.Axios, Axios)
+
+      let sendMoney = container.get(DI.FILETYPES.SendMoney)
+      sendMoney.sendMoney()
+        .then((result) => {
+          throw new Error()
+        })
+        .catch((error) => {
+          should(error.message).startWith('connect ECONNREFUSED')
+          done()
+        })
     })
   })
 })
