@@ -82,21 +82,25 @@ let sendMoney = function (config, logger, axios, aschJS, promise) {
       null
     )
     let peerTransactionUrl = `${config.node.host}:${config.node.port}/peer/transactions`
-    // let header = {
-    //   magic: config.node.magic,
-    //   version: ''
-    // }
-    return new this.Promise((resolve, reject) => {
-      this.axios.post(peerTransactionUrl, {
-      // headers: header,
-        data: {
-          transaction: trs
-        }
-      })
-        .then((result) => {
-          resolve(result)
-        })
+    let header = {
+      magic: config.node.magic,
+      version: ''
+    }
+    // return this.axios({
+    //   method: 'POST',
+    //   url: peerTransactionUrl,
+    //   headers: header,
+    //   data: {
+    //     transaction: trs
+    //   }
+    // })
+    return this.axios.post(peerTransactionUrl, { transaction: trs }, {
+      headers: header
     })
+      .then((result) => {
+        console.log(`yuhu result: ${result}`)
+        return result
+      })
   } // transfer
 
   this.handleTransferResponse = function (response) {
@@ -107,7 +111,7 @@ let sendMoney = function (config, logger, axios, aschJS, promise) {
     if (response.data.success === false) {
       this.Promise.reject(new Error(response.data.error))
     }
-    this.logger.verbose(`successful created money transaction: ${response.data.transactionId}`)
+    this.logger.info(`successful created money transaction: ${response.data.transactionId}`, { meta: 'green.inverse' })
     return response.data.transactionId
   } // handleTransfer
 
