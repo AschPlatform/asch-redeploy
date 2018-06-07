@@ -1,8 +1,15 @@
+const Promise = require('bluebird')
 
-let checkArch = () => {
-  if (process.platform !== 'linux') {
-    throw new Error('This program can currently run only on linux')
+let CheckArch = function () {
+  this.check = () => {
+    return new Promise((resolve, reject) => {
+      if (process.platform !== 'linux') {
+        reject(new Error('only_linux: This program can currently run only on linux'))
+      } else {
+        resolve(true)
+      }
+    })
   }
 }
 
-module.exports = checkArch
+module.exports = CheckArch

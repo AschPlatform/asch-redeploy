@@ -24,6 +24,7 @@ describe('startUpcheck', function () {
     it('dependencies getting called and overall result is true', function (done) {
       container.unbind(DI.FILETYPES.IsConfigValid)
       container.unbind(DI.FILETYPES.CheckFileStructure)
+      container.unbind(DI.DEPENDENCIES.CheckArch)
 
       let IsConfigValid = function (config, logger) {
         this.config = config
@@ -48,14 +49,29 @@ describe('startUpcheck', function () {
       DI.helpers.annotate(CheckFileStructure, [DI.DEPENDENCIES.Config])
       container.bind(DI.FILETYPES.CheckFileStructure).to(CheckFileStructure)
 
+      let CheckArch = function () {
+        CheckArch.called = 0
+        this.check = () => {
+          CheckArch.called += 1
+          return new Promise((resolve, reject) => {
+            resolve(true)
+          })
+        }
+      }
+      registerConstant(DI.DEPENDENCIES.CheckArch, new CheckArch())
+
       let startUpCheck = container.get(DI.FILETYPES.StartUpCheck)
       startUpCheck.check()
         .then((result) => {
           should(result).equals(true)
+
           should(IsConfigValid).have.property('called')
           should(IsConfigValid.called).equals(1)
           should(CheckFileStructure).have.property('called')
           should(CheckFileStructure.called).equals(1)
+          should(CheckArch).have.property('called')
+          should(CheckArch.called).equals(1)
+
           done()
         })
         .catch((error) => {
@@ -65,5 +81,36 @@ describe('startUpcheck', function () {
   })
 
   describe('sad path', function () {
+    it('CheckArch throws Error - exists with exception', function (done) {
+      // config
+      container.unbind(DI.DEPENDENCIES.CheckArch)
+
+      let CheckArch = function () {
+        CheckArch.called = 0
+        this.check = () => {
+          CheckArch.called += 1
+          return new Promise((resolve, reject) => {
+            reject(new Error('only_linux: This program can currently run only on linux'))
+          })
+        }
+      }
+      let checkArch = new CheckArch()
+      registerConstant(DI.DEPENDENCIES.CheckArch, checkArch)
+
+      let startUpCheck = container.get(DI.FILETYPES.StartUpCheck)
+      startUpCheck.check()
+        .then((result) => {
+          throw new Error()
+        })
+        .catch((error) => {
+          should(error.message).startWith('only_linux')
+          should(CheckArch).have.property('called')
+          should(CheckArch.called).equals(1)
+          done()
+        })
+    })
+
+    it.skip('CheckFileStructure throws Error - StartUpcheck exits with exception')
+    it.skip('check for system architecture throws Error - StartUpCheck exists with exception')
   })
 })

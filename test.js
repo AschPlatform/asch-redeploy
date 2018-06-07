@@ -1,17 +1,17 @@
 const DI = require('./src/container')
+const Prom = DI.container.get(DI.DEPENDENCIES.Promise)
 
-// const config = DI.container.get(DI.DEPENDENCIES.Config)
-// console.log(config)
+let calling = function () {
+  return new Promise((resolve, reject) => {
+    reject(new Error('this is an error'))
+  })
+}
 
-const startUpCheck = DI.container.get(DI.FILETYPES.StartUpCheck)
-// console.log(startUpCheck)
-
-startUpCheck.check()
-  .then((result) => {
-    console.log('got result')
-    console.log(`result: ${result}`)
+calling()
+  .then((result) =>  {
+    console.log('result' + result)
   })
   .catch((error) => {
-    console.log('got error')
+    console.log('catched')
     console.log(error)
   })

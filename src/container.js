@@ -29,6 +29,7 @@ const Utils = require('./utils')
 const Fs = require('fs')
 const Path = require('path')
 const CopyDirectory = require('./orchestration/copyDirectory')
+const CheckArch = new (require('./startup/checkArch'))()
 
 const DEPENDENCIES = {
   Config: 'Config',
@@ -40,7 +41,8 @@ const DEPENDENCIES = {
   Utils: 'Utils',
   Fs: 'Fs',
   Path: 'Path',
-  CopyDirectory: 'CopyDirectory'
+  CopyDirectory: 'CopyDirectory',
+  CheckArch: 'CheckArch'
 }
 
 /* register SendMoney */
@@ -56,7 +58,7 @@ helpers.annotate(ChangeAschConfig, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPEND
 helpers.annotate(Deploy, [DEPENDENCIES.Config, DEPENDENCIES.CopyDirectory, DEPENDENCIES.Path, DEPENDENCIES.Fs])
 
 /* register StartUpCheck */
-helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FILETYPES.CheckFileStructure])
+helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FILETYPES.CheckFileStructure, DEPENDENCIES.CheckArch])
 
 /* register IsConfigValid */
 helpers.annotate(IsConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.Logger])
@@ -78,6 +80,7 @@ let setConstants = function () {
   registerConstantValue(DEPENDENCIES.Fs, Fs)
   registerConstantValue(DEPENDENCIES.Path, Path)
   registerConstantValue(DEPENDENCIES.CopyDirectory, CopyDirectory)
+  registerConstantValue(DEPENDENCIES.CheckArch, CheckArch)
 }
 
 let resetConstants = function () {
@@ -91,6 +94,7 @@ let resetConstants = function () {
   container.unbind(DEPENDENCIES.Fs)
   container.unbind(DEPENDENCIES.Path)
   container.unbind(DEPENDENCIES.CopyDirectory)
+  container.unbind(DEPENDENCIES.CheckArch)
 
   setConstants()
 }

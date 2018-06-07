@@ -1,16 +1,13 @@
-const checkArch = require('./checkArch')
-const Promise = require('bluebird')
 
 // ctor
-let StartUpCheck = function (config, isConfigValid, checkFileStructure) {
+let StartUpCheck = function (config, isConfigValid, checkFileStructure, checkArch) {
   this.config = config
   this.isConfigValid = isConfigValid
   this.checkFileStructure = checkFileStructure
+  this.checkArch = checkArch
 
   this.check = () => {
-    return new Promise((resolve, reject) => {
-      resolve(checkArch())
-    })
+    return this.checkArch.check()
       .then(() => {
         return this.isConfigValid.isValidSync()
       })
