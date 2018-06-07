@@ -26,7 +26,7 @@ let workflow = (service, config) => {
       return registerDapp.register()
     })
     .then(function startToCopyfiles (transactionId) {
-      return deploy.copyFiles(transactionId)
+      return deploy.deploy(transactionId)
     })
     .then(function writeAschConfigFile (transactionId) {
       let changeAschConfig = DI.container.get(DI.FILETYPES.ChangeAschConfig)

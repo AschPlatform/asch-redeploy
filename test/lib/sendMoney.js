@@ -16,7 +16,6 @@ describe('sendMoney', function () {
       verbose (text, config) {
       }
     }
-
     DI.container.unbind(DI.DEPENDENCIES.Logger)
     registerConstant(DI.DEPENDENCIES.Logger, Logger)
   })

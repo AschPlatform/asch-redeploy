@@ -34,6 +34,7 @@ describe('writeOutput', function () {
       should(changeAschConfig).have.property('fs')
       should(changeAschConfig).have.property('path')
       should(changeAschConfig).have.property('logger')
+      done()
     })
 
     it('add new dappId to asch/config.json file', function (done) {

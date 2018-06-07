@@ -7,10 +7,13 @@ const Promise = require('bluebird')
 let deploy = function (config) {
   this.config = config
 
-  this.copyFiles = function (dappId) {
-    let self = this
-    return new Promise(function (resolve, reject) {
-      let dappParentDir = path.join(self.config.node.directory, 'dapps')
+  this.deploy = (dappId) => {
+    return new Promise((resolve, reject) => {
+      if (typeof dappId !== 'string') {
+        throw new Error('dappId must be of type string')
+      }
+
+      let dappParentDir = path.join(this.config.node.directory, 'dapps')
 
       let existsDappDir = fs.existsSync(dappParentDir)
 
@@ -18,17 +21,19 @@ let deploy = function (config) {
         fs.mkdirSync(dappParentDir)
       }
 
-      let newDappDirectory = path.join(self.config.node.directory, 'dapps', dappId)
+      let newDappDirectory = path.join(this.config.node.directory, 'dapps', dappId)
       fs.mkdirSync(newDappDirectory)
 
-      let dappConfigPath = path.join(self.config.userDevDir, 'config.json')
-      let dappConfig = JSON.parse(fs.readFileSync(dappConfigPath, 'utf8'))
+      // let dappConfig = {
+      //   peers: [],
+      //   secrets: this.config.dapp.delegates
+      // }
+      // let dappConfigPath = path.join(this.config.userDevDir, 'config.json')
+      // dappConfig.secrets = []
+      // dappConfig.secrets.push(...this.config.dapp.delegates)
+      // fs.writeFileSync(dappConfigPath, JSON.stringify(dappConfig, null, 2), 'utf8')
 
-      dappConfig.secrets = []
-      dappConfig.secrets.push(...self.config.dapp.delegates)
-      fs.writeFileSync(dappConfigPath, JSON.stringify(dappConfig, null, 2), 'utf8')
-
-      copyDirectory(self.config.userDevDir, newDappDirectory, (err) => {
+      copyDirectory(this.config.userDevDir, newDappDirectory, (err) => {
         if (err) {
           reject(err)
         } else {
