@@ -7,12 +7,26 @@ const mockFs = require('mock-fs')
 describe('writeOutput', function () {
   const container = DI.container
   const registerConstant = DI.helpers.registerConstantValue(container)
+
+  beforeEach('setup', function () {
+    // logger
+    const Logger = {
+      info (text, config) {
+      },
+      warn (text, config) {
+      }
+    }
+
+    DI.container.unbind(DI.DEPENDENCIES.Logger)
+    registerConstant(DI.DEPENDENCIES.Logger, Logger)
+  })
+
   afterEach('cleanup', function () {
     mockFs.restore()
   })
 
   describe('happy path', function (done) {
-    it('add new dappId to config.json file', function (done) {
+    it('add new dappId to asch/config.json file', function (done) {
       // config
       let Config = {
         node: {
@@ -69,7 +83,34 @@ describe('writeOutput', function () {
   })
 
   describe('sad path', function () {
-    it.skip('file config.json doesn\'t exists', function (done) {
+    it('file config.json doesn\'t exists', function (done) {
+      // config
+      let dappId = 'jg8h2051iiIFHEGH35'
+      let Config = {
+        node: {
+          directory: '/home/user/asch'
+        },
+        dapp: {
+          masterAccountPassword: 'sentence weasel match weather apple onion release keen lens deal fruit matrix'
+        }
+      }
+      DI.container.unbind(DI.DEPENDENCIES.Config)
+      registerConstant(DI.DEPENDENCIES.Config, Config)
+
+      mockFs({
+        '/home/user/aschWrongDir': {
+        }
+      })
+
+      let changeAschConfig = container.get(DI.FILETYPES.ChangeAschConfig)
+      changeAschConfig.add(dappId)
+        .then((result) => {
+          throw new Error()
+        })
+        .catch((error) => {
+          should(error.message).startWith('asch_config_file_not_found')
+          done()
+        })
     })
 
     it('calling writeOutput.add() without dappId throws exception', function (done) {
