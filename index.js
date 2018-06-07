@@ -10,7 +10,7 @@ const logger = require('./src/logger')
 const Service = require('./src/orchestration/service')
 const Conductor = require('./src/orchestration/conductor')
 let aschService = null
-let appConfig = null
+let appConfig = DI.container.get(DI.DEPENDENCIES.Config)
 
 // https://www.exratione.com/2013/05/die-child-process-die/
 process.once('uncaughtException', function (error) {
@@ -21,11 +21,8 @@ process.once('uncaughtException', function (error) {
 logger.verbose('starting asch-redeploy...')
 
 startUpCheck.check()
-  .then((config) => {
-    appConfig = config
-    return appConfig
-  })
-  .then((config) => {
+  .then(() => {
+    let config = DI.container.get(DI.DEPENDENCIES.Config)
     let logDir = path.join(config.userDevDir, 'logs')
     let aschDirectory = config.node.directory
     let port = config.node.port
