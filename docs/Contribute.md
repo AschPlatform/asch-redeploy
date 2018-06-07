@@ -37,3 +37,8 @@ Type
 cd asch-redeploy
 npm link
 ```
+
+## Run tests
+```bash
+npm test
+```

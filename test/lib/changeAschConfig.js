@@ -26,6 +26,16 @@ describe('writeOutput', function () {
   })
 
   describe('happy path', function (done) {
+    it('DI worked', function (done) {
+      let changeAschConfig = container.get(DI.FILETYPES.ChangeAschConfig)
+
+      should(changeAschConfig).be.ok()
+      should(changeAschConfig).have.property('config')
+      should(changeAschConfig).have.property('fs')
+      should(changeAschConfig).have.property('path')
+      should(changeAschConfig).have.property('logger')
+    })
+
     it('add new dappId to asch/config.json file', function (done) {
       // config
       let Config = {

@@ -1,6 +1,5 @@
 # TODO
-* Use a dependency injection container that will passed to every constructor
-  * after that make
+* Is it necessary, to have the asch/public/dist folder build for "asch-redeploy" to work?
 * Write tests
   * Add travis-ci build on commit!Add travis-ci build on commit!
   * Add `.travis.yml` file
