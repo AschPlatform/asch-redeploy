@@ -59,7 +59,7 @@ helpers.annotate(Deploy, [DEPENDENCIES.Config, DEPENDENCIES.CopyDirectory, DEPEN
 helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FILETYPES.CheckFileStructure])
 
 /* register IsConfigValid */
-helpers.annotate(IsConfigValid, [DEPENDENCIES.Config])
+helpers.annotate(IsConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.Logger])
 
 /* register CheckFileStructure */
 helpers.annotate(CheckFileStructure, [DEPENDENCIES.Config])

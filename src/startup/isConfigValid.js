@@ -1,10 +1,10 @@
 const ZSchema = require('z-schema')
 const customValidators = require('./customValidators')
-const logger = require('../logger')
 
 // ctor
-let IsConfigValid = function (config) {
+let IsConfigValid = function (config, logger) {
   this.config = config
+  this.logger = logger
 
   this.isValidSync = () => {
     let validator = new ZSchema({
@@ -23,8 +23,8 @@ let IsConfigValid = function (config) {
       return true
     } else {
       let errors = validator.getLastErrors()
-      logger.error(JSON.stringify(errors), { meta: 'underline' })
-      return false
+      this.logger.error('validation_error: Error after validationg configuration')
+      throw new Error(JSON.stringify(errors))
     }
   }
 }

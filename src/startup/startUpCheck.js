@@ -12,14 +12,9 @@ let StartUpCheck = function (config, isConfigValid, checkFileStructure) {
       resolve(checkArch())
     })
       .then((result) => {
-        console.log('isValid?')
-        // let isConfigValid = DI.container.get(DI.FILETYPES.IsConfigValid)
-        let isValid = this.isConfigValid.isValidSync()
-        return isValid
+        return this.isConfigValid.isValidSync()
       })
       .then(() => {
-        console.log('check file structure')
-        // let checkFileStructure = DI.container.get(DI.FILETYPES.CheckFileStructure)
         return this.checkFileStructure.checkSync()
       })
       .catch((error) => {
