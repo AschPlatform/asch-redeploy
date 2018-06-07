@@ -5,13 +5,21 @@ require('reflect-metadata')
 const SendMoney = require('./orchestration/sendMoney')
 const RegisterDapp = require('./orchestration/registerDapp')
 const ChangeAschConfig = require('./orchestration/changeAschConfig')
+const Deploy = require('./orchestration/deploy')
+const StartUpCheck = require('./startup/startUpCheck')
+const IsConfigValid = require('./startup/isConfigValid')
+const CheckFileStructure = require('./startup/checkFileStructure')
 const FILETYPES = {
   SendMoney: 'SendMoney',
   RegisterDapp: 'RegisterDapp',
-  ChangeAschConfig: 'ChangeAschConfig'
+  ChangeAschConfig: 'ChangeAschConfig',
+  Deploy: 'Deploy',
+  StartUpCheck: 'StartUpCheck',
+  IsConfigValid: 'IsConfigValid',
+  CheckFileStructure: 'CheckFileStructure'
 }
 
-const Config = require('config').config
+const Config = require('./startup/loadConfig')()
 const Axios = require('axios')
 const Logger = require('./logger')
 const AschJS = require('asch-js')
@@ -20,6 +28,7 @@ const DappConfig = require('../dapp.json')
 const Utils = require('./utils')
 const Fs = require('fs')
 const Path = require('path')
+const CopyDirectory = require('./orchestration/copyDirectory')
 
 const DEPENDENCIES = {
   Config: 'Config',
@@ -30,7 +39,8 @@ const DEPENDENCIES = {
   DappConfig: 'DappConfig',
   Utils: 'Utils',
   Fs: 'Fs',
-  Path: 'Path'
+  Path: 'Path',
+  CopyDirectory: 'CopyDirectory'
 }
 
 /* register SendMoney */
@@ -41,6 +51,18 @@ helpers.annotate(RegisterDapp, [DEPENDENCIES.Config, DEPENDENCIES.DappConfig, DE
 
 /* register ChangeAschConfig */
 helpers.annotate(ChangeAschConfig, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path, DEPENDENCIES.Logger])
+
+/* register Deploy */
+helpers.annotate(Deploy, [DEPENDENCIES.Config, DEPENDENCIES.CopyDirectory, DEPENDENCIES.Path, DEPENDENCIES.Fs])
+
+/* register StartUpCheck */
+helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FILETYPES.CheckFileStructure])
+
+/* register IsConfigValid */
+helpers.annotate(IsConfigValid, [DEPENDENCIES.Config])
+
+/* register CheckFileStructure */
+helpers.annotate(CheckFileStructure, [DEPENDENCIES.Config])
 
 var container = new inversify.Container()
 
@@ -55,6 +77,7 @@ let setConstants = function () {
   registerConstantValue(DEPENDENCIES.Utils, Utils)
   registerConstantValue(DEPENDENCIES.Fs, Fs)
   registerConstantValue(DEPENDENCIES.Path, Path)
+  registerConstantValue(DEPENDENCIES.CopyDirectory, CopyDirectory)
 }
 
 let resetConstants = function () {
@@ -67,6 +90,7 @@ let resetConstants = function () {
   container.unbind(DEPENDENCIES.Utils)
   container.unbind(DEPENDENCIES.Fs)
   container.unbind(DEPENDENCIES.Path)
+  container.unbind(DEPENDENCIES.CopyDirectory)
 
   setConstants()
 }
@@ -75,6 +99,10 @@ let resetConstants = function () {
 container.bind(FILETYPES.SendMoney).to(SendMoney)
 container.bind(FILETYPES.RegisterDapp).to(RegisterDapp)
 container.bind(FILETYPES.ChangeAschConfig).to(ChangeAschConfig)
+container.bind(FILETYPES.Deploy).to(Deploy)
+container.bind(FILETYPES.StartUpCheck).to(StartUpCheck)
+container.bind(FILETYPES.IsConfigValid).to(IsConfigValid)
+container.bind(FILETYPES.CheckFileStructure).to(CheckFileStructure)
 
 setConstants()
 

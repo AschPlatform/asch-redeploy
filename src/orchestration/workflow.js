@@ -1,5 +1,4 @@
 const Promise = require('bluebird')
-const Deploy = require('./deploy')
 const writeOutput = require('./writeOutput')
 const logger = require('../logger')
 
@@ -7,7 +6,6 @@ let workflow = (service, config) => {
   this.service = service
   this.config = config
 
-  const deploy = new Deploy(config)
   const DI = require('../container')
 
   logger.info('check balance...', { meta: 'green' })
@@ -26,6 +24,7 @@ let workflow = (service, config) => {
       return registerDapp.register()
     })
     .then(function startToCopyfiles (transactionId) {
+      let deploy = DI.container.get(DI.FILETYPES.Deploy)
       return deploy.deploy(transactionId)
     })
     .then(function writeAschConfigFile (transactionId) {
@@ -33,7 +32,7 @@ let workflow = (service, config) => {
       return changeAschConfig.add(transactionId)
     })
     .then(function writeOutputfile (result) {
-      return writeOutput(config, deploy.dappId)
+      return writeOutput(config, undefined)
     })
     .then(function wait (result) {
       logger.info(`wrote dappId to: ${result}`)

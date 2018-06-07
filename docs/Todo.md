@@ -1,4 +1,7 @@
 # TODO
+* Refactoring:
+  * rename `src/container.js` file into `src/DI.js`
+  * Add "userDevDir" to schema object for validation
 * Is it necessary, to have the asch/public/dist folder build for "asch-redeploy" to work?
 * Write tests
   * Add travis-ci build on commit!Add travis-ci build on commit!

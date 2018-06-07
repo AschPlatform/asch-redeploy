@@ -1,9 +1,12 @@
+const DI = require('./src/container')
+
+let startUpCheck = DI.container.get(DI.FILETYPES.StartUpCheck)
+
 const path = require('path')
 const utils = require('./src/utils')
 const Promise = require('bluebird')
 const logger = require('./src/logger')
 
-const startUp = require('./src/startup/startup')
 const Service = require('./src/orchestration/service')
 const Conductor = require('./src/orchestration/conductor')
 let aschService = null
@@ -16,7 +19,8 @@ process.once('uncaughtException', function (error) {
 })
 
 logger.verbose('starting asch-redeploy...')
-startUp()
+
+startUpCheck.check()
   .then((config) => {
     appConfig = config
     return appConfig
