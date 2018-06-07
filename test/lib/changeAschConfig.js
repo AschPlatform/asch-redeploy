@@ -53,10 +53,13 @@ describe('writeOutput', function () {
       let writeOutput = container.get(DI.FILETYPES.ChangeAschConfig)
       writeOutput.add(dappId)
         .then((result) => {
-          should(result).equals(true)
           let fs = container.get(DI.DEPENDENCIES.Fs)
           let configFile = fs.readFileSync('/home/user/asch/config.json', 'utf8')
-          console.log(`configfile: ${configFile}`)
+          configFile = JSON.parse(configFile)
+
+          should(fileAfter).deepEqual(configFile)
+          should(result).equals(true)
+
           done()
         })
         .catch((error) => {
