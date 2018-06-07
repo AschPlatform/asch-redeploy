@@ -1,7 +1,6 @@
 'use strict'
 
 const DI = require('../../src/container')
-// const SendMoney = require('../../src/orchestration/sendMoney')
 const should = require('should')
 
 describe('sendMoney', function () {

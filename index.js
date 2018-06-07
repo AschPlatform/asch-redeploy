@@ -1,3 +1,4 @@
+/* needs to be called first */
 const DI = require('./src/container')
 
 let startUpCheck = DI.container.get(DI.FILETYPES.StartUpCheck)

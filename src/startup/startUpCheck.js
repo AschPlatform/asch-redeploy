@@ -11,7 +11,7 @@ let StartUpCheck = function (config, isConfigValid, checkFileStructure) {
     return new Promise((resolve, reject) => {
       resolve(checkArch())
     })
-      .then((result) => {
+      .then(() => {
         return this.isConfigValid.isValidSync()
       })
       .then(() => {
