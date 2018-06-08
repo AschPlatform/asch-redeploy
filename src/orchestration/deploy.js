@@ -15,23 +15,12 @@ let deploy = function (config, copyDirectory, path, fs) {
 
       let dappParentDir = this.path.join(this.config.node.directory, 'dapps')
 
-      let existsDappDir = this.fs.existsSync(dappParentDir)
-
-      if (existsDappDir === false) {
+      if (!this.fs.existsSync(dappParentDir)) {
         this.fs.mkdirSync(dappParentDir)
       }
 
       let newDappDirectory = this.path.join(this.config.node.directory, 'dapps', dappId)
       this.fs.mkdirSync(newDappDirectory)
-
-      // let dappConfig = {
-      //   peers: [],
-      //   secrets: this.config.dapp.delegates
-      // }
-      // let dappConfigPath = path.join(this.config.userDevDir, 'config.json')
-      // dappConfig.secrets = []
-      // dappConfig.secrets.push(...this.config.dapp.delegates)
-      // fs.writeFileSync(dappConfigPath, JSON.stringify(dappConfig, null, 2), 'utf8')
 
       this.copyDirectory(this.config.userDevDir, newDappDirectory, (err) => {
         if (err) {
