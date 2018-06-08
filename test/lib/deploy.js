@@ -105,5 +105,42 @@ describe('deploy', function () {
           done()
         })
     })
+
+    it('copy of files throws exception - deploy exists with error', function (done) {
+      // config
+      let Config = {
+        node: {
+          directory: '/home/user/asch'
+        },
+        userDevDir: '/home/user/source'
+      }
+      container.unbind(DI.DEPENDENCIES.Config)
+      registerConstant(DI.DEPENDENCIES.Config, Config)
+
+      mockFs({
+        '/home/user': {
+          'asch': {
+          },
+          'source': {
+          }
+        }
+      })
+
+      let CopyDirectory = function (from, to, callback) {
+        callback(new Error('copy_files_error: Error while copying files'))
+      }
+      container.unbind(DI.DEPENDENCIES.CopyDirectory)
+      registerConstant(DI.DEPENDENCIES.CopyDirectory, CopyDirectory)
+
+      let deploy = container.get(DI.FILETYPES.Deploy)
+      deploy.deploy('testDappId')
+        .then((result) => {
+          throw new Error()
+        })
+        .catch((error) => {
+          should(error.message).startWith('copy_files_error')
+          done()
+        })
+    })
   })
 })
