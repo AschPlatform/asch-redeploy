@@ -1,12 +1,11 @@
 const Promise = require('bluebird')
 const writeOutput = require('./writeOutput')
 const logger = require('../logger')
+const DI = require('../container')
 
 let workflow = (service, config) => {
   this.service = service
   this.config = config
-
-  const DI = require('../container')
 
   logger.info('check balance...', { meta: 'green' })
 

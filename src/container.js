@@ -30,6 +30,9 @@ const Fs = require('fs')
 const Path = require('path')
 const CopyDirectory = require('./orchestration/copyDirectory')
 const CheckArch = new (require('./startup/checkArch'))()
+const ZSchema = require('z-schema')
+const CustomValidators = require('./startup/customValidators')
+const ConfigSchema = require('./startup/configSchema')
 
 const DEPENDENCIES = {
   Config: 'Config',
@@ -42,7 +45,10 @@ const DEPENDENCIES = {
   Fs: 'Fs',
   Path: 'Path',
   CopyDirectory: 'CopyDirectory',
-  CheckArch: 'CheckArch'
+  CheckArch: 'CheckArch',
+  ZSchema: 'ZSchema',
+  CustomValidators: 'CustomValidators',
+  ConfigSchema: 'ConfigSchema'
 }
 
 var container = new inversify.Container()
@@ -53,12 +59,10 @@ helpers.annotate(RegisterDapp, [DEPENDENCIES.Config, DEPENDENCIES.DappConfig, DE
 helpers.annotate(ChangeAschConfig, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path, DEPENDENCIES.Logger])
 helpers.annotate(Deploy, [DEPENDENCIES.Config, DEPENDENCIES.CopyDirectory, DEPENDENCIES.Path, DEPENDENCIES.Fs])
 helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FILETYPES.CheckFileStructure, DEPENDENCIES.CheckArch])
-helpers.annotate(IsConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.Logger])
+helpers.annotate(IsConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.ZSchema, DEPENDENCIES.CustomValidators, DEPENDENCIES.ConfigSchema])
 helpers.annotate(CheckFileStructure, [DEPENDENCIES.Config])
 
 let setup = function () {
-  // test
-
   // bindings
   container.bind(FILETYPES.SendMoney).to(SendMoney)
   container.bind(FILETYPES.RegisterDapp).to(RegisterDapp)
@@ -80,6 +84,9 @@ let setup = function () {
   registerConstantValue(DEPENDENCIES.Path, Path)
   registerConstantValue(DEPENDENCIES.CopyDirectory, CopyDirectory)
   registerConstantValue(DEPENDENCIES.CheckArch, CheckArch)
+  registerConstantValue(DEPENDENCIES.ZSchema, ZSchema)
+  registerConstantValue(DEPENDENCIES.CustomValidators, CustomValidators)
+  registerConstantValue(DEPENDENCIES.ConfigSchema, ConfigSchema)
 }
 
 let resetConstants = function () {

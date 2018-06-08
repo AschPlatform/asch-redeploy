@@ -1,23 +1,23 @@
-const ZSchema = require('z-schema')
-const customValidators = require('./customValidators')
-
 // ctor
-let IsConfigValid = function (config, logger) {
+let IsConfigValid = function (config, logger, ZSchema, customValidators, configSchema) {
   this.config = config
   this.logger = logger
+  this.ZSchema = ZSchema
+  this.customValidators = customValidators
+  this.configSchema = configSchema
 
   this.isValidSync = () => {
-    let validator = new ZSchema({
+    let validator = new this.ZSchema({
       reportPathAsArray: true,
       breakOnFirstError: false,
       forceItems: true
     })
 
-    if (!customValidators.areNewFormatsRegistered()) {
+    if (!this.customValidators.areNewFormatsRegistered()) {
       throw new Error('z-schema validators bip39 and file are not registered')
     }
 
-    let schema = require('./configSchema')
+    let schema = this.configSchema
     let valid = validator.validate(this.config, schema)
     if (valid === true) {
       return true
