@@ -7,15 +7,15 @@ const utils = require('./src/utils')
 const Promise = require('bluebird')
 const logger = require('./src/logger')
 
-const Conductor = require('./src/orchestration/conductor')
-let aschService = DI.container.get(DI.FILETYPES.Service)
-let appConfig = DI.container.get(DI.DEPENDENCIES.Config)
-
 // https://www.exratione.com/2013/05/die-child-process-die/
 process.once('uncaughtException', function (error) {
   logger.error('UNCAUGHT EXCEPTION')
   logger.error(error.stack)
 })
+
+const Conductor = require('./src/orchestration/conductor')
+let aschService = DI.container.get(DI.FILETYPES.Service)
+let appConfig = DI.container.get(DI.DEPENDENCIES.Config)
 
 logger.verbose('starting asch-redeploy...')
 
