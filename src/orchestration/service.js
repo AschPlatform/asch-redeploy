@@ -17,19 +17,10 @@ let Service = function (config, logger, moment, path, fs, EventEmitter, createLo
 
   this.notifier = new EventEmitter()
 
-  this.createLogFileName = () => {
-    let today = this.moment().format('YYYY-MM-DD')
-    let logFile = this.path.join(this.logDir, `asch-node-${today}.log`)
-    return logFile
-  }
-
   this.start = () => {
     return new Promise((resolve, reject) => {
-      let logFile = this.createLogFileName()
-      this.createLogDir.createDirSync()
-
-      this.logger.info(`asch-node logs are saved in "${logFile}"`)
-      let logStream = this.fs.openSync(logFile, 'a')
+      let logDir = this.createLogDir.createDirSync()
+      let logStream = this.createLogDir.createLogFileNameHandleSync(logDir)
 
       let aschPath = this.path.join(this.aschNodeDir, 'app.js')
       this.logger.info(`starting asch-node in "${aschPath}" on port ${this.port}`)
