@@ -1,4 +1,5 @@
 # TODO
+* Add check for open port
 * Refactoring:
   * rename `src/container.js` file into `src/DI.js`
   * Add "userDevDir" to schema object for validation

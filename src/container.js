@@ -9,6 +9,8 @@ const Deploy = require('./orchestration/deploy')
 const StartUpCheck = require('./startup/startUpCheck')
 const IsConfigValid = require('./startup/isConfigValid')
 const CheckFileStructure = require('./startup/checkFileStructure')
+const Service = require('./orchestration/service')
+const CreateLogDir = require('./orchestration/createLogDir')
 const FILETYPES = {
   SendMoney: 'SendMoney',
   RegisterDapp: 'RegisterDapp',
@@ -16,7 +18,9 @@ const FILETYPES = {
   Deploy: 'Deploy',
   StartUpCheck: 'StartUpCheck',
   IsConfigValid: 'IsConfigValid',
-  CheckFileStructure: 'CheckFileStructure'
+  CheckFileStructure: 'CheckFileStructure',
+  Service: 'Service',
+  CreateLogDir: 'CreateLogDir'
 }
 
 const Config = require('./startup/loadConfig')()
@@ -33,6 +37,8 @@ const CheckArch = new (require('./startup/checkArch'))()
 const ZSchema = require('z-schema')
 const CustomValidators = require('./startup/customValidators')
 const ConfigSchema = require('./startup/configSchema')
+const EventEmitter = require('events')
+const Moment = require('moment')
 
 const DEPENDENCIES = {
   Config: 'Config',
@@ -48,7 +54,9 @@ const DEPENDENCIES = {
   CheckArch: 'CheckArch',
   ZSchema: 'ZSchema',
   CustomValidators: 'CustomValidators',
-  ConfigSchema: 'ConfigSchema'
+  ConfigSchema: 'ConfigSchema',
+  EventEmitter: 'EventEmitter',
+  Moment: 'Moment'
 }
 
 var container = new inversify.Container()
@@ -61,6 +69,8 @@ helpers.annotate(Deploy, [DEPENDENCIES.Config, DEPENDENCIES.CopyDirectory, DEPEN
 helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FILETYPES.CheckFileStructure, DEPENDENCIES.CheckArch])
 helpers.annotate(IsConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.ZSchema, DEPENDENCIES.CustomValidators, DEPENDENCIES.ConfigSchema])
 helpers.annotate(CheckFileStructure, [DEPENDENCIES.Config])
+helpers.annotate(Service, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Moment, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.EventEmitter, FILETYPES.CreateLogDir])
+helpers.annotate(CreateLogDir, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path])
 
 let setup = function () {
   // bindings
@@ -71,6 +81,8 @@ let setup = function () {
   container.bind(FILETYPES.StartUpCheck).to(StartUpCheck)
   container.bind(FILETYPES.IsConfigValid).to(IsConfigValid)
   container.bind(FILETYPES.CheckFileStructure).to(CheckFileStructure)
+  container.bind(FILETYPES.Service).to(Service)
+  container.bind(FILETYPES.CreateLogDir).to(CreateLogDir)
 
   const registerConstantValue = helpers.registerConstantValue(container)
   registerConstantValue(DEPENDENCIES.Config, Config)
@@ -87,11 +99,12 @@ let setup = function () {
   registerConstantValue(DEPENDENCIES.ZSchema, ZSchema)
   registerConstantValue(DEPENDENCIES.CustomValidators, CustomValidators)
   registerConstantValue(DEPENDENCIES.ConfigSchema, ConfigSchema)
+  registerConstantValue(DEPENDENCIES.EventEmitter, EventEmitter)
+  registerConstantValue(DEPENDENCIES.Moment, Moment)
 }
 
 let resetConstants = function () {
   container.unbindAll()
-
   setup()
 }
 

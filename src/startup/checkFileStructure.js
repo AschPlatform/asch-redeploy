@@ -56,7 +56,7 @@ let CheckFileStructure = function (config) {
     logger.info('\t public/ ✓', greenUnderline)
 
     // init.js
-    let initFile = path.join(this.userDevDir, 'init.js')
+    let initFile = path.join(this.config.userDevDir, 'init.js')
     if (!fs.existsSync(initFile)) {
       throw new Error('init.js file doesn\'t exist')
     }

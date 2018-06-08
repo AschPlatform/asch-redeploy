@@ -3,14 +3,12 @@ const DI = require('./src/container')
 
 let startUpCheck = DI.container.get(DI.FILETYPES.StartUpCheck)
 
-const path = require('path')
 const utils = require('./src/utils')
 const Promise = require('bluebird')
 const logger = require('./src/logger')
 
-const Service = require('./src/orchestration/service')
 const Conductor = require('./src/orchestration/conductor')
-let aschService = null
+let aschService = DI.container.get(DI.FILETYPES.Service)
 let appConfig = DI.container.get(DI.DEPENDENCIES.Config)
 
 // https://www.exratione.com/2013/05/die-child-process-die/
@@ -23,11 +21,6 @@ logger.verbose('starting asch-redeploy...')
 
 startUpCheck.check()
   .then(() => {
-    let config = DI.container.get(DI.DEPENDENCIES.Config)
-    let logDir = path.join(config.userDevDir, 'logs')
-    let aschDirectory = config.node.directory
-    let port = config.node.port
-    aschService = new Service(aschDirectory, logDir, port)
     aschService.notifier.on('exit', function (code) {
       logger.warn(`asch-node terminated with code ${code}`)
     })
