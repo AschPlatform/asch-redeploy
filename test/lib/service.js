@@ -3,6 +3,8 @@ const should = require('should')
 const mockFs = require('mock-fs')
 const fs = require('fs')
 const path = require('path')
+const EventEmitter = require('events')
+const moment = require('moment')
 
 describe('service', function () {
   const container = DI.container
@@ -43,6 +45,15 @@ describe('service', function () {
     })
 
     it('service forks new process that writes to log file', function (done) {
+      mockFs({
+        '/home/user/asch': {
+          'app.js': 'write_to_appjs'
+        },
+        '/home/user/dapp': {
+          'logs': {}
+        }
+      })
+
       let Config = {
         node: {
           directory: '/home/user/asch'
@@ -52,25 +63,30 @@ describe('service', function () {
       container.unbind(DI.DEPENDENCIES.Config)
       registerConstant(DI.DEPENDENCIES.Config, Config)
 
-      mockFs({
-        '/home/user/asch': {
-          'app.js': 'console.error("write_to_appjs")'
-        },
-        '/home/user/dapp': {
-          'logs': {}
-        }
-      })
+      let Moment = function () {
+        return moment.utc('2017-01-01T01:00:00')
+      }
+      container.unbind(DI.DEPENDENCIES.Moment)
+      registerConstant(DI.DEPENDENCIES.Moment, Moment)
+
+      let expectedLogFile = path.join('/home/user/dapp', 'logs', 'asch-node-2017-01-01.log')
+
+      let Fork = (path, args, option) => {
+        let appjsContent = fs.readFileSync('/home/user/asch/app.js', 'utf8')
+        fs.writeFileSync(expectedLogFile, appjsContent, 'utf8')
+        return new EventEmitter()
+      }
+      container.unbind(DI.DEPENDENCIES.Fork)
+      registerConstant(DI.DEPENDENCIES.Fork, Fork)
 
       // overwrite
       let service = container.get(DI.FILETYPES.Service)
       service.start()
         .then((result) => {
-          console.log(result)
+          let expectedLogFile = path.join('/home/user/dapp', 'logs', 'asch-node-2017-01-01.log')
 
-          let expectedLogFile = path.join('/home/user/dapp', 'logs', 'asch-node-2018-06-08.log')
           should(fs.existsSync(expectedLogFile)).equals(true)
-          let content = fs.readFileSync(expectedLogFile, 'utf8')
-          console.log(fs.readFileSync('/home/user/asch/app.js', 'utf8'))
+          should(fs.readFileSync(expectedLogFile, 'utf8')).equals('write_to_appjs')
 
           done()
         })

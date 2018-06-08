@@ -39,6 +39,7 @@ const CustomValidators = require('./startup/customValidators')
 const ConfigSchema = require('./startup/configSchema')
 const EventEmitter = require('events')
 const Moment = require('moment')
+const Fork = require('child_process').fork
 
 const DEPENDENCIES = {
   Config: 'Config',
@@ -56,7 +57,8 @@ const DEPENDENCIES = {
   CustomValidators: 'CustomValidators',
   ConfigSchema: 'ConfigSchema',
   EventEmitter: 'EventEmitter',
-  Moment: 'Moment'
+  Moment: 'Moment',
+  Fork: 'Fork'
 }
 
 var container = new inversify.Container()
@@ -69,7 +71,7 @@ helpers.annotate(Deploy, [DEPENDENCIES.Config, DEPENDENCIES.CopyDirectory, DEPEN
 helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FILETYPES.CheckFileStructure, DEPENDENCIES.CheckArch])
 helpers.annotate(IsConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.ZSchema, DEPENDENCIES.CustomValidators, DEPENDENCIES.ConfigSchema])
 helpers.annotate(CheckFileStructure, [DEPENDENCIES.Config])
-helpers.annotate(Service, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Moment, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.EventEmitter, FILETYPES.CreateLogDir])
+helpers.annotate(Service, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Moment, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.EventEmitter, FILETYPES.CreateLogDir, DEPENDENCIES.Fork])
 helpers.annotate(CreateLogDir, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path])
 
 let setup = function () {
@@ -101,6 +103,7 @@ let setup = function () {
   registerConstantValue(DEPENDENCIES.ConfigSchema, ConfigSchema)
   registerConstantValue(DEPENDENCIES.EventEmitter, EventEmitter)
   registerConstantValue(DEPENDENCIES.Moment, Moment)
+  registerConstantValue(DEPENDENCIES.Fork, Fork)
 }
 
 let resetConstants = function () {
