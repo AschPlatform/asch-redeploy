@@ -51,7 +51,7 @@ let Service = function (config, logger, moment, path, fs, EventEmitter, createLo
     this.process.kill('SIGTERM')
   }
   this.onExit = (code) => {
-    this.logger.info(`asch-node exited wite code: "${code}"`, { meta: 'inverse.blue' })
+    this.logger.info(`asch-node exited with code: "${code}"`, { meta: 'inverse.blue' })
     this.notifier.emit('exit', code)
   }
 }

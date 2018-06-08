@@ -1,10 +1,7 @@
 const DI = require('../../src/container')
 const should = require('should')
 const mockFs = require('mock-fs')
-const fs = require('fs')
-const path = require('path')
 const EventEmitter = require('events')
-const moment = require('moment')
 
 describe('service', function () {
   const container = DI.container
@@ -64,17 +61,29 @@ describe('service', function () {
       container.unbind(DI.DEPENDENCIES.Config)
       registerConstant(DI.DEPENDENCIES.Config, Config)
 
-      let Moment = function () {
-        return moment.utc('2017-01-01T01:00:00')
-      }
-      container.unbind(DI.DEPENDENCIES.Moment)
-      registerConstant(DI.DEPENDENCIES.Moment, Moment)
+      let CreateLogDir = function (config, fs, path, moment) {
+        this.config = config
+        this.fs = fs
+        this.path = path
+        this.moment = moment
 
-      let expectedLogFile = path.join('/home/user/dapp', 'logs', 'asch-node-2017-01-01.log')
+        CreateLogDir.createdLogDir = false
+        CreateLogDir.returnedFileDescriptor = false
+
+        this.createDirSync = () => {
+          CreateLogDir.createdLogDir = true
+          return '/home/user/dapp/logs'
+        }
+        this.createLogFileNameHandleSync = (logDir) => {
+          CreateLogDir.returnedFileDescriptor = true
+          return 'asch-node-2017-01-01.log'
+        }
+      }
+      container.unbind(DI.FILETYPES.CreateLogDir)
+      DI.helpers.annotate(CreateLogDir, [DI.DEPENDENCIES.Config, DI.DEPENDENCIES.Fs, DI.DEPENDENCIES.Path, DI.DEPENDENCIES.Moment])
+      container.bind(DI.FILETYPES.CreateLogDir).to(CreateLogDir)
 
       let Fork = (path, args, option) => {
-        let appjsContent = fs.readFileSync('/home/user/asch/app.js', 'utf8')
-        fs.writeFileSync(expectedLogFile, appjsContent, 'utf8')
         return new EventEmitter()
       }
       container.unbind(DI.DEPENDENCIES.Fork)
@@ -84,10 +93,10 @@ describe('service', function () {
       let service = container.get(DI.FILETYPES.Service)
       service.start()
         .then((result) => {
-          let expectedLogFile = path.join('/home/user/dapp', 'logs', 'asch-node-2017-01-01.log')
-
-          should(fs.existsSync(expectedLogFile)).equals(true)
-          should(fs.readFileSync(expectedLogFile, 'utf8')).equals('write_to_appjs')
+          should(CreateLogDir).have.property('createdLogDir')
+          should(CreateLogDir.createdLogDir).equals(true)
+          should(CreateLogDir).have.property('returnedFileDescriptor')
+          should(CreateLogDir.returnedFileDescriptor).equals(true)
 
           done()
         })

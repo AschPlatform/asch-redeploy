@@ -1,6 +1,9 @@
 # TODO
 * Test writing out to "dappConfig.json" file
 * Add check for open port
+* Possible Refactoring
+  * Merge the two methods in CreateLogDir into one
+  * CopyDirectory doesn't need to be in own file. Easier to test when not in own file
 * Refactoring:
   * rename `src/container.js` file into `src/DI.js`
   * Add "userDevDir" to schema object for validation
