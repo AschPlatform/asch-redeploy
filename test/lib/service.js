@@ -40,6 +40,7 @@ describe('service', function () {
       should(service).have.property('fs')
       should(service).have.property('EventEmitter')
       should(service).have.property('createLogDir')
+      should(service).have.property('fork')
 
       done()
     })
@@ -95,7 +96,9 @@ describe('service', function () {
         })
     })
 
-    it.skip('stopping service emits exit event')
+    it.skip('stopping service emits exit event and corresponding exit code', function (done) {
+    })
+
     it.skip('stopping service sends "SIGTERM" command to forked process')
     it.skip('started service writes to log file')
   })

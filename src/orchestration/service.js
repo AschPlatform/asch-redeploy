@@ -26,13 +26,14 @@ let Service = function (config, logger, moment, path, fs, EventEmitter, createLo
   this.start = () => {
     return new Promise((resolve, reject) => {
       let logFile = this.createLogFileName()
-      this.createLogDir.createSync()
+      this.createLogDir.createDirSync()
 
       this.logger.info(`asch-node logs are saved in "${logFile}"`)
       let logStream = this.fs.openSync(logFile, 'a')
 
       let aschPath = this.path.join(this.aschNodeDir, 'app.js')
       this.logger.info(`starting asch-node in "${aschPath}" on port ${this.port}`)
+
       this.process = this.fork(aschPath, ['--port', parseInt(this.port)], {
         cwd: this.aschNodeDir,
         execArgv: [],

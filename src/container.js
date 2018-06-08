@@ -72,7 +72,7 @@ helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FI
 helpers.annotate(IsConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.ZSchema, DEPENDENCIES.CustomValidators, DEPENDENCIES.ConfigSchema])
 helpers.annotate(CheckFileStructure, [DEPENDENCIES.Config])
 helpers.annotate(Service, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Moment, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.EventEmitter, FILETYPES.CreateLogDir, DEPENDENCIES.Fork])
-helpers.annotate(CreateLogDir, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path])
+helpers.annotate(CreateLogDir, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path, DEPENDENCIES.Moment])
 
 let setup = function () {
   // bindings

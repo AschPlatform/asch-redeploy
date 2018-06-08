@@ -40,7 +40,7 @@ describe('createLogDir', function () {
       })
 
       let createLogDir = container.get(DI.FILETYPES.CreateLogDir)
-      let result = createLogDir.createSync()
+      let result = createLogDir.createDirSync()
 
       let expectedPath = path.join('/home/user/hello', 'logs')
 
@@ -64,7 +64,7 @@ describe('createLogDir', function () {
       })
 
       let createLogDir = container.get(DI.FILETYPES.CreateLogDir)
-      let result = createLogDir.createSync()
+      let result = createLogDir.createDirSync()
 
       let expectedPath = path.join('../hello', 'logs')
 

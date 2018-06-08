@@ -1,4 +1,5 @@
 # TODO
+* Test writing out to "dappConfig.json" file
 * Add check for open port
 * Refactoring:
   * rename `src/container.js` file into `src/DI.js`
