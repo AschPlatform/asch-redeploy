@@ -3,7 +3,7 @@
 const DI = require('../../src/container')
 const should = require('should')
 
-describe('startUpcheck', function () {
+describe('startUpCheck', function () {
   const container = DI.container
   const registerConstant = DI.helpers.registerConstantValue(container)
 

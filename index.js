@@ -17,25 +17,25 @@ const Conductor = require('./src/orchestration/conductor')
 let aschService = DI.container.get(DI.FILETYPES.Service)
 let appConfig = DI.container.get(DI.DEPENDENCIES.Config)
 
+aschService.notifier.on('exit', function (code) {
+  logger.warn(`asch-node terminated with code ${code}`)
+})
+process.on('SIGTERM', function () {
+  logger.warn('SIGTERM', { meta: 'inverse' })
+  aschService.stop()
+  process.exit(0)
+})
+process.on('SIGINT', function () {
+  // ctrl+c
+  logger.warn('SIGTERM', { meta: 'inverse' })
+  aschService.stop()
+  process.exit(0)
+})
+
 logger.verbose('starting asch-redeploy...')
 
 startUpCheck.check()
   .then(() => {
-    aschService.notifier.on('exit', function (code) {
-      logger.warn(`asch-node terminated with code ${code}`)
-    })
-    process.on('SIGTERM', function () {
-      logger.warn('SIGTERM', { meta: 'inverse' })
-      aschService.stop()
-      process.exit(0)
-    })
-    process.on('SIGINT', function () {
-      // ctrl+c
-      logger.warn('SIGTERM', { meta: 'inverse' })
-      aschService.stop()
-      process.exit(0)
-    })
-
     return aschService.start()
   })
   .then(() => {

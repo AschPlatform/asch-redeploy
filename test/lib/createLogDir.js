@@ -6,7 +6,7 @@ const mockFs = require('mock-fs')
 const path = require('path')
 const fs = require('fs')
 
-describe('startUpcheck', function () {
+describe('createLogDir', function () {
   const container = DI.container
   const registerConstant = DI.helpers.registerConstantValue(container)
 

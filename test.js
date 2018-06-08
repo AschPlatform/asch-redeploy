@@ -1,14 +1,2 @@
-const DI = require('./src/container')
-const Service = DI.container.get(DI.FILETYPES.Service)
+let fork = require('child_process')
 
-Service.start()
-  .then((result) => {
-    console.log(result)
-  })
-  .catch((error) => {
-    console.log(error)
-  })
-
-setTimeout(() => {
-  Service.stop()
-}, 2000)

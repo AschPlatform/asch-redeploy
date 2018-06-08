@@ -4,7 +4,7 @@ const DI = require('../../src/container')
 const should = require('should')
 const mockFs = require('mock-fs')
 
-describe('writeOutput', function () {
+describe('changeAschConfig', function () {
   const container = DI.container
   const registerConstant = DI.helpers.registerConstantValue(container)
 
