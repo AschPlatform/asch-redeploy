@@ -37,7 +37,7 @@ describe('changeAschConfig', function () {
       done()
     })
 
-    it('add new dappId to asch/config.json file', function (done) {
+    it('add new dappId to asch-node/config.json file', function (done) {
       // config
       let Config = {
         node: {
@@ -75,8 +75,8 @@ describe('changeAschConfig', function () {
         }
       })
 
-      let writeOutput = container.get(DI.FILETYPES.ChangeAschConfig)
-      writeOutput.add(dappId)
+      let changeAschConfig = container.get(DI.FILETYPES.ChangeAschConfig)
+      changeAschConfig.add(dappId)
         .then((result) => {
           let fs = container.get(DI.DEPENDENCIES.Fs)
           let configFile = fs.readFileSync('/home/user/asch/config.json', 'utf8')
@@ -124,11 +124,11 @@ describe('changeAschConfig', function () {
         })
     })
 
-    it('calling writeOutput.add() without dappId throws exception', function (done) {
+    it('calling changeAschConfig.add() without dappId throws exception', function (done) {
       let dappId = null
 
-      let writeOutput = container.get(DI.FILETYPES.ChangeAschConfig)
-      writeOutput.add(dappId)
+      let changeAschConfig = container.get(DI.FILETYPES.ChangeAschConfig)
+      changeAschConfig.add(dappId)
         .then((result) => {
           throw new Error()
         })

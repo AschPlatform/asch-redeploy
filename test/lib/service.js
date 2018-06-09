@@ -165,7 +165,7 @@ describe('service', function () {
         })
     })
 
-    it('stopping service emits exit event and corresponding exit code', function (done) {
+    it('stopping service emits exit with exit code', function (done) {
       let exitCode = 1
 
       mockFs({
