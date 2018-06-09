@@ -2,6 +2,7 @@ const Promise = require('bluebird')
 const workflow = require('./workflow')
 const Watcher = require('./watcher')
 const logger = require('../logger')
+const moment = require('moment')
 
 // ctor
 let Conductor = function (service, config) {
@@ -15,18 +16,41 @@ let Conductor = function (service, config) {
   watcher.watch()
   this.notifier = watcher.notify
 
+  this.getCurrentTime = () => {
+    return moment().unix()
+  }
+
   this.notifier.on('changed', (data) => {
     logger.info(`${data.event} ${data.name}`, { meta: 'reset.underline' })
     if (this.timesRestarted > 0) {
+      data.time = this.getCurrentTime()
       this.pendingTasks.push(data)
     }
   })
+
+  this.shouldIWait = () => {
+    if (this.pendingTasks.length === 0) {
+      return true
+    }
+    let sorted = this.pendingTasks.sort((a, b) => {
+      return b.time - a.time
+    })
+
+    let latest = sorted[0].time
+    let current = this.getCurrentTime()
+    if ((current - latest) <= 10) {
+      logger.info('waiting for 10 seconds after the last change...')
+      return true
+    } else {
+      return false
+    }
+  }
 
   // recursive
   this.waiting = () => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        if (this.pendingTasks.length === 0) {
+        if (this.shouldIWait()) {
           resolve(this.waiting()) // recursive
         } else {
           logger.silly('start to orchestrate()')
