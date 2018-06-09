@@ -23,9 +23,6 @@ describe('startUpCheck', function () {
 
     it('dependencies getting called and overall result is true', function (done) {
       container.unbind(DI.FILETYPES.IsConfigValid)
-      container.unbind(DI.FILETYPES.CheckFileStructure)
-      container.unbind(DI.DEPENDENCIES.CheckArch)
-
       let IsConfigValid = function (config, logger) {
         this.config = config
         this.logger = logger
@@ -38,6 +35,7 @@ describe('startUpCheck', function () {
       DI.helpers.annotate(IsConfigValid, [DI.DEPENDENCIES.Config, DI.DEPENDENCIES.Logger])
       container.bind(DI.FILETYPES.IsConfigValid).to(IsConfigValid)
 
+      container.unbind(DI.FILETYPES.CheckFileStructure)
       let CheckFileStructure = function (config) {
         this.config = config
         CheckFileStructure.called = 0
@@ -49,6 +47,7 @@ describe('startUpCheck', function () {
       DI.helpers.annotate(CheckFileStructure, [DI.DEPENDENCIES.Config])
       container.bind(DI.FILETYPES.CheckFileStructure).to(CheckFileStructure)
 
+      container.unbind(DI.DEPENDENCIES.CheckArch)
       let CheckArch = function () {
         CheckArch.called = 0
         this.check = () => {
@@ -60,6 +59,21 @@ describe('startUpCheck', function () {
       }
       registerConstant(DI.DEPENDENCIES.CheckArch, new CheckArch())
 
+      container.unbind(DI.FILETYPES.CheckPort)
+      let CheckPort = function (config, isPortAvailable) {
+        this.config = config
+        this.isPortAvailable = isPortAvailable
+        CheckPort.called = 0
+        this.check = () => {
+          return new Promise((resolve, reject) => {
+            CheckPort.called += 1
+            resolve(true)
+          })
+        }
+      }
+      DI.helpers.annotate(CheckPort, [DI.DEPENDENCIES.Config, DI.DEPENDENCIES.IsPortAvailable])
+      container.bind(DI.FILETYPES.CheckPort).to(CheckPort)
+
       let startUpCheck = container.get(DI.FILETYPES.StartUpCheck)
       startUpCheck.check()
         .then((result) => {
@@ -67,10 +81,15 @@ describe('startUpCheck', function () {
 
           should(IsConfigValid).have.property('called')
           should(IsConfigValid.called).equals(1)
+
           should(CheckFileStructure).have.property('called')
           should(CheckFileStructure.called).equals(1)
+
           should(CheckArch).have.property('called')
           should(CheckArch.called).equals(1)
+
+          should(CheckPort).have.property('called')
+          should(CheckPort.called).equals(1)
 
           done()
         })
@@ -81,10 +100,65 @@ describe('startUpCheck', function () {
   })
 
   describe('sad path', function () {
+    // helper function
+    let dummyCheckArch = function () {
+      container.unbind(DI.DEPENDENCIES.CheckArch)
+      let CheckArch = function () {
+        this.check = () => {
+          return new Promise((resolve, reject) => {
+            resolve(true)
+          })
+        }
+      }
+      registerConstant(DI.DEPENDENCIES.CheckArch, new CheckArch())
+    }
+
+    let dummyIsConfigValid = function () {
+      container.unbind(DI.FILETYPES.IsConfigValid)
+
+      let IsConfigValid = function (config, logger) {
+        this.config = config
+        this.logger = logger
+        this.isValidSync = () => {
+          return true
+        }
+      }
+      DI.helpers.annotate(IsConfigValid, [DI.DEPENDENCIES.Config, DI.DEPENDENCIES.Logger])
+      container.bind(DI.FILETYPES.IsConfigValid).to(IsConfigValid)
+    }
+
+    let dummyCheckFileStructure = function () {
+      container.unbind(DI.FILETYPES.CheckFileStructure)
+
+      let CheckFileStructure = function (config) {
+        this.config = config
+        this.checkSync = () => {
+          throw new Error('file structure error')
+        }
+      }
+      DI.helpers.annotate(CheckFileStructure, [DI.DEPENDENCIES.Config])
+      container.bind(DI.FILETYPES.CheckFileStructure).to(CheckFileStructure)
+    }
+
+    let dummyCheckPort = function () {
+      container.unbind(DI.FILETYPES.CheckPort)
+      let CheckPort = function (config, isPortAvailable) {
+        this.config = config
+        this.isPortAvailable = isPortAvailable
+
+        this.check = () => {
+          return new Promise((resolve, reject) => {
+            resolve(true)
+          })
+        }
+      }
+      DI.helpers.annotate(CheckPort, [DI.DEPENDENCIES.Config, DI.DEPENDENCIES.IsPortAvailable])
+      container.bind(DI.FILETYPES.CheckPort).to(CheckPort)
+    }
+
     it('dependency CheckArch throws Error - startUpCheck exists with error', function (done) {
       // config
       container.unbind(DI.DEPENDENCIES.CheckArch)
-
       let CheckArch = function () {
         CheckArch.called = 0
         this.check = () => {
@@ -96,6 +170,10 @@ describe('startUpCheck', function () {
       }
       let checkArch = new CheckArch()
       registerConstant(DI.DEPENDENCIES.CheckArch, checkArch)
+
+      dummyCheckFileStructure()
+      dummyIsConfigValid()
+      dummyCheckPort()
 
       let startUpCheck = container.get(DI.FILETYPES.StartUpCheck)
       startUpCheck.check()
@@ -112,20 +190,7 @@ describe('startUpCheck', function () {
 
     it('dependency CheckFileStructure throws Error - startUpcheck exits with error', function (done) {
       // every dependency returns true except for "CheckfileStructure" - it throws error
-      container.unbind(DI.FILETYPES.IsConfigValid)
       container.unbind(DI.FILETYPES.CheckFileStructure)
-      container.unbind(DI.DEPENDENCIES.CheckArch)
-
-      let IsConfigValid = function (config, logger) {
-        this.config = config
-        this.logger = logger
-        this.isValidSync = () => {
-          return true
-        }
-      }
-      DI.helpers.annotate(IsConfigValid, [DI.DEPENDENCIES.Config, DI.DEPENDENCIES.Logger])
-      container.bind(DI.FILETYPES.IsConfigValid).to(IsConfigValid)
-
       let CheckFileStructure = function (config) {
         this.config = config
         this.checkSync = () => {
@@ -135,14 +200,9 @@ describe('startUpCheck', function () {
       DI.helpers.annotate(CheckFileStructure, [DI.DEPENDENCIES.Config])
       container.bind(DI.FILETYPES.CheckFileStructure).to(CheckFileStructure)
 
-      let CheckArch = function () {
-        this.check = () => {
-          return new Promise((resolve, reject) => {
-            resolve(true)
-          })
-        }
-      }
-      registerConstant(DI.DEPENDENCIES.CheckArch, new CheckArch())
+      dummyCheckArch()
+      dummyIsConfigValid()
+      dummyCheckPort()
 
       let startUpCheck = DI.container.get(DI.FILETYPES.StartUpCheck)
       startUpCheck.check()
@@ -158,9 +218,6 @@ describe('startUpCheck', function () {
     it('dependency IsConfigValid throws Error - startUpcheck exits with error', function (done) {
       // every dependency returns true except for "IsConfigValid"" - it throws error
       container.unbind(DI.FILETYPES.IsConfigValid)
-      container.unbind(DI.FILETYPES.CheckFileStructure)
-      container.unbind(DI.DEPENDENCIES.CheckArch)
-
       let IsConfigValid = function (config, logger) {
         this.config = config
         this.logger = logger
@@ -171,23 +228,9 @@ describe('startUpCheck', function () {
       DI.helpers.annotate(IsConfigValid, [DI.DEPENDENCIES.Config, DI.DEPENDENCIES.Logger])
       container.bind(DI.FILETYPES.IsConfigValid).to(IsConfigValid)
 
-      let CheckFileStructure = function (config) {
-        this.config = config
-        this.checkSync = () => {
-          return true
-        }
-      }
-      DI.helpers.annotate(CheckFileStructure, [DI.DEPENDENCIES.Config])
-      container.bind(DI.FILETYPES.CheckFileStructure).to(CheckFileStructure)
-
-      let CheckArch = function () {
-        this.check = () => {
-          return new Promise((resolve, reject) => {
-            resolve(true)
-          })
-        }
-      }
-      registerConstant(DI.DEPENDENCIES.CheckArch, new CheckArch())
+      dummyCheckArch()
+      dummyCheckFileStructure()
+      dummyCheckPort()
 
       let startUpCheck = DI.container.get(DI.FILETYPES.StartUpCheck)
       startUpCheck.check()
