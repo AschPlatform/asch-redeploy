@@ -133,7 +133,7 @@ describe('startUpCheck', function () {
       let CheckFileStructure = function (config) {
         this.config = config
         this.checkSync = () => {
-          throw new Error('file structure error')
+          return true
         }
       }
       DI.helpers.annotate(CheckFileStructure, [DI.DEPENDENCIES.Config])
@@ -239,6 +239,36 @@ describe('startUpCheck', function () {
         })
         .catch((error) => {
           should(error.message).startWith('config not valid')
+          done()
+        })
+    })
+
+    it('dependency CheckPort throws Error - startUpcheck exits with error', function (done) {
+      // every dependency returns true except for "CheckPort"" - it throws error
+      container.unbind(DI.FILETYPES.CheckPort)
+      let CheckPort = function (config, isPortAvailable) {
+        this.config = config
+        this.isPortAvailable = isPortAvailable
+        this.check = () => {
+          return new Promise((resolve, reject) => {
+            reject(new Error('port_in_use'))
+          })
+        }
+      }
+      DI.helpers.annotate(CheckPort, [DI.DEPENDENCIES.Config, DI.DEPENDENCIES.IsPortAvailable])
+      container.bind(DI.FILETYPES.CheckPort).to(CheckPort)
+
+      dummyCheckArch()
+      dummyIsConfigValid()
+      dummyCheckFileStructure()
+
+      let startUpCheck = DI.container.get(DI.FILETYPES.StartUpCheck)
+      startUpCheck.check()
+        .then((result) => {
+          throw new Error()
+        })
+        .catch((error) => {
+          should(error.message).startWith('port_in_use')
           done()
         })
     })
