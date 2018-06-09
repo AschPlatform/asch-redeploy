@@ -12,6 +12,7 @@ const CheckFileStructure = require('./startup/checkFileStructure')
 const Service = require('./orchestration/service')
 const CreateLogDir = require('./orchestration/createLogDir')
 const SerializedNewDappId = require('./orchestration/serializedNewDappId')
+const CheckPort = require('./startup/checkPort')
 const FILETYPES = {
   SendMoney: 'SendMoney',
   RegisterDapp: 'RegisterDapp',
@@ -22,7 +23,8 @@ const FILETYPES = {
   CheckFileStructure: 'CheckFileStructure',
   Service: 'Service',
   CreateLogDir: 'CreateLogDir',
-  SerializedNewDappId: 'SerializedNewDappId'
+  SerializedNewDappId: 'SerializedNewDappId',
+  CheckPort: 'CheckPort'
 }
 
 const Config = require('./startup/loadConfig')()
@@ -42,6 +44,7 @@ const ConfigSchema = require('./startup/configSchema')
 const EventEmitter = require('events')
 const Moment = require('moment')
 const Fork = require('child_process').fork
+const IsPortAvailable = require('is-port-available')
 
 const DEPENDENCIES = {
   Config: 'Config',
@@ -60,7 +63,8 @@ const DEPENDENCIES = {
   ConfigSchema: 'ConfigSchema',
   EventEmitter: 'EventEmitter',
   Moment: 'Moment',
-  Fork: 'Fork'
+  Fork: 'Fork',
+  IsPortAvailable: 'IsPortAvailable'
 }
 
 var container = new inversify.Container()
@@ -70,12 +74,13 @@ helpers.annotate(SendMoney, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENC
 helpers.annotate(RegisterDapp, [DEPENDENCIES.Config, DEPENDENCIES.DappConfig, DEPENDENCIES.Utils, DEPENDENCIES.Axios, DEPENDENCIES.AschJS, DEPENDENCIES.Logger])
 helpers.annotate(ChangeAschConfig, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path, DEPENDENCIES.Logger])
 helpers.annotate(Deploy, [DEPENDENCIES.Config, DEPENDENCIES.CopyDirectory, DEPENDENCIES.Path, DEPENDENCIES.Fs])
-helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FILETYPES.CheckFileStructure, DEPENDENCIES.CheckArch])
+helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FILETYPES.CheckFileStructure, DEPENDENCIES.CheckArch, FILETYPES.CheckPort])
 helpers.annotate(IsConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.ZSchema, DEPENDENCIES.CustomValidators, DEPENDENCIES.ConfigSchema])
 helpers.annotate(CheckFileStructure, [DEPENDENCIES.Config])
 helpers.annotate(Service, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Moment, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.EventEmitter, FILETYPES.CreateLogDir, DEPENDENCIES.Fork])
 helpers.annotate(CreateLogDir, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path, DEPENDENCIES.Moment])
 helpers.annotate(SerializedNewDappId, [DEPENDENCIES.Config, DEPENDENCIES.Fs])
+helpers.annotate(CheckPort, [DEPENDENCIES.Config, DEPENDENCIES.IsPortAvailable])
 
 let setup = function () {
   // bindings
@@ -89,6 +94,7 @@ let setup = function () {
   container.bind(FILETYPES.Service).to(Service)
   container.bind(FILETYPES.CreateLogDir).to(CreateLogDir)
   container.bind(FILETYPES.SerializedNewDappId).to(SerializedNewDappId)
+  container.bind(FILETYPES.CheckPort).to(CheckPort)
 
   // constants or third party libraries
   const registerConstantValue = helpers.registerConstantValue(container)
@@ -109,6 +115,7 @@ let setup = function () {
   registerConstantValue(DEPENDENCIES.EventEmitter, EventEmitter)
   registerConstantValue(DEPENDENCIES.Moment, Moment)
   registerConstantValue(DEPENDENCIES.Fork, Fork)
+  registerConstantValue(DEPENDENCIES.IsPortAvailable, IsPortAvailable)
 }
 
 let resetConstants = function () {

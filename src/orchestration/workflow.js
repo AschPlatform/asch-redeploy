@@ -15,7 +15,7 @@ let workflow = (service, config) => {
     })
     .then(function wait () {
       logger.info('starting to register Dapp...', { meta: 'green' })
-      return Promise.delay(10000)
+      return Promise.delay(12000)
     })
     .then(function () {
       let registerDapp = DI.container.get(DI.FILETYPES.RegisterDapp)
@@ -44,21 +44,18 @@ let workflow = (service, config) => {
     })
     .then((result) => {
       logger.verbose('stopping asch-Server for restart', { meta: 'green.inverse' })
-      this.service.stop()
-      return Promise.delay(5000)
-    })
-    .then(function afterStopChangeAschConfig (result) {
-      logger.verbose('asch-server stopped', { meta: 'green.inverse' })
-      // return deploy.changeAschConfig(result)
-      return Promise.delay(2000)
+      return this.service.stop()
     })
     .then((result) => {
-      logger.verbose(`result: ${result}`)
-      this.service.start()
+      logger.verbose('stopping asch-server', { meta: 'green.inverse' })
       return Promise.delay(5000)
     })
-    .then(function restartResult () {
-      logger.info('aschService started', { meta: 'green.inverse' })
+    .then(() => {
+      logger.info('starting aschService', { meta: 'green.inverse' })
+      return this.service.start()
+    })
+    .then(() => {
+      return Promise.delay(5000)
     })
     .catch(function errorOccured (error) {
       logger.verbose('error in worklflow.js occured')

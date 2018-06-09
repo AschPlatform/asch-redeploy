@@ -1,7 +1,5 @@
 # TODO
 * If many file changes occur, wait 10 after the last file change for further file changes
-* Test writing out to "dappConfig.json" file
-* Add check for open port
 * Possible Refactoring
   * Merge the two methods in CreateLogDir into one
   * CopyDirectory doesn't need to be in own file. Easier to test when not in own file
