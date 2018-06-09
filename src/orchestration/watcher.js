@@ -9,20 +9,19 @@ function Watcher (config, logger, chokidar, moment) {
   this.changedFiles = []
 
   this.watch = function () {
-    this.logger.verbose(`files are watched in userDevDir: ${this.config.userDevDir}`)
-    this.chokidar = this.chokidar.watch(this.config.watch, {
+    this.logger.info(`files are watched in userDevDir: ${this.config.userDevDir}`, { meta: 'white.inverse' })
+    this.choki = this.chokidar.watch(this.config.watch, {
       cwd: this.config.userDevDir,
       interval: 100,
       depth: 10,
       ignoreInitial: true
     })
 
-    logger.info('watching for...', { meta: 'white.inverse' })
     this.config.watch.forEach((value) => {
       logger.info(value, { meta: 'white.underline' })
     })
 
-    this.chokidar.on('all', (event, name) => {
+    this.choki.on('all', (event, name) => {
       this.logger.info(`${event} ${name}`, { meta: 'underline.white' })
       this.changedFiles.push({
         event: event,

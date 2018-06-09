@@ -23,7 +23,7 @@ let CheckFileStructure = function (config) {
       return true
     }
 
-    logger.verbose(`Check folder structure in ${this.config.userDevDir}`)
+    logger.info(`Check folder structure in ${this.config.userDevDir}`, { meta: 'green.inverse' })
     let greenUnderline = { meta: 'green.underline' }
 
     // contract
@@ -32,35 +32,35 @@ let CheckFileStructure = function (config) {
       this.printNecessaryDirectories()
       throw new Error('contract directory doesn\'t exist')
     }
-    logger.info('\t contract/ ✓', greenUnderline)
+    logger.info('contract/ ✓', greenUnderline)
 
     // interface
     let interfaceDir = path.join(this.config.userDevDir, 'interface')
     if (!fs.existsSync(interfaceDir)) {
       throw new Error('interface directory doesn\'t exist')
     }
-    logger.info('\t interface/ ✓', greenUnderline)
+    logger.info('interface/ ✓', greenUnderline)
 
     // model
     let modelDir = path.join(this.config.userDevDir, 'model')
     if (!fs.existsSync(modelDir)) {
       throw new Error('model directory doesn\'t exist')
     }
-    logger.info('\t model/ ✓', greenUnderline)
+    logger.info('model/ ✓', greenUnderline)
 
     // public
     let publicDir = path.join(this.config.userDevDir, 'public')
     if (!fs.existsSync(publicDir)) {
       throw new Error('public directory doesn\'t exist')
     }
-    logger.info('\t public/ ✓', greenUnderline)
+    logger.info('public/ ✓', greenUnderline)
 
     // init.js
     let initFile = path.join(this.config.userDevDir, 'init.js')
     if (!fs.existsSync(initFile)) {
       throw new Error('init.js file doesn\'t exist')
     }
-    logger.info('\t init.js file ✓', greenUnderline)
+    logger.info('init.js file ✓', greenUnderline)
 
     return true
   }
