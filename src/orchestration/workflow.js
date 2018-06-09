@@ -1,5 +1,4 @@
 const Promise = require('bluebird')
-const writeOutput = require('./writeOutput')
 const logger = require('../logger')
 const DI = require('../container')
 
@@ -30,8 +29,9 @@ let workflow = (service, config) => {
       let changeAschConfig = DI.container.get(DI.FILETYPES.ChangeAschConfig)
       return changeAschConfig.add(transactionId)
     })
-    .then(function writeOutputfile (result) {
-      return writeOutput(config, undefined)
+    .then(function serializeNewDappId (result) {
+      let serializeNewDapp = DI.container.get(DI.FILETYPES.SerializedNewDappId)
+      return serializeNewDapp.serializeSync(result)
     })
     .then(function wait (result) {
       logger.info(`wrote dappId to: ${result}`)

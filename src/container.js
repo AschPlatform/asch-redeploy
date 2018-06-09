@@ -11,6 +11,7 @@ const IsConfigValid = require('./startup/isConfigValid')
 const CheckFileStructure = require('./startup/checkFileStructure')
 const Service = require('./orchestration/service')
 const CreateLogDir = require('./orchestration/createLogDir')
+const SerializedNewDappId = require('./orchestration/serializedNewDappId')
 const FILETYPES = {
   SendMoney: 'SendMoney',
   RegisterDapp: 'RegisterDapp',
@@ -20,7 +21,8 @@ const FILETYPES = {
   IsConfigValid: 'IsConfigValid',
   CheckFileStructure: 'CheckFileStructure',
   Service: 'Service',
-  CreateLogDir: 'CreateLogDir'
+  CreateLogDir: 'CreateLogDir',
+  SerializedNewDappId: 'SerializedNewDappId'
 }
 
 const Config = require('./startup/loadConfig')()
@@ -73,6 +75,7 @@ helpers.annotate(IsConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPEN
 helpers.annotate(CheckFileStructure, [DEPENDENCIES.Config])
 helpers.annotate(Service, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Moment, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.EventEmitter, FILETYPES.CreateLogDir, DEPENDENCIES.Fork])
 helpers.annotate(CreateLogDir, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path, DEPENDENCIES.Moment])
+helpers.annotate(SerializedNewDappId, [DEPENDENCIES.Config, DEPENDENCIES.Fs])
 
 let setup = function () {
   // bindings
@@ -85,7 +88,9 @@ let setup = function () {
   container.bind(FILETYPES.CheckFileStructure).to(CheckFileStructure)
   container.bind(FILETYPES.Service).to(Service)
   container.bind(FILETYPES.CreateLogDir).to(CreateLogDir)
+  container.bind(FILETYPES.SerializedNewDappId).to(SerializedNewDappId)
 
+  // constants or third party libraries
   const registerConstantValue = helpers.registerConstantValue(container)
   registerConstantValue(DEPENDENCIES.Config, Config)
   registerConstantValue(DEPENDENCIES.Logger, Logger)
