@@ -166,6 +166,9 @@ describe('service', function () {
         })
     })
 
+    it.skip('stopping service removes property "process" of service object', function (done) {
+    })
+
     it.skip('stopping service emits exit event and corresponding exit code', function (done) {
     })
 
@@ -174,6 +177,16 @@ describe('service', function () {
   })
 
   describe('sad path', function () {
-    it.skip('call stop() without start throws exception')
+    it('call stop() without start() throws exception', function (done) {
+      let service = container.get(DI.FILETYPES.Service)
+      service.stop()
+        .then((result) => {
+          throw new Error()
+        })
+        .catch((error) => {
+          should(error.message).startWith('no_process_started')
+          done()
+        })
+    })
   })
 })

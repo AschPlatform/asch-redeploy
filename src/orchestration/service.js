@@ -39,6 +39,10 @@ let Service = function (config, logger, moment, path, fs, EventEmitter, createLo
 
   this.stop = () => {
     return new Promise((resolve, reject) => {
+      if (typeof this.process !== 'object') {
+        reject(new Error('no_process_started: No asch-node started. Be sure to call start() first'))
+        return
+      }
       this.logger.warn('sending SIGTERM signal to child process', { meta: 'inverse.blue' })
       this.process.kill('SIGTERM')
       resolve(true)
