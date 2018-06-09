@@ -15,6 +15,8 @@ let Service = function (config, logger, moment, path, fs, EventEmitter, createLo
   this.logDir = path.join(config.userDevDir, 'logs')
   this.port = config.node.port
 
+  this.running = false
+
   this.notifier = new EventEmitter()
 
   this.start = () => {
@@ -30,6 +32,7 @@ let Service = function (config, logger, moment, path, fs, EventEmitter, createLo
         execArgv: [],
         stdio: [ 'ignore', logStream, logStream, 'ipc' ]
       })
+      this.running = true
 
       this.process.on('error', this.onError)
       this.process.on('exit', this.onExit)
@@ -39,7 +42,7 @@ let Service = function (config, logger, moment, path, fs, EventEmitter, createLo
 
   this.stop = () => {
     return new Promise((resolve, reject) => {
-      if (typeof this.process !== 'object') {
+      if (this.running === false) {
         reject(new Error('no_process_started: No asch-node started. Be sure to call start() first'))
         return
       }
@@ -57,6 +60,7 @@ let Service = function (config, logger, moment, path, fs, EventEmitter, createLo
   this.onExit = (code) => {
     this.logger.info(`asch-node exited with code: "${code}"`, { meta: 'inverse.blue' })
     this.notifier.emit('exit', code)
+    this.running = false
   }
 }
 

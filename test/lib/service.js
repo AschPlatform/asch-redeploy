@@ -2,6 +2,7 @@ const DI = require('../../src/container')
 const should = require('should')
 const mockFs = require('mock-fs')
 const EventEmitter = require('events')
+const Promise = require('bluebird')
 
 describe('service', function () {
   const container = DI.container
@@ -131,8 +132,6 @@ describe('service', function () {
         Fork.killVerb = ''
         Fork.called = 0
 
-        console.log('called fork')
-
         let eventEmitter = new EventEmitter()
         eventEmitter.kill = function (verb) {
           Fork.killed = true
@@ -185,6 +184,57 @@ describe('service', function () {
         })
         .catch((error) => {
           should(error.message).startWith('no_process_started')
+          done()
+        })
+    })
+
+    it('call start() stop() and again stop() should throw exception', function (done) {
+      mockFs({
+        '/home/user/asch': {
+          'app.js': 'write_to_appjs'
+        },
+        '/home/user/dapp': {
+          'logs': {}
+        }
+      })
+
+      let Config = {
+        node: {
+          directory: '/home/user/asch'
+        },
+        userDevDir: '/home/user/dapp'
+      }
+      container.unbind(DI.DEPENDENCIES.Config)
+      registerConstant(DI.DEPENDENCIES.Config, Config)
+
+      let Fork = (path, args, option) => {
+        let eventEmitter = new EventEmitter()
+        Fork.killedTimes = 0
+        eventEmitter.kill = function () {
+          Fork.killedTimes += 1
+          eventEmitter.emit('exit', 1)
+        }
+        return eventEmitter
+      }
+      container.unbind(DI.DEPENDENCIES.Fork)
+      registerConstant(DI.DEPENDENCIES.Fork, Fork)
+
+      let service = container.get(DI.FILETYPES.Service)
+      service.start()
+        .then(() => {
+          return service.stop()
+        })
+        .then(() => {
+          return service.stop()
+        })
+        .then(() => {
+          throw new Error('shouldnt come to here')
+        })
+        .catch((error) => {
+          should(error.message).startWith('no_process_started')
+
+          should(Fork).have.property('killedTimes')
+          should(Fork.killedTimes).equals(1)
           done()
         })
     })
