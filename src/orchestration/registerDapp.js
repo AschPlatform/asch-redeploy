@@ -18,9 +18,10 @@ let RegisterDapp = function (config, dappConfig, utils, axios, aschJS, logger) {
     let secret = this.config.dapp.masterAccountPassword
     let secondSecret = this.config.dapp.masterAccountPassword2nd
 
-    var dapp = this.dappConfig
+    var dapp = JSON.parse(JSON.stringify(this.dappConfig))
     dapp.name = `${dapp.name}-${utils.generateRandomString(15)}`
     dapp.link = `${dapp.link.replace('.zip', '')}-${utils.generateRandomString(15)}.zip`
+    this.logger.info(`dapp: ${JSON.stringify(dapp, null, 2)}`)
 
     let trs = aschJS.dapp.createDApp(dapp, secret, secondSecret)
     return this.axios.post(this.peerTransactionUrl, { transaction: trs }, {
@@ -31,7 +32,8 @@ let RegisterDapp = function (config, dappConfig, utils, axios, aschJS, logger) {
           throw new Error('Could not register dapp')
         }
         if (response.data.success === false) {
-          throw new Error(response.data.error)
+          this.logger.warn(`registration of dapp was not successful ${JSON.stringify(response.data)}`)
+          throw new Error(response.data)
         }
         this.logger.info(`DAPP registered, DappId: ${response.data.transactionId}`, { meta: 'green.inverse' })
 

@@ -21,6 +21,14 @@ let workflow = (service, config) => {
       let registerDapp = DI.container.get(DI.FILETYPES.RegisterDapp)
       return registerDapp.register()
     })
+    .then(function serializeNewDappId (transactionId) {
+      let serializeNewDapp = DI.container.get(DI.FILETYPES.SerializedNewDappId)
+      let result = serializeNewDapp.serializeSync(transactionId)
+      if (result === true) {
+        logger.info(`wrote dappId to: ${result}`)
+      }
+      return transactionId
+    })
     .then(function startToCopyfiles (transactionId) {
       let deploy = DI.container.get(DI.FILETYPES.Deploy)
       return deploy.deploy(transactionId)
@@ -29,12 +37,7 @@ let workflow = (service, config) => {
       let changeAschConfig = DI.container.get(DI.FILETYPES.ChangeAschConfig)
       return changeAschConfig.add(transactionId)
     })
-    .then(function serializeNewDappId (result) {
-      let serializeNewDapp = DI.container.get(DI.FILETYPES.SerializedNewDappId)
-      return serializeNewDapp.serializeSync(result)
-    })
     .then(function wait (result) {
-      logger.info(`wrote dappId to: ${result}`)
       let ms = 10000
       logger.verbose(`wait for: ${ms}`)
       return Promise.delay(ms)

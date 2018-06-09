@@ -1,5 +1,5 @@
 # TODO
-* Somewhere executes 'resut: undefinded' -> not good
+* If many file changes occur, wait 10 after the last file change for further file changes
 * Test writing out to "dappConfig.json" file
 * Add check for open port
 * Possible Refactoring
