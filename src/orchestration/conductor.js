@@ -12,7 +12,11 @@ let Conductor = function (service, config) {
   watcher.watch()
 
   this.orchestrate = () => {
-    return watcher.waitForFileChanges()
+    return Promise.delay(100)
+      .then(() => {
+        logger.info('waiting for file changes...')
+        return watcher.waitForFileChanges()
+      })
       .then(() => {
         logger.info('finished watching files...')
         return workflow(this.service, this.config)

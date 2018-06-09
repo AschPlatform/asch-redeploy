@@ -1,4 +1,3 @@
-const Promise = require('bluebird')
 
 // ctor
 function Watcher (config, logger, chokidar, moment) {
@@ -8,7 +7,6 @@ function Watcher (config, logger, chokidar, moment) {
   this.moment = moment
 
   this.changedFiles = []
-  this.timesRestarted = 0
 
   this.watch = function () {
     this.logger.verbose(`files are watched in userDevDir: ${this.config.userDevDir}`)
@@ -17,6 +15,11 @@ function Watcher (config, logger, chokidar, moment) {
       interval: 100,
       depth: 10,
       ignoreInitial: true
+    })
+
+    logger.info('watching for...', { meta: 'white.inverse' })
+    this.config.watch.forEach((value) => {
+      logger.info(value, { meta: 'white.underline' })
     })
 
     this.chokidar.on('all', (event, name) => {
@@ -49,19 +52,11 @@ function Watcher (config, logger, chokidar, moment) {
 
   this.waitForFileChanges = () => {
     return new Promise((resolve, reject) => {
-      if (this.timesRestarted === 0) {
-        this.timesRestarted += 1
-        resolve(true)
-        return
-      }
       setTimeout(() => {
         if (this.shouldIWait()) {
-          this.logger.info('waiting...')
           resolve(this.waitForFileChanges()) // recursive
         } else {
-          this.logger.info('returning...')
           this.changedFiles = []
-          this.timesRestarted += 1
           resolve(true)
         }
       }, 3000)
