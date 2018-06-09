@@ -1,18 +1,18 @@
-const watch = require('chokidar')
-const logger = require('../logger')
-const moment = require('moment')
 const Promise = require('bluebird')
 
 // ctor
-function watcher (config) {
+function Watcher (config, logger, chokidar, moment) {
   this.config = config
+  this.logger = logger
+  this.chokidar = chokidar
+  this.moment = moment
 
   this.changedFiles = []
   this.timesRestarted = 0
 
   this.watch = function () {
-    logger.verbose(`files are watched in userDevDir: ${this.config.userDevDir}`)
-    this.chokidar = watch.watch(this.config.watch, {
+    this.logger.verbose(`files are watched in userDevDir: ${this.config.userDevDir}`)
+    this.chokidar = this.chokidar.watch(this.config.watch, {
       cwd: this.config.userDevDir,
       interval: 100,
       depth: 10,
@@ -20,11 +20,11 @@ function watcher (config) {
     })
 
     this.chokidar.on('all', (event, name) => {
-      logger.info(`${event} ${name}`, { meta: 'underline.white' })
+      this.logger.info(`${event} ${name}`, { meta: 'underline.white' })
       this.changedFiles.push({
         event: event,
         name: name,
-        time: moment().unix()
+        time: this.moment().unix()
       })
     })
   }
@@ -38,9 +38,9 @@ function watcher (config) {
     })
 
     let latest = sorted[0].time
-    let current = moment().unix()
+    let current = this.moment().unix()
     if ((current - latest) <= 10) {
-      logger.info('waiting for 10 seconds after the last change...')
+      this.logger.info('waiting for 10 seconds after the last change...')
       return true
     } else {
       return false
@@ -56,10 +56,10 @@ function watcher (config) {
       }
       setTimeout(() => {
         if (this.shouldIWait()) {
-          logger.info('waiting...')
+          this.logger.info('waiting...')
           resolve(this.waitForFileChanges()) // recursive
         } else {
-          logger.info('returning...')
+          this.logger.info('returning...')
           this.changedFiles = []
           this.timesRestarted += 1
           resolve(true)
@@ -69,4 +69,4 @@ function watcher (config) {
   }
 }
 
-module.exports = watcher
+module.exports = Watcher

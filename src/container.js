@@ -13,6 +13,7 @@ const Service = require('./orchestration/service')
 const CreateLogDir = require('./orchestration/createLogDir')
 const SerializedNewDappId = require('./orchestration/serializedNewDappId')
 const CheckPort = require('./startup/checkPort')
+const Watcher = require('./orchestration/watcher')
 const FILETYPES = {
   SendMoney: 'SendMoney',
   RegisterDapp: 'RegisterDapp',
@@ -24,7 +25,8 @@ const FILETYPES = {
   Service: 'Service',
   CreateLogDir: 'CreateLogDir',
   SerializedNewDappId: 'SerializedNewDappId',
-  CheckPort: 'CheckPort'
+  CheckPort: 'CheckPort',
+  Watcher: 'Watcher'
 }
 
 const Config = require('./startup/loadConfig')()
@@ -45,6 +47,7 @@ const EventEmitter = require('events')
 const Moment = require('moment')
 const Fork = require('child_process').fork
 const IsPortAvailable = require('is-port-available')
+const Chokidar = require('chokidar')
 
 const DEPENDENCIES = {
   Config: 'Config',
@@ -64,7 +67,8 @@ const DEPENDENCIES = {
   EventEmitter: 'EventEmitter',
   Moment: 'Moment',
   Fork: 'Fork',
-  IsPortAvailable: 'IsPortAvailable'
+  IsPortAvailable: 'IsPortAvailable',
+  Chokidar: 'Chokidar'
 }
 
 var container = new inversify.Container()
@@ -81,6 +85,7 @@ helpers.annotate(Service, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIE
 helpers.annotate(CreateLogDir, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path, DEPENDENCIES.Moment])
 helpers.annotate(SerializedNewDappId, [DEPENDENCIES.Config, DEPENDENCIES.Fs])
 helpers.annotate(CheckPort, [DEPENDENCIES.Config, DEPENDENCIES.IsPortAvailable])
+helpers.annotate(Watcher, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Chokidar, DEPENDENCIES.Moment])
 
 let setup = function () {
   // bindings
@@ -95,6 +100,7 @@ let setup = function () {
   container.bind(FILETYPES.CreateLogDir).to(CreateLogDir)
   container.bind(FILETYPES.SerializedNewDappId).to(SerializedNewDappId)
   container.bind(FILETYPES.CheckPort).to(CheckPort)
+  container.bind(FILETYPES.Watcher).to(Watcher)
 
   // constants or third party libraries
   const registerConstantValue = helpers.registerConstantValue(container)
@@ -116,6 +122,7 @@ let setup = function () {
   registerConstantValue(DEPENDENCIES.Moment, Moment)
   registerConstantValue(DEPENDENCIES.Fork, Fork)
   registerConstantValue(DEPENDENCIES.IsPortAvailable, IsPortAvailable)
+  registerConstantValue(DEPENDENCIES.Chokidar, Chokidar)
 }
 
 let resetConstants = function () {

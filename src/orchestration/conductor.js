@@ -1,14 +1,14 @@
 const Promise = require('bluebird')
 const workflow = require('./workflow')
-const Watcher = require('./watcher')
 const logger = require('../logger')
+const DI = require('../container')
 
 // ctor
 let Conductor = function (service, config) {
   this.service = service
   this.config = config
 
-  let watcher = new Watcher(config)
+  let watcher = DI.container.get(DI.FILETYPES.Watcher)
   watcher.watch()
 
   this.orchestrate = () => {
