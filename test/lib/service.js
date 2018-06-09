@@ -108,7 +108,7 @@ describe('service', function () {
         })
     })
 
-    it('stopping service kills forked process', function (done) {
+    it('stopping service kills forked process and sends SIGTERM to forked process', function (done) {
       mockFs({
         '/home/user/asch': {
           'app.js': 'write_to_appjs'
@@ -165,14 +165,52 @@ describe('service', function () {
         })
     })
 
-    it.skip('stopping service removes property "process" of service object', function (done) {
-    })
+    it('stopping service emits exit event and corresponding exit code', function (done) {
+      let exitCode = 1
 
-    it.skip('stopping service emits exit event and corresponding exit code', function (done) {
-    })
+      mockFs({
+        '/home/user/asch': {
+          'app.js': 'write_to_appjs'
+        },
+        '/home/user/dapp': {
+          'logs': {}
+        }
+      })
 
-    it.skip('stopping service sends "SIGTERM" command to forked process')
-    it.skip('started service writes to log file')
+      let Config = {
+        node: {
+          directory: '/home/user/asch'
+        },
+        userDevDir: '/home/user/dapp'
+      }
+      container.unbind(DI.DEPENDENCIES.Config)
+      registerConstant(DI.DEPENDENCIES.Config, Config)
+
+      let Fork = (path, args, option) => {
+        let eventEmitter = new EventEmitter()
+        eventEmitter.kill = function (verb) {
+          eventEmitter.emit('exit', exitCode)
+        }
+        return eventEmitter
+      }
+      container.unbind(DI.DEPENDENCIES.Fork)
+      registerConstant(DI.DEPENDENCIES.Fork, Fork)
+
+      let service = container.get(DI.FILETYPES.Service)
+
+      service.notifier.on('exit', function (code) {
+        should(code).equals(exitCode)
+        done()
+      })
+
+      service.start()
+        .then(() => {
+          return service.stop()
+        })
+        .catch((error) => {
+          throw error
+        })
+    })
   })
 
   describe('sad path', function () {
