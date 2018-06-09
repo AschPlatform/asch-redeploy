@@ -1,4 +1,5 @@
 # TODO
+* Somewhere executes 'resut: undefinded' -> not good
 * Test writing out to "dappConfig.json" file
 * Add check for open port
 * Possible Refactoring

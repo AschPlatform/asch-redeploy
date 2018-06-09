@@ -14,6 +14,8 @@ describe('service', function () {
       },
       verbose (text, config) {
       },
+      warn (test, config) {
+      },
       error (text, config) {
       }
     }
@@ -105,10 +107,73 @@ describe('service', function () {
         })
     })
 
+    it('stopping service kills forked process', function (done) {
+      mockFs({
+        '/home/user/asch': {
+          'app.js': 'write_to_appjs'
+        },
+        '/home/user/dapp': {
+          'logs': {}
+        }
+      })
+
+      let Config = {
+        node: {
+          directory: '/home/user/asch'
+        },
+        userDevDir: '/home/user/dapp'
+      }
+      container.unbind(DI.DEPENDENCIES.Config)
+      registerConstant(DI.DEPENDENCIES.Config, Config)
+
+      let Fork = (path, args, option) => {
+        Fork.killed = false
+        Fork.killVerb = ''
+        Fork.called = 0
+
+        console.log('called fork')
+
+        let eventEmitter = new EventEmitter()
+        eventEmitter.kill = function (verb) {
+          Fork.killed = true
+          Fork.killVerb = verb
+          Fork.called += 1
+        }
+        return eventEmitter
+      }
+      container.unbind(DI.DEPENDENCIES.Fork)
+      registerConstant(DI.DEPENDENCIES.Fork, Fork)
+
+      let service = container.get(DI.FILETYPES.Service)
+      service.start()
+        .then(() => {
+          return service.stop()
+        })
+        .then((result) => {
+          should(Fork).have.property('killed')
+          should(Fork.killed).equals(true)
+
+          should(Fork).have.property('killVerb')
+          should(Fork.killVerb).equals('SIGTERM')
+
+          should(Fork).have.property('called')
+          should(Fork.called).equals(1)
+
+          done()
+        })
+        .catch((error) => {
+          throw error
+        })
+    })
+
     it.skip('stopping service emits exit event and corresponding exit code', function (done) {
     })
 
     it.skip('stopping service sends "SIGTERM" command to forked process')
     it.skip('started service writes to log file')
+  })
+
+  describe('sad path', function () {
+    it.skip('call stop() without start throws exception')
   })
 })
