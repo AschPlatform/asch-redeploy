@@ -1,5 +1,4 @@
 # TODO
-* If many file changes occur, wait 10 after the last file change for further file changes
 * Possible Refactoring
   * Merge the two methods in CreateLogDir into one
   * CopyDirectory doesn't need to be in own file. Easier to test when not in own file
@@ -15,15 +14,8 @@
   * Add `.travis.yml` file
 * Uninstall old unused Dapps
   * Save on memory and asch startup time 
-* Logs
-   * Create one log-file for verbose console output
-   * And one log-file for asch-node output 
-   * Add date output
 * Does silly-log-level works?
-* Overwrite NODE_ENV
-* Consistent output
 * Optimize delay times
   * Between transactions
   * Between startup/shutdowns
-* retry when not enough money
 * Delete old dappId folders for start-up optimization
