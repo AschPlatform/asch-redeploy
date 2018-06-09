@@ -7,7 +7,7 @@ let CheckPort = function (config, isPortAvailable) {
     return isPortAvailable(config.node.port)
       .then((status) => {
         if (status === false) {
-          throw new Error(`port ${config.node.port} is is already in use. Do you have a asch-node already running?`)
+          throw new Error(`port_in_use: port ${config.node.port} is is already in use. Do you have a asch-node already running?`)
         }
         return true
       })

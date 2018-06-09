@@ -4,6 +4,7 @@
   * Merge the two methods in CreateLogDir into one
   * CopyDirectory doesn't need to be in own file. Easier to test when not in own file
   * Asch service returns the promise on exit only when the exit() event fired
+  * Rename DI.resetConstants
 * Refactoring:
   * rename `src/container.js` file into `src/DI.js`
   * Add "userDevDir" to schema object for validation
