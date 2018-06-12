@@ -251,6 +251,26 @@ describe('watcher', function () {
         })
     })
 
-    it.skip('throws exception if watch() is called twice or more')
+    it('throws exception if watch() is called twice or more', function (done) {
+      // dummy Chokidar
+      let Chokidar = {
+        emitter: new EventEmitter(),
+        watch (watchFor) {
+          return this.emitter
+        }
+      }
+      container.unbind(DI.DEPENDENCIES.Chokidar)
+      registerConstant(DI.DEPENDENCIES.Chokidar, Chokidar)
+
+      let watcher = container.get(DI.FILETYPES.Watcher)
+      watcher.watch()
+
+      try {
+        watcher.watch()
+      } catch (error) {
+        should(error.message).startWith('already_initialized')
+        done()
+      }
+    })
   })
 })
