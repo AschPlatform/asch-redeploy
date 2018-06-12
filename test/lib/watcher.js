@@ -94,6 +94,7 @@ describe('watcher', function () {
     })
 
     it('return control after 10 seconds after the last file change occured', function (done) {
+      // mock current time
       const Moment = function () {
         return {
           unix () {
@@ -104,11 +105,7 @@ describe('watcher', function () {
       container.unbind(DI.DEPENDENCIES.Moment)
       registerConstant(DI.DEPENDENCIES.Moment, Moment)
 
-      let newMoment = container.get(DI.DEPENDENCIES.Moment)
-      console.log(newMoment().unix())
-
       let watcher = container.get(DI.FILETYPES.Watcher)
-
       watcher.changedFiles.push({
         event: 'add',
         name: 'test.js',
@@ -120,8 +117,107 @@ describe('watcher', function () {
       done()
     })
 
-    it.skip('no file changed - wait longer')
-    it.skip('wait longer if last file change is shorter then 10 seconds ago')
+    it('no file changed - continue to wait', function (done) {
+      // mock current time
+      const Moment = function () {
+        return {
+          unix () {
+            return 1000
+          }
+        }
+      }
+      container.unbind(DI.DEPENDENCIES.Moment)
+      registerConstant(DI.DEPENDENCIES.Moment, Moment)
+
+      let watcher = container.get(DI.FILETYPES.Watcher)
+
+      let result = watcher.shouldIWait()
+      should(result).equals(true)
+      done()
+    })
+
+    it('wait longer if last file change is shorter then 10 seconds ago', function (done) {
+      // mock current time
+      const Moment = function () {
+        return {
+          unix () {
+            return 1000
+          }
+        }
+      }
+      container.unbind(DI.DEPENDENCIES.Moment)
+      registerConstant(DI.DEPENDENCIES.Moment, Moment)
+
+      let watcher = container.get(DI.FILETYPES.Watcher)
+      watcher.changedFiles.push({
+        event: 'add',
+        name: 'test.js',
+        time: 995
+      })
+
+      let result = watcher.shouldIWait()
+      should(result).equals(true)
+      done()
+    })
+
+    it('multiple file changes, consier only the last one', function (done) {
+      // mock current time
+      const Moment = function () {
+        return {
+          unix () {
+            return 1000
+          }
+        }
+      }
+      container.unbind(DI.DEPENDENCIES.Moment)
+      registerConstant(DI.DEPENDENCIES.Moment, Moment)
+
+      let watcher = container.get(DI.FILETYPES.Watcher)
+
+      // file changes
+      watcher.changedFiles.push({
+        event: 'add',
+        name: 'test.js',
+        time: 985
+      })
+      watcher.changedFiles.push({
+        event: 'change',
+        name: 'domain.js',
+        time: 993
+      })
+
+      let result = watcher.shouldIWait()
+      should(result).equals(true)
+      done()
+    })
+
+    it('waitForFileChanges() returns promise', function (done) {
+      // mock current time
+      const Moment = function () {
+        return {
+          unix () {
+            return 1000
+          }
+        }
+      }
+      container.unbind(DI.DEPENDENCIES.Moment)
+      registerConstant(DI.DEPENDENCIES.Moment, Moment)
+
+      // no file changes
+      let watcher = container.get(DI.FILETYPES.Watcher)
+
+      // file changes
+      watcher.changedFiles.push({
+        event: 'add',
+        name: 'test.js',
+        time: 980
+      })
+
+      let promise = watcher.waitForFileChanges(10)
+      should(promise).have.property('then')
+      should(promise).have.property('catch')
+      done()
+    })
   })
 
   describe('sad path', function () {
