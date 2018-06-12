@@ -1,3 +1,4 @@
+const Promise = require('bluebird')
 
 // ctor
 function Watcher (config, logger, chokidar, moment) {
