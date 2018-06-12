@@ -160,7 +160,7 @@ describe('watcher', function () {
       done()
     })
 
-    it('multiple file changes, consier only the last one', function (done) {
+    it('multiple file changes, consider only the last one', function (done) {
       // mock current time
       const Moment = function () {
         return {
@@ -203,6 +203,16 @@ describe('watcher', function () {
       container.unbind(DI.DEPENDENCIES.Moment)
       registerConstant(DI.DEPENDENCIES.Moment, Moment)
 
+      // dummy Chokidar
+      let Chokidar = {
+        emitter: new EventEmitter(),
+        watch (watchFor) {
+          return this.emitter
+        }
+      }
+      container.unbind(DI.DEPENDENCIES.Chokidar)
+      registerConstant(DI.DEPENDENCIES.Chokidar, Chokidar)
+
       // no file changes
       let watcher = container.get(DI.FILETYPES.Watcher)
 
@@ -213,14 +223,34 @@ describe('watcher', function () {
         time: 980
       })
 
+      watcher.watch()
+
       let promise = watcher.waitForFileChanges(10)
-      should(promise).have.property('then')
-      should(promise).have.property('catch')
-      done()
+        .then((result) => {
+          should(promise).have.property('then')
+          should(promise).have.property('catch')
+          done()
+        })
+        .catch((error) => {
+          throw error
+        })
     })
   })
 
   describe('sad path', function () {
-    it.skip('throws exception if watch() is not called before waitForFileChanges')
+    it('throws exception if watch() is not called before waitForFileChanges', function (done) {
+      let watcher = container.get(DI.FILETYPES.Watcher)
+
+      watcher.waitForFileChanges(10)
+        .then((result) => {
+          throw new Error()
+        })
+        .catch((error) => {
+          should(error.message).startWith('did_not_initialize')
+          done()
+        })
+    })
+
+    it.skip('throws exception if watch() is called twice or more')
   })
 })

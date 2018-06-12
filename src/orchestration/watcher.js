@@ -8,6 +8,7 @@ function Watcher (config, logger, chokidar, moment) {
   this.moment = moment
 
   this.changedFiles = []
+  this.initialized = false
 
   this.watch = function () {
     this.logger.info(`files are watched in userDevDir: ${this.config.userDevDir}`, { meta: 'white.inverse' })
@@ -30,6 +31,8 @@ function Watcher (config, logger, chokidar, moment) {
         time: this.moment().unix()
       })
     })
+
+    this.initialized = true
   }
 
   this.shouldIWait = () => {
@@ -52,6 +55,11 @@ function Watcher (config, logger, chokidar, moment) {
 
   this.waitForFileChanges = (ms = 1000) => {
     return new Promise((resolve, reject) => {
+      if (this.initialized === false) {
+        reject(new Error('did_not_initialize: watcher.watch() has to be called first'))
+        return
+      }
+
       if (this.shouldIWait()) {
         resolve(Promise.delay(ms).then(() => this.waitForFileChanges())) // recursive
       } else {
