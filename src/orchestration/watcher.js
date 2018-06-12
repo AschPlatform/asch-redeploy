@@ -50,16 +50,14 @@ function Watcher (config, logger, chokidar, moment) {
     }
   }
 
-  this.waitForFileChanges = () => {
+  this.waitForFileChanges = (ms = 1000) => {
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (this.shouldIWait()) {
-          resolve(this.waitForFileChanges()) // recursive
-        } else {
-          this.changedFiles = []
-          resolve(true)
-        }
-      }, 3000)
+      if (this.shouldIWait()) {
+        resolve(Promise.delay(ms).then(() => this.waitForFileChanges())) // recursive
+      } else {
+        this.changedFiles = []
+        resolve(true)
+      }
     })
   }
 }

@@ -92,5 +92,39 @@ describe('watcher', function () {
       should(watcher.changedFiles[0].name).equals('domain.js')
       done()
     })
+
+    it('return control after 10 seconds after the last file change occured', function (done) {
+      const Moment = function () {
+        return {
+          unix () {
+            return 1001
+          }
+        }
+      }
+      container.unbind(DI.DEPENDENCIES.Moment)
+      registerConstant(DI.DEPENDENCIES.Moment, Moment)
+
+      let newMoment = container.get(DI.DEPENDENCIES.Moment)
+      console.log(newMoment().unix())
+
+      let watcher = container.get(DI.FILETYPES.Watcher)
+
+      watcher.changedFiles.push({
+        event: 'add',
+        name: 'test.js',
+        time: 990
+      })
+
+      let result = watcher.shouldIWait()
+      should(result).equals(false)
+      done()
+    })
+
+    it.skip('no file changed - wait longer')
+    it.skip('wait longer if last file change is shorter then 10 seconds ago')
+  })
+
+  describe('sad path', function () {
+    it.skip('throws exception if watch() is not called before waitForFileChanges')
   })
 })
