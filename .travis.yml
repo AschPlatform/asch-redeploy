@@ -1,0 +1,16 @@
+language: node_js
+os:
+  - linux
+env:
+  - CXX=g++-4.8
+node_js:
+  - 7
+  - 8
+  - 9
+  - 10
+notifications:
+  recipients:
+    - a1300asch@gmail.com
+  email:
+    on_success: change
+    on_failure: always
