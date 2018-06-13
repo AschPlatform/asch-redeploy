@@ -8,9 +8,6 @@
   * rename `src/DI.js` file into `src/DI.js`
   * In container.js make shure, that all dependencies are getting unset and then reset on a call to reset()
 * Is it necessary, to have the asch/public/dist folder build for "asch-redeploy" to work?
-* Write tests
-  * Add travis-ci build on commit!Add travis-ci build on commit!
-  * Add `.travis.yml` file
 * Uninstall old unused Dapps
   * Save on memory and asch startup time 
 * Does silly-log-level works?

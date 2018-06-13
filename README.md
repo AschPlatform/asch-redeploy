@@ -1,3 +1,9 @@
+[![Build Status](https://travis-ci.org/AschPlatform/asch-redeploy.svg?branch=master)](https://travis-ci.org/AschPlatform/asch-redeploy)
+[![License](https://img.shields.io/badge/license-MIT-yellow.svg?style=flat)](http://aschplatform.mit-license.org)
+[![Platform](https://img.shields.io/badge/platform-Linux-green.svg?style=flat)](https://github.com/AschPlatform/asch-redeploy)
+- - -
+
+
 # asch-redeploy
 A hassle-free local asch environment. Watch for changes on your Dapp and re-deploy it automatically.
 
