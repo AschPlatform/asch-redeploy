@@ -14,7 +14,7 @@ const CreateLogDir = require('./orchestration/createLogDir')
 const SerializedNewDappId = require('./orchestration/serializedNewDappId')
 const CheckPort = require('./startup/checkPort')
 const Watcher = require('./orchestration/watcher')
-const CreatePublicDistFolder = require('./startup/createPublicDistFolder')
+const CheckPublicDistDir = require('./startup/checkPublicDistDir')
 const FILETYPES = {
   SendMoney: 'SendMoney',
   RegisterDapp: 'RegisterDapp',
@@ -28,7 +28,7 @@ const FILETYPES = {
   SerializedNewDappId: 'SerializedNewDappId',
   CheckPort: 'CheckPort',
   Watcher: 'Watcher',
-  CreatePublicDistFolder: CreatePublicDistFolder
+  CheckPublicDistDir: CheckPublicDistDir
 }
 
 const Config = require('./startup/loadConfig')()
@@ -80,7 +80,7 @@ helpers.annotate(SendMoney, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENC
 helpers.annotate(RegisterDapp, [DEPENDENCIES.Config, DEPENDENCIES.DappConfig, DEPENDENCIES.Utils, DEPENDENCIES.Axios, DEPENDENCIES.AschJS, DEPENDENCIES.Logger])
 helpers.annotate(ChangeAschConfig, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path, DEPENDENCIES.Logger])
 helpers.annotate(Deploy, [DEPENDENCIES.Config, DEPENDENCIES.CopyDirectory, DEPENDENCIES.Path, DEPENDENCIES.Fs])
-helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FILETYPES.CheckFileStructure, DEPENDENCIES.CheckArch, FILETYPES.CheckPort, FILETYPES.CreatePublicDistFolder])
+helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FILETYPES.CheckFileStructure, DEPENDENCIES.CheckArch, FILETYPES.CheckPort, FILETYPES.CheckPublicDistDir])
 helpers.annotate(IsConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.ZSchema, DEPENDENCIES.CustomValidators, DEPENDENCIES.ConfigSchema])
 helpers.annotate(CheckFileStructure, [DEPENDENCIES.Config])
 helpers.annotate(Service, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Moment, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.EventEmitter, FILETYPES.CreateLogDir, DEPENDENCIES.Fork])
@@ -88,7 +88,7 @@ helpers.annotate(CreateLogDir, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCI
 helpers.annotate(SerializedNewDappId, [DEPENDENCIES.Config, DEPENDENCIES.Fs])
 helpers.annotate(CheckPort, [DEPENDENCIES.Config, DEPENDENCIES.IsPortAvailable])
 helpers.annotate(Watcher, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Chokidar, DEPENDENCIES.Moment])
-helpers.annotate(CreatePublicDistFolder, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path])
+helpers.annotate(CheckPublicDistDir, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path])
 
 let setup = function () {
   // bindings
@@ -104,7 +104,7 @@ let setup = function () {
   container.bind(FILETYPES.SerializedNewDappId).to(SerializedNewDappId)
   container.bind(FILETYPES.CheckPort).to(CheckPort)
   container.bind(FILETYPES.Watcher).to(Watcher)
-  container.bind(FILETYPES.CreatePublicDistFolder).to(CreatePublicDistFolder)
+  container.bind(FILETYPES.CheckPublicDistDir).to(CheckPublicDistDir)
 
   // constants or third party libraries
   const registerConstantValue = helpers.registerConstantValue(container)
