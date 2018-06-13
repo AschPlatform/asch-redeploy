@@ -51,7 +51,7 @@ let workflow = (service, config) => {
       return Promise.delay(5000)
     })
     .then(() => {
-      logger.info('starting aschService', { meta: 'green.inverse' })
+      logger.info('starting asch node', { meta: 'green.inverse' })
       return this.service.start()
     })
     .then(() => {

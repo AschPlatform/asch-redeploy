@@ -31,7 +31,6 @@ let Conductor = function (service, config) {
         throw error
       })
       .then(() => {
-        logger.info('waiting for file changes...')
         return this.orchestrate()
       })
   }
