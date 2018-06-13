@@ -14,7 +14,6 @@
     "inversify": "^4.13.0",
     "inversify-vanillajs-helpers": "^2.0.0",
     "is-port-available": "^0.1.5",
-    "js-yaml": "^3.11.0",
     "moment": "2.22.1",
     "ncp": "2.0.0",
     "randomstring": "1.1.5",
