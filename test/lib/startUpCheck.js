@@ -60,6 +60,19 @@ describe('startUpCheck', function () {
       }
       registerConstant(DI.DEPENDENCIES.CheckArch, new CheckArch())
 
+      container.unbind(DI.FILETYPES.CheckPublicDistDir)
+      let CheckPublicDistDir = function (config, fs, path) {
+        this.config = config
+        this.fs = fs
+        this.path = path
+        CheckPublicDistDir.called = 0
+        this.createIfNotExistsSync = () => {
+          CheckPublicDistDir.called += 1
+        }
+      }
+      DI.helpers.annotate(CheckPublicDistDir, [DI.DEPENDENCIES.Config, DI.DEPENDENCIES.Fs, DI.DEPENDENCIES.Path])
+      container.bind(DI.FILETYPES.CheckPublicDistDir).to(CheckPublicDistDir)
+
       container.unbind(DI.FILETYPES.CheckPort)
       let CheckPort = function (config, isPortAvailable) {
         this.config = config
@@ -91,6 +104,9 @@ describe('startUpCheck', function () {
 
           should(CheckPort).have.property('called')
           should(CheckPort.called).equals(1)
+
+          should(CheckPublicDistDir).have.property('called')
+          should(CheckPublicDistDir.called).equals(1)
 
           done()
         })
