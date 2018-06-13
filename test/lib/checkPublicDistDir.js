@@ -2,6 +2,8 @@
 const DI = require('../../src/DI')
 const should = require('should')
 const mockFs = require('mock-fs')
+const fs = require('fs')
+const path = require('path')
 
 describe('checkPort', function () {
   const container = DI.container
@@ -25,11 +27,67 @@ describe('checkPort', function () {
   })
 
   describe('happy path', function () {
-    it.skip('DI worked', function (done) {
-      let checkPort = container.get(DI.FILETYPES.CheckPublicDistDir)
-      should(checkPort).be.ok()
-      should(checkPort).have.property('config')
-      should(checkPort).have.property('isPortAvailable')
+    it('DI worked', function (done) {
+      let checkPublicDistDir = container.get(DI.FILETYPES.CheckPublicDistDir)
+      should(checkPublicDistDir).be.ok()
+      should(checkPublicDistDir).have.property('config')
+      should(checkPublicDistDir).have.property('fs')
+      should(checkPublicDistDir).have.property('path')
+
+      done()
+    })
+
+    it('create dist directory if not exists', function (done) {
+      let Config = {
+        node: {
+          directory: '/home/user/asch/'
+        }
+      }
+      container.unbind(DI.DEPENDENCIES.Config)
+      registerConstant(DI.DEPENDENCIES.Config, Config)
+
+      mockFs({
+        '/home/user/asch/': {
+          'public': {
+          }
+        }
+      })
+
+      let checkPublicDistDir = container.get(DI.FILETYPES.CheckPublicDistDir)
+
+      let result = checkPublicDistDir.createIfNotExistsSync()
+      let expectedPath = '/home/user/asch/public/dist'
+      should(result).equals(true)
+      should(fs.existsSync(expectedPath)).equals(true)
+      should(fs.lstatSync(expectedPath).isDirectory()).equals(true)
+
+      done()
+    })
+
+    it('create dist directory if not exists (relative path)', function (done) {
+      let Config = {
+        node: {
+          directory: '../asch/'
+        }
+      }
+      container.unbind(DI.DEPENDENCIES.Config)
+      registerConstant(DI.DEPENDENCIES.Config, Config)
+
+      mockFs({
+        '../asch/': {
+          'public': {
+          }
+        }
+      })
+
+      let checkPublicDistDir = container.get(DI.FILETYPES.CheckPublicDistDir)
+
+      let result = checkPublicDistDir.createIfNotExistsSync()
+
+      should(result).equals(true)
+      let expectedPath = '../asch/public/dist'
+      should(fs.existsSync(expectedPath)).equals(true)
+      should(fs.lstatSync(expectedPath).isDirectory()).equals(true)
 
       done()
     })

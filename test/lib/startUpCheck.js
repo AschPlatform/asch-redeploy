@@ -18,6 +18,7 @@ describe('startUpCheck', function () {
       should(startUpCheck).have.property('config')
       should(startUpCheck).have.property('isConfigValid')
       should(startUpCheck).have.property('checkFileStructure')
+      should(startUpCheck).have.property('checkPublicDistDir')
       done()
     })
 
@@ -156,6 +157,21 @@ describe('startUpCheck', function () {
       container.bind(DI.FILETYPES.CheckPort).to(CheckPort)
     }
 
+    let dummyCheckPublicDistDir = function () {
+      container.unbind(DI.FILETYPES.CheckPublicDistDir)
+      let CheckPublicDistDir = function (config, fs, path) {
+        this.config = config
+        this.fs = fs
+        this.path = path
+
+        this.createIfNotExistsSync = () => {
+          return true
+        }
+      }
+      DI.helpers.annotate(CheckPublicDistDir, [DI.DEPENDENCIES.Config, DI.DEPENDENCIES.Fs, DI.DEPENDENCIES.Path])
+      container.bind(DI.FILETYPES.CheckPublicDistDir).to(CheckPublicDistDir)
+    }
+
     it('dependency CheckArch throws Error - startUpCheck exists with error', function (done) {
       // config
       container.unbind(DI.DEPENDENCIES.CheckArch)
@@ -174,6 +190,7 @@ describe('startUpCheck', function () {
       dummyCheckFileStructure()
       dummyIsConfigValid()
       dummyCheckPort()
+      dummyCheckPublicDistDir()
 
       let startUpCheck = container.get(DI.FILETYPES.StartUpCheck)
       startUpCheck.check()
@@ -203,6 +220,7 @@ describe('startUpCheck', function () {
       dummyCheckArch()
       dummyIsConfigValid()
       dummyCheckPort()
+      dummyCheckPublicDistDir()
 
       let startUpCheck = DI.container.get(DI.FILETYPES.StartUpCheck)
       startUpCheck.check()
@@ -231,6 +249,7 @@ describe('startUpCheck', function () {
       dummyCheckArch()
       dummyCheckFileStructure()
       dummyCheckPort()
+      dummyCheckPublicDistDir()
 
       let startUpCheck = DI.container.get(DI.FILETYPES.StartUpCheck)
       startUpCheck.check()
@@ -261,6 +280,7 @@ describe('startUpCheck', function () {
       dummyCheckArch()
       dummyIsConfigValid()
       dummyCheckFileStructure()
+      dummyCheckPublicDistDir()
 
       let startUpCheck = DI.container.get(DI.FILETYPES.StartUpCheck)
       startUpCheck.check()
@@ -269,6 +289,33 @@ describe('startUpCheck', function () {
         })
         .catch((error) => {
           should(error.message).startWith('port_in_use')
+          done()
+        })
+    })
+
+    it('dependency checkPublicDistDir throws Error - startUpCheck exits with error', function (done) {
+      // every dependency returns true except for "checkPublicDistDir - it throws error
+      container.unbind(DI.FILETYPES.CheckPublicDistDir)
+      let CheckPublicDistDir = function () {
+        this.createIfNotExistsSync = () => {
+          throw new Error('can_not_create_dir')
+        }
+      }
+      DI.helpers.annotate(CheckPublicDistDir, [DI.DEPENDENCIES.Config, DI.DEPENDENCIES.Fs, DI.DEPENDENCIES.Path])
+      container.bind(DI.FILETYPES.CheckPublicDistDir).to(CheckPublicDistDir)
+
+      dummyCheckArch()
+      dummyIsConfigValid()
+      dummyCheckFileStructure()
+      dummyCheckPort()
+
+      let startUpCheck = DI.container.get(DI.FILETYPES.StartUpCheck)
+      startUpCheck.check()
+        .then((result) => {
+          throw new Error()
+        })
+        .catch((error) => {
+          should(error.message).startWith('can_not_create_dir')
           done()
         })
     })

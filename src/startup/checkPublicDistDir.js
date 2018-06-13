@@ -1,11 +1,11 @@
 
 // ctor
-let CreatePublicDistFolder = function (config, fs, path) {
+let CheckPublicDistDir = function (config, fs, path) {
   this.config = config
   this.fs = fs
   this.path = path
 
-  this.createIfNotExistsSync = function () {
+  this.createIfNotExistsSync = () => {
     let distDir = path.join(config.node.directory, 'public', 'dist')
     if (fs.existsSync(distDir) === false) {
       fs.mkdirSync(distDir)
@@ -14,4 +14,4 @@ let CreatePublicDistFolder = function (config, fs, path) {
   }
 }
 
-module.exports = CreatePublicDistFolder
+module.exports = CheckPublicDistDir
