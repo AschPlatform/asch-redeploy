@@ -1,4 +1,4 @@
-const DI = require('../../src/container')
+const DI = require('../../src/DI')
 const should = require('should')
 const path = require('path')
 const mockFs = require('mock-fs')

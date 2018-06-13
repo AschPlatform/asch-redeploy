@@ -1,6 +1,6 @@
 'use strict'
 
-const DI = require('../../src/container')
+const DI = require('../../src/DI')
 const should = require('should')
 const mockFs = require('mock-fs')
 const fs = require('fs')

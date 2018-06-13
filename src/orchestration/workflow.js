@@ -1,6 +1,6 @@
 const Promise = require('bluebird')
 const logger = require('../logger')
-const DI = require('../container')
+const DI = require('../DI')
 
 let workflow = (service, config) => {
   this.service = service

@@ -1,5 +1,5 @@
 /* needs to be called first */
-const DI = require('./src/container')
+const DI = require('./src/DI')
 
 let startUpCheck = DI.container.get(DI.FILETYPES.StartUpCheck)
 

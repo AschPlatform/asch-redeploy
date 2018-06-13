@@ -1,8 +1,7 @@
-const DI = require('../../src/container')
+const DI = require('../../src/DI')
 const should = require('should')
 const mockFs = require('mock-fs')
 const EventEmitter = require('events')
-const Promise = require('bluebird')
 
 describe('service', function () {
   const container = DI.container

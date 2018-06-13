@@ -1,7 +1,7 @@
 const Promise = require('bluebird')
 const workflow = require('./workflow')
 const logger = require('../logger')
-const DI = require('../container')
+const DI = require('../DI')
 
 // ctor
 let Conductor = function (service, config) {
