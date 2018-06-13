@@ -1,4 +1,3 @@
-const shelljs = require('shelljs')
 const utils = require('../utils')
 const path = require('path')
 
@@ -9,7 +8,7 @@ let loadConfig = () => {
   const config = require('config')
 
   let defaultConfig = config.util.toObject(config.get('config'))
-  defaultConfig.userDevDir = shelljs.pwd().stdout
+  defaultConfig.userDevDir = process.cwd()
 
   return defaultConfig
 }
