@@ -75,7 +75,7 @@ You can set different ENVIRONMENT variables:
 ###################################################
 
 # required: absolute path to the asch directory (where app.js file lives)
-ASCH_NODE_DIR='/pathToAschDir' asch-redeploy
+ASCH_NODE_DIR='/pathToAschDir'
 
 # required: absolute Path to dappConfig.json file
 #  write dappId to file (for frontend-development)
