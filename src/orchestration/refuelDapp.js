@@ -1,8 +1,9 @@
 
-let RefuelDapp = function (config, axios, aschJS) {
+let RefuelDapp = function (config, axios, aschJS, logger) {
   this.config = config
   this.axios = axios
   this.aschJS = aschJS
+  this.logger = logger
 
   this.headers = {
     magic: this.config.node.magic,
@@ -15,8 +16,8 @@ let RefuelDapp = function (config, axios, aschJS) {
     }
 
     let currency = 'XAS'
-    let amount = 200 * 100000000
-    var transaction = this.aschJS.transfer.createInTransfer(dappId, currency, amount, config.dapp.masterAccountPassword, config.dapp.masterAccountPassword2nd || undefined)
+    let amount = 500 * 1e8
+    let transaction = this.aschJS.transfer.createInTransfer(dappId, currency, amount, config.dapp.masterAccountPassword, config.dapp.masterAccountPassword2nd || undefined)
 
     let url = 'http://localhost:4096/peer/transactions'
 
@@ -25,11 +26,18 @@ let RefuelDapp = function (config, axios, aschJS) {
     }, {
       headers: this.headers
     })
-      .then((result) => {
-        console.log(result)
+      .then((response) => {
+        if (response.status !== 200) {
+          throw new Error('Could not register dapp')
+        }
+        if (response.data.success === false) {
+          this.logger.warn(`dapp refuel was not successful ${JSON.stringify(response.data)}`)
+          throw new Error(response.data)
+        }
+        this.logger.info(`DAPP refuel with ${amount / 1e8} XAS, transactionId: "${response.data.transactionId}"`)
       })
       .catch((error) => {
-        console.log(error)
+        throw error
       })
   }
 }
