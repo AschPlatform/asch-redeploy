@@ -40,5 +40,10 @@ npm link
 
 ## Run tests
 ```bash
-npm test
+npm run test
+```
+
+## Run Code Coverage
+```bash
+npm run coverage
 ```
