@@ -15,6 +15,7 @@ const SerializedNewDappId = require('./orchestration/serializedNewDappId')
 const CheckPort = require('./startup/checkPort')
 const Watcher = require('./orchestration/watcher')
 const CheckPublicDistDir = require('./startup/checkPublicDistDir')
+const RefuelDapp = require('./orchestration/refuelDapp')
 const FILETYPES = {
   SendMoney: 'SendMoney',
   RegisterDapp: 'RegisterDapp',
@@ -28,7 +29,8 @@ const FILETYPES = {
   SerializedNewDappId: 'SerializedNewDappId',
   CheckPort: 'CheckPort',
   Watcher: 'Watcher',
-  CheckPublicDistDir: CheckPublicDistDir
+  CheckPublicDistDir: 'CheckPublicDistDir',
+  RefuelDapp: 'RefuelDapp'
 }
 
 const Config = require('./startup/loadConfig')()
@@ -89,6 +91,7 @@ helpers.annotate(SerializedNewDappId, [DEPENDENCIES.Config, DEPENDENCIES.Fs])
 helpers.annotate(CheckPort, [DEPENDENCIES.Config, DEPENDENCIES.IsPortAvailable])
 helpers.annotate(Watcher, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Chokidar, DEPENDENCIES.Moment])
 helpers.annotate(CheckPublicDistDir, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path])
+helpers.annotate(RefuelDapp, [DEPENDENCIES.Config, DEPENDENCIES.Axios, DEPENDENCIES.AschJS, DEPENDENCIES.Logger])
 
 let setup = function () {
   // bindings
@@ -105,6 +108,7 @@ let setup = function () {
   container.bind(FILETYPES.CheckPort).to(CheckPort)
   container.bind(FILETYPES.Watcher).to(Watcher)
   container.bind(FILETYPES.CheckPublicDistDir).to(CheckPublicDistDir)
+  container.bind(FILETYPES.RefuelDapp).to(RefuelDapp)
 
   // constants or third party libraries
   const registerConstantValue = helpers.registerConstantValue(container)
