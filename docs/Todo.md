@@ -1,4 +1,5 @@
 # TODO
+* Add option to fuel the dapp after deployment
 * Possible Refactoring
   * Merge the two methods in CreateLogDir into one
   * CopyDirectory doesn't need to be in own file. Easier to test when not in own file
