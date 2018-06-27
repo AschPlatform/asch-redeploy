@@ -40,6 +40,7 @@ describe('service', function () {
       should(service).have.property('EventEmitter')
       should(service).have.property('createLogDir')
       should(service).have.property('fork')
+      should(service).have.property('pathResolution')
 
       done()
     })

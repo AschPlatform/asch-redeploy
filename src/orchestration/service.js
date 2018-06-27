@@ -1,7 +1,7 @@
 const Promise = require('bluebird')
 
 // ctor
-let Service = function (config, logger, moment, path, fs, EventEmitter, createLogDir, fork) {
+let Service = function (config, logger, moment, path, fs, EventEmitter, createLogDir, fork, pathResolution) {
   this.config = config
   this.logger = logger
   this.moment = moment
@@ -10,8 +10,8 @@ let Service = function (config, logger, moment, path, fs, EventEmitter, createLo
   this.EventEmitter = EventEmitter
   this.createLogDir = createLogDir
   this.fork = fork
+  this.pathResolution = pathResolution
 
-  this.aschNodeDir = config.node.directory
   this.logDir = path.join(config.userDevDir, 'logs')
   this.port = config.node.port
 
@@ -24,11 +24,12 @@ let Service = function (config, logger, moment, path, fs, EventEmitter, createLo
       let logDir = this.createLogDir.createDirSync()
       let logStream = this.createLogDir.createLogFileNameHandleSync(logDir)
 
-      let aschPath = this.path.join(this.aschNodeDir, 'app.js')
-      this.logger.info(`starting asch-node in "${aschPath}" on port ${this.port}`)
+      let absoluteAschPath = this.pathResolution.getAbsoluteAschPathSync()
+      let appJS = this.path.join(absoluteAschPath, 'app.js')
+      this.logger.info(`starting asch-node in "${absoluteAschPath}" on port ${this.port}`, { meta: 'inverse' })
 
-      this.process = this.fork(aschPath, ['--port', parseInt(this.port)], {
-        cwd: this.aschNodeDir,
+      this.process = this.fork(appJS, ['--port', parseInt(this.port)], {
+        cwd: absoluteAschPath,
         execArgv: [],
         stdio: [ 'ignore', logStream, logStream, 'ipc' ]
       })

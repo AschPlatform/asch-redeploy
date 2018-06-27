@@ -16,6 +16,7 @@ const CheckPort = require('./startup/checkPort')
 const Watcher = require('./orchestration/watcher')
 const CheckPublicDistDir = require('./startup/checkPublicDistDir')
 const RefuelDapp = require('./orchestration/refuelDapp')
+const PathResolution = require('./pathResolution')
 const FILETYPES = {
   SendMoney: 'SendMoney',
   RegisterDapp: 'RegisterDapp',
@@ -30,7 +31,8 @@ const FILETYPES = {
   CheckPort: 'CheckPort',
   Watcher: 'Watcher',
   CheckPublicDistDir: 'CheckPublicDistDir',
-  RefuelDapp: 'RefuelDapp'
+  RefuelDapp: 'RefuelDapp',
+  PathResolution: 'PathResolution'
 }
 
 const Config = require('./startup/loadConfig')()
@@ -85,13 +87,14 @@ helpers.annotate(Deploy, [DEPENDENCIES.Config, DEPENDENCIES.CopyDirectory, DEPEN
 helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FILETYPES.CheckFileStructure, DEPENDENCIES.CheckArch, FILETYPES.CheckPort, FILETYPES.CheckPublicDistDir])
 helpers.annotate(IsConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.ZSchema, DEPENDENCIES.CustomValidators, DEPENDENCIES.ConfigSchema])
 helpers.annotate(CheckFileStructure, [DEPENDENCIES.Config])
-helpers.annotate(Service, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Moment, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.EventEmitter, FILETYPES.CreateLogDir, DEPENDENCIES.Fork])
+helpers.annotate(Service, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Moment, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.EventEmitter, FILETYPES.CreateLogDir, DEPENDENCIES.Fork, FILETYPES.PathResolution])
 helpers.annotate(CreateLogDir, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path, DEPENDENCIES.Moment])
 helpers.annotate(SerializedNewDappId, [DEPENDENCIES.Config, DEPENDENCIES.Fs])
 helpers.annotate(CheckPort, [DEPENDENCIES.Config, DEPENDENCIES.IsPortAvailable])
 helpers.annotate(Watcher, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Chokidar, DEPENDENCIES.Moment])
 helpers.annotate(CheckPublicDistDir, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path])
 helpers.annotate(RefuelDapp, [DEPENDENCIES.Config, DEPENDENCIES.Axios, DEPENDENCIES.AschJS, DEPENDENCIES.Logger])
+helpers.annotate(PathResolution, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Path])
 
 let setup = function () {
   // bindings
@@ -109,6 +112,7 @@ let setup = function () {
   container.bind(FILETYPES.Watcher).to(Watcher)
   container.bind(FILETYPES.CheckPublicDistDir).to(CheckPublicDistDir)
   container.bind(FILETYPES.RefuelDapp).to(RefuelDapp)
+  container.bind(FILETYPES.PathResolution).to(PathResolution)
 
   // constants or third party libraries
   const registerConstantValue = helpers.registerConstantValue(container)
