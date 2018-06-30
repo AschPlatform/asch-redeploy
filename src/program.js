@@ -3,9 +3,9 @@ const program = require('commander')
 let version = require('../package.json').version
 program
   .version(version)
-  .option('-a, --asch <path>', 'Path to Asch directory')
+  .option('-a, --asch <path>', 'Path to Asch directory, default "../asch"')
   .option('-h, --host <host>', 'Host name, default "localhost"')
-  .option('-p, --port <port>', 'Port nuber, default 4096')
+  .option('-p, --port <port>', 'Port nuber, default "4096"')
   .option('--magic <magic>', 'Http-Header "Magic", default "594fe0f3"')
   .option('-g, --genesis <secret>', 'The secret of the respective genesis account')
 
