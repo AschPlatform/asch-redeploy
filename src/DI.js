@@ -35,7 +35,9 @@ const FILETYPES = {
   PathResolution: 'PathResolution'
 }
 
-const Config = require('./startup/loadConfig')()
+const userInput = require('./program').getUserInput()
+
+const Config = require('./startup/loadConfig')(userInput)
 const Axios = require('axios')
 const Logger = require('./logger')
 const AschJS = require('asch-js')

@@ -1,7 +1,7 @@
 const utils = require('../utils')
 const path = require('path')
 
-let loadConfig = () => {
+let loadConfig = (userConfig) => {
   let startupDir = utils.getParentDirectory(__dirname)
   let mainDir = utils.getParentDirectory(startupDir)
   process.env['NODE_CONFIG_DIR'] = path.join(mainDir, 'config')
@@ -10,7 +10,8 @@ let loadConfig = () => {
   let defaultConfig = config.util.toObject(config.get('config'))
   defaultConfig.userDevDir = process.cwd()
 
-  return defaultConfig
+  let result = config.util.extendDeep(defaultConfig, userConfig)
+  return result
 }
 
 module.exports = loadConfig
