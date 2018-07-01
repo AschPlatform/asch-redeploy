@@ -1,10 +1,11 @@
 
 // ctor
-let RegisterAsset = function (config, aschJS, axios, logger) {
+let RegisterAsset = function (config, aschJS, axios, logger, promise) {
   this.config = config
   this.aschJS = aschJS
   this.axios = axios
   this.logger = logger
+  this.promise = promise
 
   this.existsAsset = () => {
     let url = `${this.config.node.host}:${this.config.node.port}/api/uia/assets/${this.config.uia.publisher}.${this.config.uia.asset}`
@@ -12,24 +13,44 @@ let RegisterAsset = function (config, aschJS, axios, logger) {
     return axios.get(url)
   }
 
-  this.existsAssetResult = (result) => {
+  this.handleExistsAsset = (result) => {
+    /*
+      http://localhost:4096/api/uia/assets/CCtime.XCT
+      response assetExists: {
+        "success":true,
+        "asset": {
+          "name":"CCtime.XCT",
+          "desc":"xct",
+          "maximum":"10000000000000",
+          "precision":8,
+          "strategy":"",
+          "quantity":"0",
+          "height":20,
+          "issuerId":"AHMCKebuL2nRYDgszf9J2KjVZzAw95WUyB",
+          "acl":0,
+          "writeoff":0,
+          "allowWriteoff":0,
+          "allowWhitelist":0,
+          "allowBlacklist":0,
+          "maximumShow":"100000",
+          "quantityShow":"0"
+        }
+      }
+      response assetExistsNot: {
+        "success":false,
+        "error":"Asset not found"
+      }
+    */
+
     if (result.status === 200) {
       if (result.data.success === true) {
         throw new Error('already_registered')
       } else {
         return true
       }
-      // http://localhost:4096/api/uia/assets/CCtime.XCT
-      // answer:
-      /* {"success":true,"asset":{"name":"CCtime.XCT","desc":"xct","maximum":"10000000000000","precision":8,"strategy":"","quantity":"0","height":20,"issuerId":"AHMCKebuL2nRYDgszf9J2KjVZzAw95WUyB","acl":0,"writeoff":0,"allowWriteoff":0,"allowWhitelist":0,"allowBlacklist":0,"maximumShow":"100000","quantityShow":"0"}} */
-      // no success: {"success":false,"error":"Asset not found"}
     } else {
       throw new Error('could_not_load_assets')
     }
-  }
-
-  this.finish = () => {
-    return true
   }
 
   this.register = () => {
@@ -68,16 +89,20 @@ let RegisterAsset = function (config, aschJS, axios, logger) {
     }
   }
 
-  this.registerAsset = () => {
+  this.start = () => {
     return this.existsAsset()
       .then((response) => {
-        return this.existsAssetResult(response)
+        return this.handleExistsAsset(response)
       })
       .then((response) => {
         return this.register()
       })
       .then((response) => {
         return this.handleRegister(response)
+      })
+      .then(() => {
+        this.logger.info(`waiting 12 sec for asset registration transaction to be written in block...`)
+        return this.promise.delay(12000)
       })
       .catch((error) => {
         if (error.message.startsWith('already_registered')) {

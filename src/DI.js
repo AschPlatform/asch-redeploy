@@ -107,7 +107,7 @@ helpers.annotate(RefuelDapp, [DEPENDENCIES.Config, DEPENDENCIES.Axios, DEPENDENC
 helpers.annotate(PathResolution, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Path])
 helpers.annotate(UIA, [DEPENDENCIES.Config, DEPENDENCIES.Logger, FILETYPES.RegisterPublisher, FILETYPES.RegisterAsset, FILETYPES.CreateTokens])
 helpers.annotate(RegisterPublisher, [DEPENDENCIES.Config, DEPENDENCIES.AschJS, DEPENDENCIES.Axios, DEPENDENCIES.Logger, DEPENDENCIES.Promise])
-helpers.annotate(RegisterAsset, [DEPENDENCIES.Config, DEPENDENCIES.AschJS, DEPENDENCIES.Axios, DEPENDENCIES.Logger])
+helpers.annotate(RegisterAsset, [DEPENDENCIES.Config, DEPENDENCIES.AschJS, DEPENDENCIES.Axios, DEPENDENCIES.Logger, DEPENDENCIES.Promise])
 helpers.annotate(CreateTokens, [DEPENDENCIES.Config, DEPENDENCIES.AschJS, DEPENDENCIES.Axios, DEPENDENCIES.Logger])
 
 let setup = function () {
