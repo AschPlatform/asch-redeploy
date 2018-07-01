@@ -17,7 +17,8 @@ const Watcher = require('./orchestration/watcher')
 const CheckPublicDistDir = require('./startup/checkPublicDistDir')
 const RefuelDapp = require('./orchestration/refuelDapp')
 const PathResolution = require('./pathResolution')
-const UIA = require('./orchestration/uia')
+const UIA = require('./orchestration/uia/uia')
+const RegisterPublisher = require('./orchestration/uia/registerPublisher')
 const FILETYPES = {
   SendMoney: 'SendMoney',
   RegisterDapp: 'RegisterDapp',
@@ -34,7 +35,8 @@ const FILETYPES = {
   CheckPublicDistDir: 'CheckPublicDistDir',
   RefuelDapp: 'RefuelDapp',
   PathResolution: 'PathResolution',
-  UIA: UIA
+  UIA: 'UIA',
+  RegisterPublisher: 'RegisterPublisher'
 }
 
 const userInput = require('./program').getUserInput()
@@ -99,7 +101,8 @@ helpers.annotate(Watcher, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIE
 helpers.annotate(CheckPublicDistDir, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path])
 helpers.annotate(RefuelDapp, [DEPENDENCIES.Config, DEPENDENCIES.Axios, DEPENDENCIES.AschJS, DEPENDENCIES.Logger])
 helpers.annotate(PathResolution, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Path])
-helpers.annotate(UIA, [DEPENDENCIES.Config])
+helpers.annotate(UIA, [DEPENDENCIES.Config, FILETYPES.RegisterPublisher])
+helpers.annotate(RegisterPublisher, [DEPENDENCIES.Config, DEPENDENCIES.AschJS, DEPENDENCIES.Axios, DEPENDENCIES.Logger])
 
 let setup = function () {
   // bindings
@@ -119,6 +122,7 @@ let setup = function () {
   container.bind(FILETYPES.RefuelDapp).to(RefuelDapp)
   container.bind(FILETYPES.PathResolution).to(PathResolution)
   container.bind(FILETYPES.UIA).to(UIA)
+  container.bind(FILETYPES.RegisterPublisher).to(RegisterPublisher)
 
   // constants or third party libraries
   const registerConstantValue = helpers.registerConstantValue(container)

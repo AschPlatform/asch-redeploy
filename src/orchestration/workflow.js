@@ -13,6 +13,9 @@ let workflow = (service, config) => {
       let money = DI.container.get(DI.FILETYPES.SendMoney)
       return money.sendMoney()
     })
+    .then(function wait () {
+      return Promise.delay(12000)
+    })
     .then(function () {
       let uia = DI.container.get(DI.FILETYPES.UIA)
       return uia.start()
