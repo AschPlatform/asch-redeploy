@@ -54,8 +54,6 @@ let registerPublisher = function (config, aschJS, axios, logger) {
   this.registerPublisher = (publisher) => {
     let transaction = this.aschJS.uia.createIssuer(publisher, publisher, this.config.dapp.masterAccountPassword, this.config.dapp.masterAccountPassword2nd)
 
-    this.logger.info(`pub transaction: ${JSON.stringify(transaction, null, 2)}`)
-
     let url = 'http://localhost:4096/peer/transactions'
     let data = {
       transaction: transaction
