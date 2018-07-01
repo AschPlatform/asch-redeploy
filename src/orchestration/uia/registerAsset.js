@@ -54,8 +54,6 @@ let RegisterAsset = function (config, aschJS, axios, logger, promise) {
   }
 
   this.register = () => {
-    this.logger.info(`starting to register ${this.config.uia.asset} asset...`)
-
     let name = `${config.uia.publisher}.${config.uia.asset}`
     let desc = name
     let maximum = '1000000000000000000'
@@ -101,8 +99,8 @@ let RegisterAsset = function (config, aschJS, axios, logger, promise) {
         return this.handleRegister(response)
       })
       .then(() => {
-        this.logger.info(`waiting 12 sec for asset registration transaction to be written in block...`)
-        return this.promise.delay(12000)
+        this.logger.info(`waiting 11 sec for asset registration transaction to be written in block...`)
+        return this.promise.delay(11000)
       })
       .catch((error) => {
         if (error.message.startsWith('already_registered')) {

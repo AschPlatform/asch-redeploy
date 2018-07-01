@@ -17,10 +17,7 @@ let UIA = function (config, logger, registerPublisher, registerAsset, createToke
         return this.registerAsset.start()
       })
       .then(() => {
-        return this.createTokens.create()
-      })
-      .then(() => {
-        return Promise.delay(5000)
+        return this.createTokens.start()
       })
   }
 }

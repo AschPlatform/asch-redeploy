@@ -1,10 +1,11 @@
 
 // ctor
-let CreateTokens = function (config, aschJS, axios, logger) {
+let CreateTokens = function (config, aschJS, axios, logger, promise) {
   this.config = config
   this.aschJS = aschJS
   this.axios = axios
   this.logger = logger
+  this.promise = promise
 
   this.getAssetBalance = () => {
     let publicKey = this.aschJS.crypto.getKeys(this.config.dapp.masterAccountPassword).publicKey
@@ -70,7 +71,7 @@ let CreateTokens = function (config, aschJS, axios, logger) {
     }
   }
 
-  this.create = () => {
+  this.start = () => {
     return this.getAssetBalance()
       .then((response) => {
         return this.processAssetBalance(response)
@@ -80,6 +81,10 @@ let CreateTokens = function (config, aschJS, axios, logger) {
       })
       .then((response) => {
         return this.processCreateTokens(response)
+      })
+      .then(() => {
+        this.logger.info(`waiting 11 sec for the create token transaction to be persisted to the next block...`)
+        return this.promise.delay(11000)
       })
       .catch((error) => {
         if (error.message.startsWith('enough_tokens')) {
