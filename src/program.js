@@ -88,10 +88,20 @@ let pr = {
     if (program.publisher) {
       createUIAProperty()
       config.uia.publisher = program.publisher
+
+      if (!program.asset) {
+        console.log('the --asset option must be also provided')
+        process.exit(0)
+      }
     }
     if (program.asset) {
       createUIAProperty()
       config.uia.asset = program.asset
+
+      if (!program.publisher) {
+        console.log('the --publisher option must be also provided')
+        process.exit(0)
+      }
     }
 
     return config
