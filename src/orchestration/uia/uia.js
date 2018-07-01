@@ -11,16 +11,13 @@ let UIA = function (config, logger, registerPublisher, registerAsset, createToke
   this.start = () => {
     return Promise.delay(100)
       .then(() => {
-        return this.registerPublisher.register()
-      })
-      .then(() => {
-        return Promise.delay(12000)
+        return this.registerPublisher.start()
       })
       .then(() => {
         return this.registerAsset.registerAsset()
       })
       .then(() => {
-        return Promise.delay(12000)
+        return Promise.delay(15000)
       })
       .then(() => {
         return this.createTokens.create()
