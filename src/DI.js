@@ -17,6 +17,7 @@ const Watcher = require('./orchestration/watcher')
 const CheckPublicDistDir = require('./startup/checkPublicDistDir')
 const RefuelDapp = require('./orchestration/refuelDapp')
 const PathResolution = require('./pathResolution')
+const UIA = require('./orchestration/uia')
 const FILETYPES = {
   SendMoney: 'SendMoney',
   RegisterDapp: 'RegisterDapp',
@@ -32,7 +33,8 @@ const FILETYPES = {
   Watcher: 'Watcher',
   CheckPublicDistDir: 'CheckPublicDistDir',
   RefuelDapp: 'RefuelDapp',
-  PathResolution: 'PathResolution'
+  PathResolution: 'PathResolution',
+  UIA: UIA
 }
 
 const userInput = require('./program').getUserInput()
@@ -97,6 +99,7 @@ helpers.annotate(Watcher, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIE
 helpers.annotate(CheckPublicDistDir, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path])
 helpers.annotate(RefuelDapp, [DEPENDENCIES.Config, DEPENDENCIES.Axios, DEPENDENCIES.AschJS, DEPENDENCIES.Logger])
 helpers.annotate(PathResolution, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Path])
+helpers.annotate(UIA, [DEPENDENCIES.Config])
 
 let setup = function () {
   // bindings
@@ -115,6 +118,7 @@ let setup = function () {
   container.bind(FILETYPES.CheckPublicDistDir).to(CheckPublicDistDir)
   container.bind(FILETYPES.RefuelDapp).to(RefuelDapp)
   container.bind(FILETYPES.PathResolution).to(PathResolution)
+  container.bind(FILETYPES.UIA).to(UIA)
 
   // constants or third party libraries
   const registerConstantValue = helpers.registerConstantValue(container)

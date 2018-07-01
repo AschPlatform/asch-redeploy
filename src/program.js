@@ -17,6 +17,10 @@ program
   })
 
   .option('-o, --output <file>', 'File in which the <dapp Id> of the registered Dapp will be saved')
+
+  .option('--publisher <publisher>', 'Register this publisher')
+  .option('--asset <asset>', 'Register asset')
+
   .parse(process.argv)
 
 let pr = {
@@ -73,6 +77,21 @@ let pr = {
     if (program.output) {
       config.output = {}
       config.output.file = program.output
+    }
+
+    /* config.uia */
+    let createUIAProperty = function () {
+      if (!config.hasOwnProperty('uia')) {
+        config.uia = {}
+      }
+    }
+    if (program.publisher) {
+      createUIAProperty()
+      config.uia.publisher = program.publisher
+    }
+    if (program.asset) {
+      createUIAProperty()
+      config.uia.asset = program.asset
     }
 
     return config

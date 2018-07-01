@@ -13,6 +13,10 @@ let workflow = (service, config) => {
       let money = DI.container.get(DI.FILETYPES.SendMoney)
       return money.sendMoney()
     })
+    .then(function () {
+      let uia = DI.container.get(DI.FILETYPES.UIA)
+      return uia.start()
+    })
     .then(function wait () {
       logger.info('starting to register Dapp...', { meta: 'green' })
       return Promise.delay(12000)
