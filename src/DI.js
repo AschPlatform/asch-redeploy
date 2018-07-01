@@ -20,6 +20,7 @@ const PathResolution = require('./pathResolution')
 const UIA = require('./orchestration/uia/uia')
 const RegisterPublisher = require('./orchestration/uia/registerPublisher')
 const RegisterAsset = require('./orchestration/uia/registerAsset')
+const CreateTokens = require('./orchestration/uia/createTokens')
 const FILETYPES = {
   SendMoney: 'SendMoney',
   RegisterDapp: 'RegisterDapp',
@@ -38,7 +39,8 @@ const FILETYPES = {
   PathResolution: 'PathResolution',
   UIA: 'UIA',
   RegisterPublisher: 'RegisterPublisher',
-  RegisterAsset: 'RegisterAsset'
+  RegisterAsset: 'RegisterAsset',
+  CreateTokens: 'CreateTokens'
 }
 
 const userInput = require('./program').getUserInput()
@@ -103,9 +105,10 @@ helpers.annotate(Watcher, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIE
 helpers.annotate(CheckPublicDistDir, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path])
 helpers.annotate(RefuelDapp, [DEPENDENCIES.Config, DEPENDENCIES.Axios, DEPENDENCIES.AschJS, DEPENDENCIES.Logger])
 helpers.annotate(PathResolution, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Path])
-helpers.annotate(UIA, [DEPENDENCIES.Config, DEPENDENCIES.Logger, FILETYPES.RegisterPublisher, FILETYPES.RegisterAsset])
+helpers.annotate(UIA, [DEPENDENCIES.Config, DEPENDENCIES.Logger, FILETYPES.RegisterPublisher, FILETYPES.RegisterAsset, FILETYPES.CreateTokens])
 helpers.annotate(RegisterPublisher, [DEPENDENCIES.Config, DEPENDENCIES.AschJS, DEPENDENCIES.Axios, DEPENDENCIES.Logger])
 helpers.annotate(RegisterAsset, [DEPENDENCIES.Config, DEPENDENCIES.AschJS, DEPENDENCIES.Axios, DEPENDENCIES.Logger])
+helpers.annotate(CreateTokens, [DEPENDENCIES.Config, DEPENDENCIES.AschJS, DEPENDENCIES.Axios, DEPENDENCIES.Logger])
 
 let setup = function () {
   // bindings
@@ -127,6 +130,7 @@ let setup = function () {
   container.bind(FILETYPES.UIA).to(UIA)
   container.bind(FILETYPES.RegisterPublisher).to(RegisterPublisher)
   container.bind(FILETYPES.RegisterAsset).to(RegisterAsset)
+  container.bind(FILETYPES.CreateTokens).to(CreateTokens)
 
   // constants or third party libraries
   const registerConstantValue = helpers.registerConstantValue(container)

@@ -11,21 +11,16 @@ let registerPublisher = function (config, aschJS, axios, logger) {
   this.logger = logger
 
   this.register = () => {
-    this.logger.info(`starting to register publisher "${this.config.uia.publisher}"`, { meta: 'white.inverse' })
-
     let publicKey = this.aschJS.crypto.getKeys(this.config.dapp.masterAccountPassword).publicKey
     let address = this.aschJS.crypto.getAddress(publicKey)
 
     let url = `${config.node.host}:${config.node.port}/api/uia/issuers/${address}`
-    this.logger.info(`request: ${url}`, { meta: 'red.inverse' })
 
     return axios.get(url)
       .then((response) => {
-        this.logger.info(`issuer: ${JSON.stringify(response.data, null, 2)}`)
         if (response.status === 200) {
           if (response.data.success === true) {
             if (this.config.uia.publisher === response.data.issuer.name) {
-              this.logger.info('should throw error', { meta: 'red' })
               throw new Error('publisher_exists')
             } else {
               throw new Error(`other_publisher_registered: There is already under this address a publisher registered "${response.data.issuer}". Delete the "asch/blockchain.db" file and repeat`)
@@ -39,7 +34,7 @@ let registerPublisher = function (config, aschJS, axios, logger) {
         }
       })
       .then((publisher) => {
-        this.logger.info(`registerPublisher: "${publisher}"`, { meta: 'inverse' })
+        this.logger.info(`starting to register publisher: "${publisher}"`)
         return this.registerPublisher(publisher)
       })
       .catch((error) => {
@@ -66,7 +61,6 @@ let registerPublisher = function (config, aschJS, axios, logger) {
     }
     return axios.post(url, data, headers)
       .then((response) => {
-        this.logger.info(`registered publisher: ${JSON.stringify(response.data, null, 2)}`)
         if (response.status === 200 && response.data.success === true) {
           return true
         } else {

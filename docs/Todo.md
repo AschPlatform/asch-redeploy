@@ -1,4 +1,6 @@
 # TODO
+* Add option for resetting the asch database
+  * Just delete the `blockchain.db` file
 * Add option to fuel the dapp after deployment
 * Possible Refactoring
   * Merge the two methods in CreateLogDir into one

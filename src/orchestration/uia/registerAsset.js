@@ -9,8 +9,6 @@ let RegisterAsset = function (config, aschJS, axios, logger) {
   this.existsAsset = () => {
     let url = `${this.config.node.host}:${this.config.node.port}/api/uia/assets/${this.config.uia.publisher}.${this.config.uia.asset}`
 
-    this.logger.info(`request: ${url}`, { meta: 'white.inverse' })
-
     return axios.get(url)
   }
 
@@ -35,7 +33,7 @@ let RegisterAsset = function (config, aschJS, axios, logger) {
   }
 
   this.register = () => {
-    this.logger.info(`starting to register XCT asset`, { meta: 'white.inverse' })
+    this.logger.info(`starting to register ${this.config.uia.asset} asset...`)
 
     let name = `${config.uia.publisher}.${config.uia.asset}`
     let desc = name
@@ -47,8 +45,6 @@ let RegisterAsset = function (config, aschJS, axios, logger) {
     let allowBlacklist = 0
 
     let transaction = aschJS.uia.createAsset(name, desc, maximum, precision, strategy, allowWriteoff, allowWhitelist, allowBlacklist, this.config.dapp.masterAccountPassword)
-
-    this.logger.info(`asset transaction: ${JSON.stringify(transaction, null, 2)}`)
 
     let url = 'http://localhost:4096/peer/transactions'
     let data = {
@@ -65,10 +61,9 @@ let RegisterAsset = function (config, aschJS, axios, logger) {
   }
 
   this.handleRegister = (response) => {
-    this.logger.info(`asset: response ${JSON.stringify(response.data, null, 2)}`)
-
     if (response.data.success === true) {
-      this.logger.info(`asset successful registered: "${response.data.transactionId}"`)
+      let asset = this.config.uia.asset
+      this.logger.info(`asset "${asset}" registered`, { meta: 'inverse' })
       return true
     }
   }
