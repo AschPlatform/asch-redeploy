@@ -17,6 +17,10 @@ let RefuelDapp = function (config, axios, aschJS, logger) {
       }
 
       let currency = 'XAS'
+      if (this.config.uia.publisher && this.config.uia.asset) {
+        currency = `${this.config.uia.publisher}.${this.config.uia.asset}`
+      }
+
       let amount = 500 * 1e8
       let transaction = this.aschJS.transfer.createInTransfer(dappId, currency, amount, config.dapp.masterAccountPassword, config.dapp.masterAccountPassword2nd || undefined)
 
