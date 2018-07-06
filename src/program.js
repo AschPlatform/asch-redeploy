@@ -12,7 +12,7 @@ program
   .option('-m, --master <secret>', 'The master secret with which the Dapp should be registered with')
   .option('-m2, --master2 <secret>', 'The 2nd master secret with which the Dapp should be registered with')
   .option('-d, --delegates <del>', 'An array of delegate secrets with which the Dapp should be registered with. Delegates must be provided comma separated "secret_1,secret_2,secret3"', function (del) {
-    let delegates = del.split(',')
+    let delegates = del.split(',').map((x) => x.replace(/^\s+|\s+$/g, ''))
     return delegates
   })
 
@@ -39,7 +39,7 @@ let pr = {
     }
     if (program.delegates) {
       createDappProperty()
-      throw new Error()
+      config.dapp.delegates = program.delegates
     }
 
     /* config.node */
