@@ -82,7 +82,7 @@ If you want to use another account, you can:
 
 
 ### --master2 secret
-`-m2 --master2` Set the 2nd secret of our master account. This is only necessary if this account has the 2nd secret enabled.
+`-2 --master2` Set the 2nd secret of our master account. This is only necessary if this account has the 2nd secret enabled.
 
 ### --delegates list of secrets
 `-d, --delegates` List all delegate secrets with which the Dapp should be registered with. This secrets will enable the Dapp to produce blocks. Provide a string with comma separated secrets. According to this scheme: `--delegates "secret1 secret1 secret1, secret2 secret2 secret2, secret3 secret3 secret3"`  
