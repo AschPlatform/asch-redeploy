@@ -7,6 +7,8 @@ let RegisterAsset = function (config, aschJS, axios, logger, promise) {
   this.logger = logger
   this.promise = promise
 
+  this.waitingMS = 11000
+
   this.existsAsset = () => {
     let url = `${this.config.node.host}:${this.config.node.port}/api/uia/assets/${this.config.uia.publisher}.${this.config.uia.asset}`
 
@@ -100,7 +102,10 @@ let RegisterAsset = function (config, aschJS, axios, logger, promise) {
       })
       .then(() => {
         this.logger.info(`waiting 11 sec for asset registration transaction to be written in block...`)
-        return this.promise.delay(11000)
+        return this.promise.delay(this.waitingMS)
+      })
+      .then(() => {
+        return true
       })
       .catch((error) => {
         if (error.message.startsWith('already_registered')) {
