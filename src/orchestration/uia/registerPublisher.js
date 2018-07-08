@@ -71,7 +71,7 @@ let registerPublisher = function (config, aschJS, axios, logger, promise) {
 
   this.handleRegister = (response) => {
     if (response.status === 200 && response.data.success === true) {
-      this.logger.info(`registered publisher ${this.config.uia.publisher}`, { meta: 'inverse' })
+      this.logger.info(`registered publisher "${this.config.uia.publisher}"`, { meta: 'inverse' })
       return true
     } else {
       throw new Error(`Could not register publisher, ${JSON.stringify(response.data, null, 2)}`)
@@ -92,6 +92,9 @@ let registerPublisher = function (config, aschJS, axios, logger, promise) {
       .then(() => {
         this.logger.info('waiting 11 sec for publisher registration transaction to be persisted in block...')
         return this.promise.delay(11000)
+      })
+      .then(() => {
+        return true
       })
       .catch((error) => {
         if (error.message.startsWith('publisher_exists')) {
