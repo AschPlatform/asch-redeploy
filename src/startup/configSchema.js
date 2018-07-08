@@ -65,8 +65,7 @@ let schema = {
       type: 'object',
       properties: {
         file: {
-          type: 'string',
-          format: 'file'
+          type: 'string'
         }
       }
     }
