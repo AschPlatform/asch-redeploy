@@ -7,6 +7,8 @@ let registerPublisher = function (config, aschJS, axios, logger, promise) {
   this.logger = logger
   this.promise = promise
 
+  this.waitingMS = 12000
+
   this.existsPublisher = () => {
     let publicKey = this.aschJS.crypto.getKeys(this.config.dapp.masterAccountPassword).publicKey
     let address = this.aschJS.crypto.getAddress(publicKey)
@@ -43,7 +45,7 @@ let registerPublisher = function (config, aschJS, axios, logger, promise) {
         if (this.config.uia.publisher === response.data.issuer.name) {
           throw new Error('publisher_exists')
         } else {
-          throw new Error(`other_publisher_registered: There is already under this address a publisher registered "${response.data.issuer}". Delete the "asch/blockchain.db" file and repeat`)
+          throw new Error(`other_publisher_registered: There was already the publisher "${response.data.issuer.name}" under this account registered. Reset your Asch blockchain as you delete the "blockchain.db" file in the "asch/" directory!`)
         }
       } else {
         return true
@@ -91,7 +93,7 @@ let registerPublisher = function (config, aschJS, axios, logger, promise) {
       })
       .then(() => {
         this.logger.info('waiting 11 sec for publisher registration transaction to be persisted in block...')
-        return this.promise.delay(11000)
+        return this.promise.delay(this.waitingMS)
       })
       .then(() => {
         return true
