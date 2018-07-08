@@ -63,7 +63,7 @@ let RegisterAsset = function (config, aschJS, axios, logger, promise) {
     let allowWhitelist = 0
     let allowBlacklist = 0
 
-    let transaction = aschJS.uia.createAsset(name, desc, maximum, precision, strategy, allowWriteoff, allowWhitelist, allowBlacklist, this.config.dapp.masterAccountPassword)
+    let transaction = aschJS.uia.createAsset(name, desc, maximum, precision, strategy, allowWriteoff, allowWhitelist, allowBlacklist, this.config.dapp.masterAccountPassword, this.config.dapp.masterAccountPassword2nd)
 
     let url = 'http://localhost:4096/peer/transactions'
     let data = {

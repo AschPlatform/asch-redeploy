@@ -17,7 +17,7 @@ let RefuelDapp = function (config, axios, aschJS, logger) {
       }
 
       let currency = 'XAS'
-      if (this.config.uia.publisher && this.config.uia.asset) {
+      if (this.config.uia && this.config.uia.publisher && this.config.uia.asset) {
         currency = `${this.config.uia.publisher}.${this.config.uia.asset}`
       }
 

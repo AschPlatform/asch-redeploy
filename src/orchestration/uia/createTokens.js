@@ -41,7 +41,7 @@ let CreateTokens = function (config, aschJS, axios, logger, promise) {
     let currency = `${this.config.uia.publisher}.${this.config.uia.asset}`
     let amount = (20000 * 1e8).toString()
 
-    let transaction = aschJS.uia.createIssue(currency, amount, this.config.dapp.masterAccountPassword)
+    let transaction = aschJS.uia.createIssue(currency, amount, this.config.dapp.masterAccountPassword, this.config.dapp.masterAccountPassword2nd)
 
     let url = 'http://localhost:4096/peer/transactions'
     let data = {

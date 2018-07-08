@@ -11,6 +11,12 @@ let UIA = function (config, logger, registerPublisher, registerAsset, createToke
   this.start = () => {
     return Promise.delay(100)
       .then(() => {
+        if (!this.config.uia) {
+          throw new Error('no_publisher_no_asset')
+        }
+        return null
+      })
+      .then(() => {
         return this.registerPublisher.start()
       })
       .then(() => {
@@ -18,6 +24,13 @@ let UIA = function (config, logger, registerPublisher, registerAsset, createToke
       })
       .then(() => {
         return this.createTokens.start()
+      })
+      .catch((error) => {
+        if (error.message === 'no_publisher_no_asset') {
+          return true
+        } else {
+          throw error
+        }
       })
   }
 }
