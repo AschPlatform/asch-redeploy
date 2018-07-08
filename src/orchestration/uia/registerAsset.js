@@ -65,13 +65,13 @@ let RegisterAsset = function (config, aschJS, axios, logger, promise) {
 
     let transaction = aschJS.uia.createAsset(name, desc, maximum, precision, strategy, allowWriteoff, allowWhitelist, allowBlacklist, this.config.dapp.masterAccountPassword, this.config.dapp.masterAccountPassword2nd)
 
-    let url = 'http://localhost:4096/peer/transactions'
+    let url = `${this.config.node.host}:${this.config.node.port}/peer/transactions`
     let data = {
       transaction: transaction
     }
     let headers = {
       headers: {
-        magic: '594fe0f3',
+        magic: this.config.node.magic,
         version: ''
       }
     }

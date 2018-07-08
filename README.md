@@ -44,7 +44,7 @@ $ asch-redeploy
 <img src="./docs/blob/asch_option.png" alt="asch" style="width:550px;"/>
 
 ### --host name
-`-h --host` Set the host name on which the local Asch node should be started. Default `localhost`
+`-h --host` Set the host name on which the local Asch node should be started. Default `http://localhost`
 
 ### --port number
 `-p --port` Set the port on which the local Asch node should be started. Default `4096`
