@@ -104,7 +104,40 @@ describe('registerPublisher', function () {
         })
     })
 
-    it.skip('Same publisher was already registered - return', function () {
+    it('Same publisher was already registered - return true', function (done) {
+      const Axios = {
+        getCalled: 0,
+        get () {
+          Axios.getCalled++
+          return new Promise((resolve, reject) => {
+            let result = {
+              status: 200,
+              data: {
+                success: true,
+                issuer: {
+                  name: 'CCTime',
+                  desc: 'CCTime'
+                }
+              }
+            }
+
+            resolve(result)
+          })
+        }
+      }
+      DI.container.unbind(DI.DEPENDENCIES.Axios)
+      registerConstant(DI.DEPENDENCIES.Axios, Axios)
+
+      let registerPublisher = container.get(DI.FILETYPES.RegisterPublisher)
+      registerPublisher.start()
+        .then((result) => {
+          should(result).equals(true)
+          should(Axios.getCalled).equals(1)
+          done()
+        })
+        .catch((error) => {
+          throw error
+        })
     })
   })
 
