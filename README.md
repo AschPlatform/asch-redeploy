@@ -38,6 +38,18 @@ $ asch-redeploy
 
 # asch-redeploy Options
 
+### --publisher name
+`--publisher` Registers the `master` account (see below) as a publisher. With the publisher it is possible to register multiple assets. One account can only be registered as one publisher.  
+
+### --asset name
+`--asset` Registers an asset.
+
+> Example:  
+> Publisher: `CCTime`, Asset: `XCT`  
+> Creates asset `CCTime.XCT`, this asset can be used in Dapps.
+
+<img src="./docs/blob/publisher_asset_option.png" alt="asch" style="width:550px;"/>
+
 ### --asch directory
 `-a --asch` Points to the `asch` directory where the local Asch blockchain lives. Default `../asch`
 
