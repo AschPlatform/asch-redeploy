@@ -52,5 +52,128 @@ describe('createTokens', function () {
       should(createTokens).have.property('promise')
       done()
     })
+
+    it('0 balance creates new tokens', function (done) {
+      const Axios = {
+        getCalled: 0,
+        get () {
+          Axios.getCalled++
+          return new Promise((resolve, reject) => {
+            let returnData = {
+              status: 200,
+              data: {
+                success: false,
+                error: 'Balance info not found'
+              }
+            }
+
+            resolve(returnData)
+          })
+        },
+        postCalled: 0,
+        post () {
+          Axios.postCalled++
+          return new Promise((resolve, reject) => {
+            let returnData = {
+              status: 200,
+              data: {
+                success: true,
+                transactionId: '39jiehefiNefiNetnbknrer03i523'
+              }
+            }
+
+            resolve(returnData)
+          })
+        }
+      }
+      DI.container.unbind(DI.DEPENDENCIES.Axios)
+      registerConstant(DI.DEPENDENCIES.Axios, Axios)
+
+      let createTokens = container.get(DI.FILETYPES.CreateTokens)
+      createTokens.waitingMS = 10
+      createTokens.start()
+        .then((result) => {
+          should(result).equals(true)
+
+          should(Axios.getCalled).equals(1)
+          should(Axios.postCalled).equals(1)
+
+          done()
+        })
+        .catch((error) => {
+          throw error
+        })
+    })
+
+    it('existing balance of 11000 token does not create new tokens', function (done) {
+      const Axios = {
+        getCalled: 0,
+        get () {
+          Axios.getCalled++
+          return new Promise((resolve, reject) => {
+            let returnData = {
+              status: 200,
+              data: {
+                success: true,
+                balance: {
+                  currency: 'CCTime.XCT',
+                  balance: '1100000000000',
+                  maximum: '1000000000000000000',
+                  precision: 8,
+                  quantity: '2000000000000',
+                  writeoff: 0,
+                  allowWriteoff: 0,
+                  allowWhitelist: 0,
+                  allowBlacklist: 0,
+                  maximumShow: '10000000000',
+                  quantityShow: '20000',
+                  balanceShow: '11000'
+                }
+              }
+            }
+
+            resolve(returnData)
+          })
+        },
+        postCalled: 0,
+        post () {
+          Axios.postCalled++
+          return new Promise((resolve, reject) => {
+            let returnData = {
+              status: 200,
+              data: {
+                success: true,
+                transactionId: 'ff3ryg4gthth23535GGYR'
+              }
+            }
+
+            resolve(returnData)
+          })
+        }
+      }
+      DI.container.unbind(DI.DEPENDENCIES.Axios)
+      registerConstant(DI.DEPENDENCIES.Axios, Axios)
+
+      let createTokens = container.get(DI.FILETYPES.CreateTokens)
+      createTokens.waitingMS = 10
+      createTokens.start()
+        .then((result) => {
+          should(result).equals(true)
+
+          should(Axios.getCalled).equals(1)
+          should(Axios.postCalled).equals(0)
+
+          done()
+        })
+        .catch((error) => {
+          throw error
+        })
+    })
+
+    it.skip('existing balance of 9000 tokens creates new 20000 tokens')
+  })
+
+  describe('bad path', function () {
+    it.skip('')
   })
 })
