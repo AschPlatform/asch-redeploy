@@ -34,7 +34,7 @@ ZSchema.registerFormat('aschNodeDirectory', (dir) => {
       throw new Error(`${dir} is not a directory`)
     }
   } else {
-    throw new Error(`the asch directory ${dir} doesn't exist. Try to set the ASCH_NODE_DIR environment variable`)
+    throw new Error(`the asch directory ${dir} doesn't exist. Try to set the Asch directory with the --asch option!`)
   }
 })
 
