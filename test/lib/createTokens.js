@@ -170,10 +170,131 @@ describe('createTokens', function () {
         })
     })
 
-    it.skip('existing balance of 9000 tokens creates new 20000 tokens')
+    it('existing balance of 9000 tokens creates new 20000 tokens', function (done) {
+      const Axios = {
+        getCalled: 0,
+        get () {
+          Axios.getCalled++
+          return new Promise((resolve, reject) => {
+            let returnData = {
+              status: 200,
+              data: {
+                success: true,
+                balance: {
+                  currency: 'CCTime.XCT',
+                  balance: '900000000000',
+                  maximum: '1000000000000000000',
+                  precision: 8,
+                  quantity: '2000000000000',
+                  writeoff: 0,
+                  allowWriteoff: 0,
+                  allowWhitelist: 0,
+                  allowBlacklist: 0,
+                  maximumShow: '10000000000',
+                  quantityShow: '20000',
+                  balanceShow: '9000'
+                }
+              }
+            }
+
+            resolve(returnData)
+          })
+        },
+        postCalled: 0,
+        post () {
+          Axios.postCalled++
+          return new Promise((resolve, reject) => {
+            let returnData = {
+              status: 200,
+              data: {
+                success: true,
+                transactionId: 'jiejifjeFIF2353HFUenfyiH2RI'
+              }
+            }
+
+            resolve(returnData)
+          })
+        }
+      }
+      DI.container.unbind(DI.DEPENDENCIES.Axios)
+      registerConstant(DI.DEPENDENCIES.Axios, Axios)
+
+      let createTokens = container.get(DI.FILETYPES.CreateTokens)
+      createTokens.waitingMS = 10
+      createTokens.start()
+        .then((result) => {
+          should(result).equals(true)
+
+          should(Axios.getCalled).equals(1)
+          should(Axios.postCalled).equals(1)
+
+          done()
+        })
+        .catch((error) => {
+          throw error
+        })
+    })
   })
 
-  describe('bad path', function () {
-    it.skip('')
+  describe('sad path', function () {
+    it('Exceeding issue limit throws error', function (done) {
+      const Axios = {
+        getCalled: 0,
+        get () {
+          Axios.getCalled++
+          return new Promise((resolve, reject) => {
+            let returnData = {
+              status: 200,
+              data: {
+                success: true,
+                balance: {
+                  currency: 'CCTime.XCT',
+                  balance: '900000000000',
+                  maximum: '2000000000000',
+                  precision: 8,
+                  quantity: '2000000000000',
+                  writeoff: 0,
+                  allowWriteoff: 0,
+                  allowWhitelist: 0,
+                  allowBlacklist: 0,
+                  maximumShow: '20000',
+                  quantityShow: '20000',
+                  balanceShow: '9000'
+                }
+              }
+            }
+
+            resolve(returnData)
+          })
+        },
+        postCalled: 0,
+        post () {
+          return new Promise((resolve, reject) => {
+            let returnData = {
+              status: 200,
+              data: {
+                success: false,
+                error: 'Exceed issue limit'
+              }
+            }
+            resolve(returnData)
+          })
+        }
+      }
+      DI.container.unbind(DI.DEPENDENCIES.Axios)
+      registerConstant(DI.DEPENDENCIES.Axios, Axios)
+
+      let createTokens = container.get(DI.FILETYPES.CreateTokens)
+      createTokens.waitingMS = 10
+      createTokens.start()
+        .then((result) => {
+          throw new Error()
+        })
+        .catch((error) => {
+          should(error.message).startWith('exceeded_issue_limit')
+
+          done()
+        })
+    })
   })
 })

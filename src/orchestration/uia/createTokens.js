@@ -85,6 +85,8 @@ let CreateTokens = function (config, aschJS, axios, logger, promise) {
         let amount = 20000
         this.logger.info(`${amount} ${this.config.uia.asset} tokens successfully created`, { meta: 'inverse' })
         return true
+      } else if (response.data.error === 'Exceed issue limit') {
+        throw new Error(`exceeded_issue_limit: You want to create more tokens then possible, use another Asset then "${this.config.uia.asset}", or reset the asch blockchain with deleting the "asch/blockchain.db" file and start again`)
       } else {
         throw new Error(`error_during_creation_of_tokens, ${response.data.error}`)
       }
