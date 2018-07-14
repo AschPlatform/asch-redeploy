@@ -92,6 +92,10 @@ describe('registerAsset', function () {
       registerAsset.start()
         .then((result) => {
           should(result).equals(true)
+
+          should(Axios.getCalled).equals(1)
+          should(Axios.postCalled).equals(1)
+
           done()
         })
         .catch((error) => {
@@ -99,6 +103,61 @@ describe('registerAsset', function () {
         })
     })
 
-    it.skip('Asset is already registered - return true')
+    it('Asset is already registered - return true', function (done) {
+      const Axios = {
+        getCalled: 0,
+        get () {
+          Axios.getCalled++
+          return new Promise((resolve, reject) => {
+            let returnData = {
+              status: 200,
+              data: {
+                success: true,
+                asset: {
+                  name: 'CCtime.XCT',
+                  desc: 'xct',
+                  maximum: '10000000000000',
+                  precision: 8,
+                  strategy: '',
+                  quantity: '0'
+                }
+              }
+            }
+
+            resolve(returnData)
+          })
+        },
+        postCalled: 0,
+        post () {
+          Axios.postCalled++
+          return new Promise((resolve, reject) => {
+            let returnData = {
+              status: 200,
+              data: {
+                success: true,
+                transactionId: 'et9gh393jfh'
+              }
+            }
+            resolve(returnData)
+          })
+        }
+      }
+      DI.container.unbind(DI.DEPENDENCIES.Axios)
+      registerConstant(DI.DEPENDENCIES.Axios, Axios)
+
+      let registerAsset = container.get(DI.FILETYPES.RegisterAsset)
+      registerAsset.waitingMS = 10
+      registerAsset.start()
+        .then((result) => {
+          should(result).equals(true)
+
+          should(Axios.getCalled).equals(1)
+          should(Axios.postCalled).equals(0)
+          done()
+        })
+        .catch((error) => {
+          throw error
+        })
+    })
   })
 })
