@@ -7,6 +7,8 @@ let CreateTokens = function (config, aschJS, axios, logger, promise) {
   this.logger = logger
   this.promise = promise
 
+  this.waitingMS = 11000
+
   this.getAssetBalance = () => {
     let publicKey = this.aschJS.crypto.getKeys(this.config.dapp.masterAccountPassword).publicKey
     let address = this.aschJS.crypto.getAddress(publicKey)
@@ -17,8 +19,28 @@ let CreateTokens = function (config, aschJS, axios, logger, promise) {
   }
 
   this.processAssetBalance = (response) => {
-    // 0 balance: {"success":false,"error":"Balance info not found"}
-    // hasBalance: {"success":true,"balance":{"currency":"CCTime.XCT","balance":"2000000000000","maximum":"1000000000000000000","precision":8,"quantity":"2000000000000","writeoff":0,"allowWriteoff":0,"allowWhitelist":0,"allowBlacklist":0,"maximumShow":"10000000000","quantityShow":"20000","balanceShow":"20000"}}
+    /* 0 balance: {
+      "success": false,
+      "error":"Balance info not found"
+    }
+    hasPositiveBalance: {
+      "success": true,
+      "balance": {
+        "currency": "CCTime.XCT",
+        "balance": "2000000000000",
+        "maximum": "1000000000000000000",
+        "precision": 8,
+        "quantity": "2000000000000",
+        "writeoff": 0,
+        "allowWriteoff": 0,
+        "allowWhitelist": 0,
+        "allowBlacklist": 0,
+        "maximumShow": "10000000000",
+        "quantityShow": "20000",
+        "balanceShow": "20000"
+      }
+    }
+    */
 
     if (response.status === 200) {
       if (response.data.success === false && response.data.error === 'Balance info not found') {
@@ -63,6 +85,8 @@ let CreateTokens = function (config, aschJS, axios, logger, promise) {
         let amount = 20000
         this.logger.info(`${amount} ${this.config.uia.asset} tokens successfully created`, { meta: 'inverse' })
         return true
+      } else if (response.data.error === 'Exceed issue limit') {
+        throw new Error(`exceeded_issue_limit: You want to create more tokens then possible, use another Asset then "${this.config.uia.asset}", or reset the asch blockchain with deleting the "asch/blockchain.db" file and start again`)
       } else {
         throw new Error(`error_during_creation_of_tokens, ${response.data.error}`)
       }
@@ -84,7 +108,10 @@ let CreateTokens = function (config, aschJS, axios, logger, promise) {
       })
       .then(() => {
         this.logger.info(`waiting 11 sec for the create token transaction to be persisted to the next block...`)
-        return this.promise.delay(11000)
+        return this.promise.delay(this.waitingMS)
+      })
+      .then(() => {
+        return true
       })
       .catch((error) => {
         if (error.message.startsWith('enough_tokens')) {

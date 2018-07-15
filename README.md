@@ -42,18 +42,19 @@ $ asch-redeploy
 `--publisher` Registers the `master` account (see below) as a publisher. With the publisher it is possible to register multiple assets. One account can only be registered as one publisher.  
 
 ### --asset name
-`--asset` Registers an asset.
+`--asset` Registers an asset
 
 > Example:  
 > Publisher: `CCTime`, Asset: `XCT`  
 > Creates asset `CCTime.XCT`, this asset can be used in Dapps.
 
-<img src="./docs/blob/publisher_asset_option.png" alt="asch" style="width:550px;"/>
+
+<img src="./docs/blob/publisher_asset_option.png" alt="asch" style="width:600px;margin-right:20px;margin-left:20px;"/>
 
 ### --asch directory
 `-a --asch` Points to the `asch` directory where the local Asch blockchain lives. Default `../asch`
 
-<img src="./docs/blob/asch_option.png" alt="asch" style="width:550px;"/>
+<img src="./docs/blob/asch_option.png" alt="asch" style="width:600px;margin-right:20px;margin-left:20px;margin-right:20px;margin-left:20px;"/>
 
 ### --host name
 `-h --host` Set the host name on which the local Asch node should be started. Default `http://localhost`
@@ -90,7 +91,7 @@ Default Master Secret:
 
 If you want to use another account, you can:  
 
-<img src="./docs/blob/master_option.png" alt="asch" style="width:550px;"/>
+<img src="./docs/blob/master_option.png" alt="asch" style="width:600px;margin-right:20px;margin-left:20px;"/>
 
 
 ### --master2 secret
@@ -136,15 +137,19 @@ Produces the following `dappId.json` file:
 The `asch-redeploy` package automates numerous manual steps to register and install your Dapp on your local Asch blockchain.  
 
 1. Prepare master account  
-  1.1 Transfer 20000 XAS from genesis account to master account - only if needed
-2. Register Dapp on local Asch blockchain  
-  2.1 Create random name for Dapp - two Dapps with same name are not allowed  
-  2.2 Create Dapp registration transaction - the resulting transactionId of this operation is our new `dappId` which uniquely identifies our Dapp  
-3. Install Dapp on local Asch blockchain  
-  3.1 Add new `dappId` to `asch/config.json` file  
-  3.2 Copy smart contract files (your working directory) to `asch/dapps/dappId`  
-  3.3 Restart local Asch blockchain  
-4. Watch for file changes and start with __1.__ if a file changes  
+  1.1 Transfer 20000 XAS from genesis account to master account - only if not previously transferred
+2. (optional) Prepare Publisher, Asset, Tokens  
+  2.1 Register publisher (e.g publisher CCTime with `--publisher CCTime`) on local Asch blockchain  
+  2.2 Register asset (e.g asset XCT with `--asset XCT`) on local Asch blockchain  
+  2.3 Create 20000 `CCTime.XCT` Tokens - only if not previously created
+3. Register Dapp on local Asch blockchain  
+  3.1 Create random name for Dapp - two Dapps with same name are not allowed  
+  3.2 Create Dapp registration transaction - the resulting transactionId of this operation is our new `dappId` which uniquely identifies our Dapp  
+4. Install Dapp on local Asch blockchain  
+  4.1 Add new `dappId` to `asch/config.json` file  
+  4.2 Copy smart contract files (your working directory) to `asch/dapps/dappId`  
+  4.3 Restart local Asch blockchain to finish installation  
+5. Watch for file changes and start with __1.__ if a file changes  
 
 
 If you want you can also follow the manual steps as described [here](https://github.com/AschPlatform/asch/blob/2c8df1f7acbc713dab1d2c2a93bbe31b31eb1836/docs/dapp_docs/1_hello_en.md)
