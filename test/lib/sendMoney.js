@@ -38,7 +38,6 @@ describe('sendMoney', function () {
 
     it('zero balance on dapp-master-account starts money-transfer and returns transactionId', function (done) {
       // config
-      let transactionId = 'i300gho34h0hgyxghzzwzdbyzHB34'
       const Axios = {
         called: 0,
         post (url, config) {
@@ -75,7 +74,7 @@ describe('sendMoney', function () {
                 status: 200,
                 data: {
                   success: true,
-                  transactionId: transactionId
+                  transactionId: 'i300gho34h0hgyxghzzwzdbyzHB34'
                 }
               }
             }
@@ -90,9 +89,10 @@ describe('sendMoney', function () {
 
       /* act */
       let sendMoney = DI.container.get(DI.FILETYPES.SendMoney)
+      sendMoney.waitMS = 100
       sendMoney.sendMoney()
         .then((result) => {
-          should(result).equals(transactionId)
+          should(result).equals(true)
           done()
         })
         .catch((error) => {

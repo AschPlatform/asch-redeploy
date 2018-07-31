@@ -14,6 +14,8 @@ let sendMoney = function (config, logger, axios, aschJS, promise) {
   this.genesisAccount = {}
   this.dappAccount = {}
 
+  this.waitMS = 11000
+
   this.fetchAddressAndBalancewithSecret = function (secret) {
     this.logger.verbose('in fetchAddressAndBalancewithSecret()')
     let url = `${this.config.node.host}:${this.config.node.port}/api/accounts/open`
@@ -131,8 +133,8 @@ let sendMoney = function (config, logger, axios, aschJS, promise) {
         return this.handleTransferResponse(response)
       })
       .then(() => {
-        this.logger.info(`wait for 11sec after money transaction`)
-        return this.Promise.delay(11000)
+        this.logger.info(`wait for 11sec after money transaction`, { meta: 'blue.inverse' })
+        return this.Promise.delay(this.waitMS)
       })
       .then(() => {
         return true
