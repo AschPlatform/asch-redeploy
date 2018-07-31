@@ -18,7 +18,7 @@ let styleText = function (text, meta) {
 }
 
 const customFormat = printf(info => {
-  let formattedDate = moment(info.timestamp).format('YYYY-MM-DD HH:mm:SSS')
+  let formattedDate = moment(info.timestamp).format('YYYY-MM-DD HH:mm:SS')
   let level = info.level.toUpperCase()
   let chalkMessageBuild = ['chalk']
   switch (level) {
