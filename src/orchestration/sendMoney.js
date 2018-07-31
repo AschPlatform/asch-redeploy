@@ -14,6 +14,8 @@ let sendMoney = function (config, logger, axios, aschJS, promise) {
   this.genesisAccount = {}
   this.dappAccount = {}
 
+  this.waitMS = 11000
+
   this.fetchAddressAndBalancewithSecret = function (secret) {
     this.logger.verbose('in fetchAddressAndBalancewithSecret()')
     let url = `${this.config.node.host}:${this.config.node.port}/api/accounts/open`
@@ -57,7 +59,7 @@ let sendMoney = function (config, logger, axios, aschJS, promise) {
     this.logger.verbose(`has dappAccount a balance greater ${minBalance}?`)
     let balance = (response.balance / 1e8)
     if (balance >= minBalance) {
-      this.logger.verbose(`enough money on account. No transfer needed. Balance is ${balance}`)
+      this.logger.verbose(`enough money on account. No transfer needed. Balance is ${balance} XAS`)
       throw new Error('enough_money')
     } else {
       this.logger.verbose(`dappAccount has only balance of ${balance} XAS. Account needs a recharge`)
@@ -129,6 +131,13 @@ let sendMoney = function (config, logger, axios, aschJS, promise) {
       })
       .then((response) => {
         return this.handleTransferResponse(response)
+      })
+      .then(() => {
+        this.logger.info(`wait for 11sec after money transaction`, { meta: 'blue.inverse' })
+        return this.Promise.delay(this.waitMS)
+      })
+      .then(() => {
+        return true
       })
       .catch((error) => {
         if (error && error.message === 'enough_money') {

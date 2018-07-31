@@ -17,8 +17,12 @@ let styleText = function (text, meta) {
   return text
 }
 
+
+
+// CONSOLE
+
 const customFormat = printf(info => {
-  let formattedDate = moment(info.timestamp).format('YYYY-MM-DD HH:mm:SSS')
+  let formattedDate = moment(info.timestamp).format('YYYY-MM-DD HH:mm:ss.SSS')
   let level = info.level.toUpperCase()
   let chalkMessageBuild = ['chalk']
   switch (level) {
@@ -63,12 +67,14 @@ const customFormat = printf(info => {
   return output
 })
 
+
+
 let consoleLogLevel = 'info'
 if (process.env['NODE_ENV'] === 'development') {
   consoleLogLevel = 'verbose'
 }
 
-let con = new transports.Console({
+const con = new transports.Console({
   level: consoleLogLevel,
   format: combine(
     label(),
@@ -79,11 +85,24 @@ let con = new transports.Console({
 })
 logger.add(con)
 
-var dailyRotatefile = new (transports.DailyRotateFile)({
+
+// FILE
+
+const fileFormatter = printf(info => {
+  let msg = {
+    timestamp: moment().valueOf(),
+    level: info.level,
+    message: info.message
+  }
+  return JSON.stringify(msg)
+})
+
+const dailyRotatefile = new (transports.DailyRotateFile)({
   filename: 'asch-redeploy-%DATE%.log',
   dirname: 'logs',
   datePattern: 'YYYY-MM-DD',
-  level: 'silly'
+  level: 'silly',
+  format: combine(fileFormatter)
 })
 logger.add(dailyRotatefile)
 

@@ -23,7 +23,7 @@ let ChangeAschConfig = function (config, fs, path, logger) {
       aschConfig.dapp.params[dappId] = newOption
 
       this.fs.writeFileSync(aschNodeConfigPath, JSON.stringify(aschConfig, null, 2), 'utf8')
-      this.logger.info(`dappId "${dappId}" successfully added to "${aschNodeConfigPath}"`, { meta: 'blue.inverse' })
+      this.logger.info(`dappId successfully added to "${aschNodeConfigPath}"`, { meta: 'blue.inverse' })
       resolve(true)
     })
   }

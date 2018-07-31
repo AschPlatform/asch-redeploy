@@ -65,6 +65,22 @@ const Fork = require('child_process').fork
 const IsPortAvailable = require('is-port-available')
 const Chokidar = require('chokidar')
 
+Axios.interceptors.request.use(request => {
+  Logger.verbose('Axios request:')
+  let url = JSON.stringify(request.url, null, 2)
+  let data = JSON.stringify(request.data, null, 2)
+  Logger.verbose(`url: ${url}`)
+  Logger.verbose(`\nrequest: ${data}`)
+  return request
+})
+
+Axios.interceptors.response.use(response => {
+  Logger.verbose('Axios response:')
+  let data = JSON.stringify(response.data, null, 2)
+  Logger.verbose(`\nresponse: ${data}`)
+  return response
+})
+
 const DEPENDENCIES = {
   Config: 'Config',
   Logger: 'Logger',

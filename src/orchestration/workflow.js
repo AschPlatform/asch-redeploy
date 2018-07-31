@@ -8,13 +8,10 @@ let workflow = (service, config) => {
 
   logger.info('check balance...', { meta: 'green' })
 
-  return Promise.delay(12000)
+  return Promise.delay(100)
     .then(function (result) {
       let money = DI.container.get(DI.FILETYPES.SendMoney)
       return money.sendMoney()
-    })
-    .then(function wait () {
-      return Promise.delay(12000)
     })
     .then(function () {
       let uia = DI.container.get(DI.FILETYPES.UIA)
@@ -22,7 +19,7 @@ let workflow = (service, config) => {
     })
     .then(function wait () {
       logger.info('starting to register Dapp...', { meta: 'green' })
-      return Promise.delay(12000)
+      return Promise.delay(100)
     })
     .then(function () {
       let registerDapp = DI.container.get(DI.FILETYPES.RegisterDapp)
@@ -64,9 +61,11 @@ let workflow = (service, config) => {
           return this.service.start()
         })
         .then(() => {
-          return Promise.delay(5000)
+          // TODO: Check if blockchain is ready
+          return Promise.delay(10000)
         })
         .then(() => {
+          logger.info('blockchain started', { meta: 'blue.inverse' })
           let refuelDapp = DI.container.get(DI.FILETYPES.RefuelDapp)
           return refuelDapp.refuel(transactionId)
         })
