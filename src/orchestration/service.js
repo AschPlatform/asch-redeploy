@@ -28,7 +28,7 @@ let Service = function (config, logger, moment, path, fs, EventEmitter, createLo
       let appJS = this.path.join(absoluteAschPath, 'app.js')
       this.logger.info(`starting asch-node in "${absoluteAschPath}" on port ${this.port}`, { meta: 'inverse' })
 
-      this.process = this.fork(appJS, ['--port', parseInt(this.port)], {
+      this.process = this.fork(appJS, ['--port', parseInt(this.port), '--log', 'trace'], {
         cwd: absoluteAschPath,
         execArgv: [],
         stdio: [ 'ignore', logStream, logStream, 'ipc' ]
