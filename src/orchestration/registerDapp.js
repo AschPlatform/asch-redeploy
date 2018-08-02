@@ -8,7 +8,7 @@ let RegisterDapp = function (config, dappConfig, utils, axios, aschJS, logger) {
   this.aschJS = aschJS
   this.logger = logger
 
-  this.peerTransactionUrl = `${config.node.host}:${config.node.port}/peer/transactions`
+  this.peerTransactionUrl = `${config.node.host}:${config.node.port}/api/transactions`
   this.header = {
     magic: this.config.node.magic,
     version: ''
@@ -29,7 +29,7 @@ let RegisterDapp = function (config, dappConfig, utils, axios, aschJS, logger) {
       type: 200,
       args: [
         dapp.name,
-        dapp.desc,
+        dapp.description,
         dapp.link,
         dapp.icon,
         dapp.delegates,
