@@ -6,10 +6,10 @@ let CheckPublicDistDir = function (config, fs, path) {
   this.path = path
 
   this.createIfNotExistsSync = () => {
-    let distDir = path.join(config.node.directory, 'public', 'dist')
-    if (fs.existsSync(distDir) === false) {
-      fs.mkdirSync(distDir)
-    }
+    // let distDir = path.join(config.node.directory, 'public', 'dist')
+    // if (fs.existsSync(distDir) === false) {
+    //   fs.mkdirSync(distDir)
+    // }
     return true
   }
 }

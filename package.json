@@ -4,7 +4,7 @@
   "description": "A hassle-free local asch environment",
   "main": "index.js",
   "dependencies": {
-    "asch-js": "1.3.10",
+    "asch-js": "https://github.com/AschPlatform/asch-js/tarball/v1.4.0",
     "axios": "0.18.0",
     "bitcore-mnemonic": "1.5.0",
     "bluebird": "3.5.1",

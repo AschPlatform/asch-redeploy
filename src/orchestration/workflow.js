@@ -8,7 +8,7 @@ let workflow = (service, config) => {
 
   logger.info('check balance...', { meta: 'green' })
 
-  return Promise.delay(100)
+  return Promise.delay(11000)
     .then(function (result) {
       let money = DI.container.get(DI.FILETYPES.SendMoney)
       return money.sendMoney()

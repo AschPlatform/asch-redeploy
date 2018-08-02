@@ -8,7 +8,10 @@
       "program": "${workspaceFolder}/index.js",
       "env": {
         "NODE_ENV": "development"
-      }
+      },
+      "args": [
+        "--asch", "../newrelease/asch"
+      ]
     },
     {
       "name": "Run mocha",
