@@ -23,8 +23,21 @@ let RegisterDapp = function (config, dappConfig, utils, axios, aschJS, logger) {
     dapp.link = `${dapp.link.replace('.zip', '')}-${utils.generateRandomString(15)}.zip`
     this.logger.info(`dapp: ${JSON.stringify(dapp, null, 2)}`)
 
-    let trs = aschJS.dapp.createDApp(dapp, secret) // secondSecret
-    return this.axios.post(this.peerTransactionUrl, { transaction: trs }, {
+    let trs = {
+      secret: secret,
+      fee: 100 * 1e8,
+      type: 200,
+      args: [
+        dapp.name,
+        dapp.desc,
+        dapp.link,
+        dapp.icon,
+        dapp.delegates,
+        dapp.unlockDelegates
+      ],
+      senderId: "AHMCKebuL2nRYDgszf9J2KjVZzAw95WUyB"
+    }
+    return this.axios.put(this.peerTransactionUrl, trs, {
       headers: this.header
     })
       .then((response) => {
