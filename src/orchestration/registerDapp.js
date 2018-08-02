@@ -14,6 +14,8 @@ let RegisterDapp = function (config, dappConfig, utils, axios, aschJS, logger) {
     version: ''
   }
 
+  this.dappName = undefined
+
   this.register = () => {
     let secret = this.config.dapp.masterAccountPassword
     let secondSecret = this.config.dapp.masterAccountPassword2nd
@@ -22,6 +24,8 @@ let RegisterDapp = function (config, dappConfig, utils, axios, aschJS, logger) {
     dapp.name = `${dapp.name}-${utils.generateRandomString(15)}`
     dapp.link = `${dapp.link.replace('.zip', '')}-${utils.generateRandomString(15)}.zip`
     this.logger.info(`dapp: ${JSON.stringify(dapp, null, 2)}`)
+
+    this.dappName = dapp.name
 
     let trs = {
       secret: secret,
@@ -50,7 +54,10 @@ let RegisterDapp = function (config, dappConfig, utils, axios, aschJS, logger) {
         }
         this.logger.info(`DAPP registered, DappId: ${response.data.transactionId}`, { meta: 'green.inverse' })
 
-        return response.data.transactionId
+        return {
+          trs: response.data.transactionId,
+          name: this.dappName
+        }
       })
       .catch((error) => {
         throw error

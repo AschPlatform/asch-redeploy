@@ -13,14 +13,16 @@ let deploy = function (config, copyDirectory, path, fs) {
         throw new Error('dappId must be of type string')
       }
 
-      let dappParentDir = this.path.join(this.config.node.directory, 'dapps')
+      let dappParentDir = this.path.join(this.config.node.directory, 'chains')
 
       if (!this.fs.existsSync(dappParentDir)) {
         this.fs.mkdirSync(dappParentDir)
       }
 
-      let newDappDirectory = this.path.join(this.config.node.directory, 'dapps', dappId)
+      let dappName = 
+      let newDappDirectory = this.path.join(this.config.node.directory, 'chains', dappName)
       this.fs.mkdirSync(newDappDirectory)
+
 
       this.copyDirectory(this.config.userDevDir, newDappDirectory, (err) => {
         if (err) {

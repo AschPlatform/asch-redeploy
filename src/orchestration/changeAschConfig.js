@@ -19,8 +19,16 @@ let ChangeAschConfig = function (config, fs, path, logger) {
       }
       let aschConfig = JSON.parse(this.fs.readFileSync(aschNodeConfigPath, 'utf8'))
 
+      if (!aschConfig.chain) {
+        aschConfig.chain = {}
+      }
+
+      if (!aschConfig.chain.params) {
+        aschConfig.chain.params = {}
+      }
+
       let newOption = [this.config.dapp.masterAccountPassword]
-      aschConfig.dapp.params[dappId] = newOption
+      aschConfig.chain.params[dappId] = newOption
 
       this.fs.writeFileSync(aschNodeConfigPath, JSON.stringify(aschConfig, null, 2), 'utf8')
       this.logger.info(`dappId successfully added to "${aschNodeConfigPath}"`, { meta: 'blue.inverse' })

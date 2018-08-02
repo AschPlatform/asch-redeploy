@@ -6,6 +6,8 @@ let workflow = (service, config) => {
   this.service = service
   this.config = config
 
+  this._registered = []
+
   logger.info('check balance...', { meta: 'green' })
 
   return Promise.delay(11000)
@@ -23,7 +25,9 @@ let workflow = (service, config) => {
     })
     .then(function () {
       let registerDapp = DI.container.get(DI.FILETYPES.RegisterDapp)
-      return registerDapp.register()
+      let dappNameTrs =  registerDapp.register()
+      this._registered[dappNameTrs.trs] = dappNameTrs.name
+      return dappNameTrs.trs
     })
     .then((transactionId) => {
       return Promise.delay(1000)
@@ -67,7 +71,8 @@ let workflow = (service, config) => {
         .then(() => {
           logger.info('blockchain started', { meta: 'blue.inverse' })
           let refuelDapp = DI.container.get(DI.FILETYPES.RefuelDapp)
-          return refuelDapp.refuel(transactionId)
+          // return refuelDapp.refuel(transactionId)
+          return Promise.delay(100)
         })
         .then(() => {
           return Promise.delay(8000)
