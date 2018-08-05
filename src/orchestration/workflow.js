@@ -23,11 +23,13 @@ let workflow = (service, config) => {
       logger.info('starting to register Dapp...', { meta: 'green' })
       return Promise.delay(100)
     })
-    .then(function () {
+    .then(() => {
       let registerDapp = DI.container.get(DI.FILETYPES.RegisterDapp)
-      let dappNameTrs =  registerDapp.register()
-      this._registered[dappNameTrs.trs] = dappNameTrs.name
-      return dappNameTrs.trs
+      return registerDapp.register()
+    })
+    .then ((registeredTrans) => {
+      this._registered[registeredTrans.trs] = registeredTrans.name
+      return registeredTrans.trs
     })
     .then((transactionId) => {
       return Promise.delay(1000)
@@ -39,9 +41,9 @@ let workflow = (service, config) => {
           }
           return transactionId
         })
-        .then(function startToCopyfiles (transactionId) {
+        .then((transactionId) => {
           let deploy = DI.container.get(DI.FILETYPES.Deploy)
-          return deploy.deploy(transactionId)
+          return deploy.deploy(transactionId, this._registered[transactionId])
         })
         .then(function writeAschConfigFile (transactionId) {
           let changeAschConfig = DI.container.get(DI.FILETYPES.ChangeAschConfig)

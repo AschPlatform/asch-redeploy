@@ -7,7 +7,7 @@ let deploy = function (config, copyDirectory, path, fs) {
   this.path = path
   this.fs = fs
 
-  this.deploy = (dappId) => {
+  this.deploy = (dappId, dappName) => {
     return new Promise((resolve, reject) => {
       if (typeof dappId !== 'string') {
         throw new Error('dappId must be of type string')
@@ -19,7 +19,6 @@ let deploy = function (config, copyDirectory, path, fs) {
         this.fs.mkdirSync(dappParentDir)
       }
 
-      let dappName = 
       let newDappDirectory = this.path.join(this.config.node.directory, 'chains', dappName)
       this.fs.mkdirSync(newDappDirectory)
 
