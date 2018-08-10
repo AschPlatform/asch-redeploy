@@ -73,8 +73,7 @@ let workflow = (service, config) => {
         .then(() => {
           logger.info('blockchain started', { meta: 'blue.inverse' })
           let refuelDapp = DI.container.get(DI.FILETYPES.RefuelDapp)
-          // return refuelDapp.refuel(transactionId)
-          return Promise.delay(100)
+          return refuelDapp.refuel(this._registered[transactionId])
         })
         .then(() => {
           return Promise.delay(8000)
