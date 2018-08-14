@@ -21,6 +21,7 @@ const UIA = require('./orchestration/uia/uia')
 const RegisterPublisher = require('./orchestration/uia/registerPublisher')
 const RegisterAsset = require('./orchestration/uia/registerAsset')
 const CreateTokens = require('./orchestration/uia/createTokens')
+const CheckBlockchainVersion = require('./startup/checkBlockchainVersion')
 const FILETYPES = {
   SendMoney: 'SendMoney',
   RegisterDapp: 'RegisterDapp',
@@ -40,7 +41,8 @@ const FILETYPES = {
   UIA: 'UIA',
   RegisterPublisher: 'RegisterPublisher',
   RegisterAsset: 'RegisterAsset',
-  CreateTokens: 'CreateTokens'
+  CreateTokens: 'CreateTokens',
+  CheckBlockchainVersion: 'CheckBlockchainVersion'
 }
 
 const userInput = require('./program').getUserInput()
@@ -64,6 +66,7 @@ const Moment = require('moment')
 const Fork = require('child_process').fork
 const IsPortAvailable = require('is-port-available')
 const Chokidar = require('chokidar')
+const CompareVersions = require('compare-versions')
 
 Axios.interceptors.request.use(request => {
   Logger.verbose('Axios request:')
@@ -100,7 +103,8 @@ const DEPENDENCIES = {
   Moment: 'Moment',
   Fork: 'Fork',
   IsPortAvailable: 'IsPortAvailable',
-  Chokidar: 'Chokidar'
+  Chokidar: 'Chokidar',
+  CompareVersions: 'CompareVersions'
 }
 
 var container = new inversify.Container()
@@ -110,7 +114,7 @@ helpers.annotate(SendMoney, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENC
 helpers.annotate(RegisterDapp, [DEPENDENCIES.Config, DEPENDENCIES.DappConfig, DEPENDENCIES.Utils, DEPENDENCIES.Axios, DEPENDENCIES.AschJS, DEPENDENCIES.Logger])
 helpers.annotate(ChangeAschConfig, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path, DEPENDENCIES.Logger])
 helpers.annotate(Deploy, [DEPENDENCIES.Config, DEPENDENCIES.CopyDirectory, DEPENDENCIES.Path, DEPENDENCIES.Fs])
-helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FILETYPES.CheckFileStructure, DEPENDENCIES.CheckArch, FILETYPES.CheckPort, FILETYPES.CheckPublicDistDir])
+helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FILETYPES.CheckFileStructure, DEPENDENCIES.CheckArch, FILETYPES.CheckPort, FILETYPES.CheckPublicDistDir, FILETYPES.CheckBlockchainVersion])
 helpers.annotate(IsConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.ZSchema, DEPENDENCIES.CustomValidators, DEPENDENCIES.ConfigSchema])
 helpers.annotate(CheckFileStructure, [DEPENDENCIES.Config])
 helpers.annotate(Service, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Moment, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.EventEmitter, FILETYPES.CreateLogDir, DEPENDENCIES.Fork, FILETYPES.PathResolution])
@@ -125,6 +129,7 @@ helpers.annotate(UIA, [DEPENDENCIES.Config, DEPENDENCIES.Logger, FILETYPES.Regis
 helpers.annotate(RegisterPublisher, [DEPENDENCIES.Config, DEPENDENCIES.AschJS, DEPENDENCIES.Axios, DEPENDENCIES.Logger, DEPENDENCIES.Promise])
 helpers.annotate(RegisterAsset, [DEPENDENCIES.Config, DEPENDENCIES.AschJS, DEPENDENCIES.Axios, DEPENDENCIES.Logger, DEPENDENCIES.Promise])
 helpers.annotate(CreateTokens, [DEPENDENCIES.Config, DEPENDENCIES.AschJS, DEPENDENCIES.Axios, DEPENDENCIES.Logger, DEPENDENCIES.Promise])
+helpers.annotate(CheckBlockchainVersion, [DEPENDENCIES.Config, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.Logger, DEPENDENCIES.CompareVersions])
 
 let setup = function () {
   // bindings
@@ -147,6 +152,7 @@ let setup = function () {
   container.bind(FILETYPES.RegisterPublisher).to(RegisterPublisher)
   container.bind(FILETYPES.RegisterAsset).to(RegisterAsset)
   container.bind(FILETYPES.CreateTokens).to(CreateTokens)
+  container.bind(FILETYPES.CheckBlockchainVersion).to(CheckBlockchainVersion)
 
   // constants or third party libraries
   const registerConstantValue = helpers.registerConstantValue(container)
@@ -169,6 +175,7 @@ let setup = function () {
   registerConstantValue(DEPENDENCIES.Fork, Fork)
   registerConstantValue(DEPENDENCIES.IsPortAvailable, IsPortAvailable)
   registerConstantValue(DEPENDENCIES.Chokidar, Chokidar)
+  registerConstantValue(DEPENDENCIES.CompareVersions, CompareVersions)
 }
 
 let resetConstants = function () {

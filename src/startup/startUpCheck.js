@@ -1,12 +1,13 @@
 
 // ctor
-let StartUpCheck = function (config, isConfigValid, checkFileStructure, checkArch, checkPort, checkPublicDistDir) {
+let StartUpCheck = function (config, isConfigValid, checkFileStructure, checkArch, checkPort, checkPublicDistDir, checkBlockchainVersion) {
   this.config = config
   this.isConfigValid = isConfigValid
   this.checkFileStructure = checkFileStructure
   this.checkArch = checkArch
   this.checkPort = checkPort
-  this.checkPublicDistDir = checkPublicDistDir
+	this.checkPublicDistDir = checkPublicDistDir
+	this.checkBlockchainVersion = checkBlockchainVersion
 
   this.check = () => {
     return this.checkArch.check()
@@ -21,7 +22,10 @@ let StartUpCheck = function (config, isConfigValid, checkFileStructure, checkArc
       })
       .then(() => {
         return this.checkPort.check()
-      })
+			})
+			.then(() => {
+				return this.checkBlockchainVersion.checkSync()
+			})
       .catch((error) => {
         throw error
       })
