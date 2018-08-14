@@ -82,9 +82,9 @@
     lodash "^4.17.5"
     to-fast-properties "^2.0.0"
 
-JSONStream@^1.3.1:
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/JSONStream/-/JSONStream-1.3.3.tgz#27b4b8fbbfeab4e71bcf551e7f27be8d952239bf"
+JSONStream@=1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/JSONStream/-/JSONStream-1.3.1.tgz#707f761e01dae9e16f1bcf93703b78c70966579a"
   dependencies:
     jsonparse "^1.2.0"
     through ">=2.2.7 <3"
@@ -222,18 +222,18 @@ arrify@^1.0.0, arrify@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/arrify/-/arrify-1.0.1.tgz#898508da2226f380df904728456849c1501a4b0d"
 
-asch-js@1.3.10:
-  version "1.3.10"
-  resolved "https://registry.yarnpkg.com/asch-js/-/asch-js-1.3.10.tgz#84792cbdb28a2b6f0c0739226d0e080657df4a39"
+"asch-js@https://github.com/aschplatform/asch-js/tarball/v1.4.1":
+  version "1.4.1"
+  resolved "https://github.com/aschplatform/asch-js/tarball/v1.4.1#39526673c75ad15152f4a6b7cd1b0bcaea0afe05"
   dependencies:
-    JSONStream "^1.3.1"
-    browserify-bignum "^1.3.0-2"
-    buffer "^4.7.0"
-    bytebuffer "^5.0.1"
-    fast-sha256 "^1.0.0"
-    ripemd160 "^2.0.1"
-    through2 "^2.0.3"
-    tweetnacl "^1.0.0"
+    JSONStream "=1.3.1"
+    browserify-bignum "=1.3.0-2"
+    buffer "=4.7.0"
+    bytebuffer "=5.0.1"
+    fast-sha256 "=1.0.0"
+    ripemd160 "=2.0.1"
+    through2 "=2.0.3"
+    tweetnacl "=1.0.0"
 
 assign-symbols@^1.0.0:
   version "1.0.0"
@@ -358,7 +358,7 @@ browser-stdout@1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/browser-stdout/-/browser-stdout-1.3.1.tgz#baa559ee14ced73452229bad7326467c61fabd60"
 
-browserify-bignum@^1.3.0-2:
+browserify-bignum@=1.3.0-2:
   version "1.3.0-2"
   resolved "https://registry.yarnpkg.com/browserify-bignum/-/browserify-bignum-1.3.0-2.tgz#ddc3b6ed607fd6c960966950e2b35a2b0c6fb9bf"
 
@@ -376,9 +376,9 @@ buffer-from@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.0.tgz#87fcaa3a298358e0ade6e442cfce840740d1ad04"
 
-buffer@^4.7.0:
-  version "4.9.1"
-  resolved "https://registry.yarnpkg.com/buffer/-/buffer-4.9.1.tgz#6d1bb601b07a4efced97094132093027c95bc298"
+buffer@=4.7.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/buffer/-/buffer-4.7.0.tgz#f32ca787cbaac88a62b230f7040ee431655c71f3"
   dependencies:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
@@ -388,7 +388,7 @@ builtin-modules@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/builtin-modules/-/builtin-modules-1.1.1.tgz#270f076c5a72c02f5b65a47df94c5fe3a278892f"
 
-bytebuffer@^5.0.1:
+bytebuffer@=5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/bytebuffer/-/bytebuffer-5.0.1.tgz#582eea4b1a873b6d020a48d58df85f0bba6cfddd"
   dependencies:
@@ -596,9 +596,17 @@ commander@2.15.1, commander@^2.7.1:
   version "2.15.1"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.15.1.tgz#df46e867d0fc2aec66a34662b406a9ccafff5b0f"
 
+commander@^2.16.0:
+  version "2.17.1"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
+
 commondir@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/commondir/-/commondir-1.0.1.tgz#ddd800da0c66127393cca5950ea968a3aaf1253b"
+
+compare-versions@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/compare-versions/-/compare-versions-3.3.0.tgz#af93ea705a96943f622ab309578b9b90586f39c3"
 
 component-emitter@^1.2.1:
   version "1.2.1"
@@ -1062,9 +1070,9 @@ fast-safe-stringify@^2.0.4:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/fast-safe-stringify/-/fast-safe-stringify-2.0.4.tgz#4fe828718aa61dbcf9119c3c24e79cc4dea973b2"
 
-fast-sha256@^1.0.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/fast-sha256/-/fast-sha256-1.1.0.tgz#b640189403c7ff0d796d1251a1c1f6954c40e7b4"
+fast-sha256@=1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/fast-sha256/-/fast-sha256-1.0.0.tgz#217edc0ffc36c117a37c55b87e5381d99b44d1dd"
 
 fecha@^2.3.3:
   version "2.3.3"
@@ -1303,12 +1311,11 @@ has@^1.0.1:
   dependencies:
     function-bind "^1.1.1"
 
-hash-base@^3.0.0:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/hash-base/-/hash-base-3.0.4.tgz#5fc8686847ecd73499403319a6b0a3f3f6ae4918"
+hash-base@^2.0.0:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/hash-base/-/hash-base-2.0.2.tgz#66ea1d856db4e8a5470cadf6fce23ae5244ef2e1"
   dependencies:
     inherits "^2.0.1"
-    safe-buffer "^5.0.1"
 
 hash.js@^1.0.0, hash.js@^1.0.3:
   version "1.1.4"
@@ -2467,11 +2474,11 @@ rimraf@^2.2.8, rimraf@^2.6.1, rimraf@^2.6.2:
   dependencies:
     glob "^7.0.5"
 
-ripemd160@^2.0.1:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/ripemd160/-/ripemd160-2.0.2.tgz#a1c1a6f624751577ba5d07914cbc92850585890c"
+ripemd160@=2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/ripemd160/-/ripemd160-2.0.1.tgz#0f4584295c53a3628af7e6d79aca21ce57d1c6e7"
   dependencies:
-    hash-base "^3.0.0"
+    hash-base "^2.0.0"
     inherits "^2.0.1"
 
 run-async@^2.2.0:
@@ -2829,7 +2836,7 @@ text-table@~0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
 
-through2@^2.0.3:
+through2@=2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/through2/-/through2-2.0.3.tgz#0004569b37c7c74ba39c43f3ced78d1ad94140be"
   dependencies:
@@ -2880,7 +2887,7 @@ triple-beam@^1.1.0, triple-beam@^1.2.0, triple-beam@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/triple-beam/-/triple-beam-1.3.0.tgz#a595214c7298db8339eeeee083e4d10bd8cb8dd9"
 
-tweetnacl@^1.0.0:
+tweetnacl@=1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-1.0.0.tgz#713d8b818da42068740bf68386d0479e66fc8a7b"
 

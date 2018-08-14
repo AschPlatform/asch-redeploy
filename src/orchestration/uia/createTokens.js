@@ -24,20 +24,22 @@ let CreateTokens = function (config, aschJS, axios, logger, promise) {
       "error":"Balance info not found"
     }
     hasPositiveBalance: {
-      "success": true,
+      "success":true,
       "balance": {
-        "currency": "CCTime.XCT",
-        "balance": "2000000000000",
-        "maximum": "1000000000000000000",
-        "precision": 8,
-        "quantity": "2000000000000",
-        "writeoff": 0,
-        "allowWriteoff": 0,
-        "allowWhitelist": 0,
-        "allowBlacklist": 0,
-        "maximumShow": "10000000000",
-        "quantityShow": "20000",
-        "balanceShow": "20000"
+        "address":"AHMCKebuL2nRYDgszf9J2KjVZzAw95WUyB",
+        "currency":"CCTime.XCT",
+        "balance":"3950000000000",
+        "flag":2,
+        "_version_":3,
+        "name":"CCTime.XCT",
+        "desc":"XCT",
+        "maximum":"1000000000000000000",
+        "precision":8,
+        "quantity":"4000000000000",
+        "issuerId":"AHMCKebuL2nRYDgszf9J2KjVZzAw95WUyB",
+        "writeoff":0,
+        "maximumShow":"10000000000",
+        "quantityShow":"40000"
       }
     }
     */
@@ -48,8 +50,8 @@ let CreateTokens = function (config, aschJS, axios, logger, promise) {
       }
 
       let threshold = 10000
-      if (response.data.balance && response.data.balance.balanceShow > threshold) {
-        this.logger.info(`Balance: ${response.data.balance.balanceShow} ${this.config.uia.asset}`, { meta: 'inverse' })
+      if (response.data.balance && response.data.balance.quantityShow > threshold) {
+        this.logger.info(`Balance: ${response.data.balance.quantityShow} ${this.config.uia.asset}`, { meta: 'inverse' })
         throw new Error('enough_tokens')
       } else {
         return true
@@ -63,12 +65,17 @@ let CreateTokens = function (config, aschJS, axios, logger, promise) {
     let currency = `${this.config.uia.publisher}.${this.config.uia.asset}`
     let amount = (20000 * 1e8).toString()
 
-    let transaction = aschJS.uia.createIssue(currency, amount, this.config.dapp.masterAccountPassword, this.config.dapp.masterAccountPassword2nd)
-
-    let url = `${this.config.node.host}:${this.config.node.port}/peer/transactions`
-    let data = {
-      transaction: transaction
+    let trs = {
+      type: 102,
+      secret: this.config.dapp.masterAccountPassword,
+      fee: 0.1 * 1e8,
+      args: [
+        currency, amount
+      ]
     }
+
+    let url = `${this.config.node.host}:${this.config.node.port}/api/transactions`
+
     let headers = {
       headers: {
         magic: this.config.node.magic,
@@ -76,7 +83,7 @@ let CreateTokens = function (config, aschJS, axios, logger, promise) {
       }
     }
 
-    return axios.post(url, data, headers)
+    return axios.put(url, trs, headers)
   }
 
   this.processCreateTokens = (response) => {

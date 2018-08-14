@@ -17,18 +17,19 @@ let sendMoney = function (config, logger, axios, aschJS, promise) {
   this.waitMS = 11000
 
   this.fetchAddressAndBalancewithSecret = function (secret) {
-    this.logger.verbose('in fetchAddressAndBalancewithSecret()')
-    let url = `${this.config.node.host}:${this.config.node.port}/api/accounts/open`
-    this.logger.verbose(`get account information from "${secret}"`)
-    return this.axios.post(url, {
-      secret: secret
-    })
-      .then(function (response) {
+    let publicKey = this.aschJS.crypto.getKeys(secret).publicKey
+    let address = this.aschJS.crypto.getAddress(publicKey)
+
+    let url = `${this.config.node.host}:${this.config.node.port}/api/accounts/getBalance?address=${address}`
+    this.logger.info(`get account information from "${address}"`)
+    return this.axios.get(url)
+      .then((response) => {
         if (response.status === 200 && response.data.success === true) {
-          return {
-            address: response.data.account.address,
-            balance: response.data.account.balance
+          let value = {
+            address: address,
+            balance: response.data.balance
           }
+          return value
         }
       })
       .catch(function (error) {
@@ -37,6 +38,7 @@ let sendMoney = function (config, logger, axios, aschJS, promise) {
   } // fetchAddressAndBalancewithSecret
 
   this.hasGenesisAccountEnoughMoney = function (response) {
+
     this.logger.verbose('in hasGenesisAccountEnoughMoney()')
     let minBalance = 50000
     this.logger.verbose(`has genesisAccount a balance greater ${minBalance}?`)

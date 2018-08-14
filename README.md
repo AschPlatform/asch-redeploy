@@ -71,9 +71,9 @@ $ asch-redeploy
 Default Genesis account:  
 ```json
 {
-  "secret": "someone manual strong movie roof episode eight spatial brown soldier soup motor",
-  "publicKey": "8065a105c785a08757727fded3a06f8f312e73ad40f1f3502e0232ea42e67efd",
-  "address": "14762548536863074694"
+  "secret": "stone elephant caught wrong spend traffic success fetch inside blush virtual element",
+  "publicKey": "116025d5664ce153b02c69349798ab66144edd2a395e822b13587780ac9c9c09",
+  "address": "ABuH9VHV3cFi9UKzcHXGMPGnSC4QqT2cZ5"
 }
 ```
 

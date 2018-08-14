@@ -12,9 +12,9 @@ let RefuelDapp = function (config, axios, aschJS, logger) {
     version: ''
   }
 
-  this.refuel = (dappId) => {
+  this.refuel = (dappName) => {
     return new Promise((resolve, reject) => {
-      if (typeof dappId !== 'string') {
+      if (typeof dappName !== 'string') {
         reject(new Error('dappId must be of type string'))
       }
 
@@ -22,14 +22,27 @@ let RefuelDapp = function (config, axios, aschJS, logger) {
         this.transferCurrency = `${this.config.uia.publisher}.${this.config.uia.asset}`
       }
 
+      let secret = this.config.dapp.masterAccountPassword
+
+      let publicKey = this.aschJS.crypto.getKeys(secret).publicKey
+      let senderId = this.aschJS.crypto.getAddress(publicKey)
+
       let amount = 500 * 1e8
-      let transaction = this.aschJS.transfer.createInTransfer(dappId, this.transferCurrency, amount, config.dapp.masterAccountPassword, config.dapp.masterAccountPassword2nd || undefined)
+      let trs = {
+        secret: secret,
+        fee: 0.1 * 1e8,
+        type: 204,
+        senderId: senderId,
+        args: [
+          dappName, this.transferCurrency, amount
+        ]
+      }
 
-      let url = `${this.config.node.host}:${this.config.node.port}/peer/transactions`
+      this.logger.info(`refuel: \n ${JSON.stringify(trs, null, 2)}`)
 
-      this.axios.post(url, {
-        transaction: transaction
-      }, {
+      let url = `${this.config.node.host}:${this.config.node.port}/api/transactions`
+
+      this.axios.put(url, trs, {
         headers: this.headers
       })
         .then((response) => {

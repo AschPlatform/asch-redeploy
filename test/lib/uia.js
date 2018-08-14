@@ -56,7 +56,6 @@ describe('uia', function () {
         this.called = 0
         this.start = () => {
           this.called++
-          console.log(`called: ${this.called}`)
           return new Promise((resolve, reject) => {
             resolve(true)
           })

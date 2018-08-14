@@ -6,9 +6,11 @@ let workflow = (service, config) => {
   this.service = service
   this.config = config
 
+  this._registered = []
+
   logger.info('check balance...', { meta: 'green' })
 
-  return Promise.delay(100)
+  return Promise.delay(11000)
     .then(function (result) {
       let money = DI.container.get(DI.FILETYPES.SendMoney)
       return money.sendMoney()
@@ -21,9 +23,13 @@ let workflow = (service, config) => {
       logger.info('starting to register Dapp...', { meta: 'green' })
       return Promise.delay(100)
     })
-    .then(function () {
+    .then(() => {
       let registerDapp = DI.container.get(DI.FILETYPES.RegisterDapp)
       return registerDapp.register()
+    })
+    .then ((registeredTrans) => {
+      this._registered[registeredTrans.trs] = registeredTrans.name
+      return registeredTrans.trs
     })
     .then((transactionId) => {
       return Promise.delay(1000)
@@ -35,13 +41,9 @@ let workflow = (service, config) => {
           }
           return transactionId
         })
-        .then(function startToCopyfiles (transactionId) {
+        .then((transactionId) => {
           let deploy = DI.container.get(DI.FILETYPES.Deploy)
-          return deploy.deploy(transactionId)
-        })
-        .then(function writeAschConfigFile (transactionId) {
-          let changeAschConfig = DI.container.get(DI.FILETYPES.ChangeAschConfig)
-          return changeAschConfig.add(transactionId)
+          return deploy.deploy(transactionId, this._registered[transactionId])
         })
         .then(function wait (result) {
           let ms = 10000
@@ -62,12 +64,12 @@ let workflow = (service, config) => {
         })
         .then(() => {
           // TODO: Check if blockchain is ready
-          return Promise.delay(10000)
+          return Promise.delay(20000)
         })
         .then(() => {
           logger.info('blockchain started', { meta: 'blue.inverse' })
           let refuelDapp = DI.container.get(DI.FILETYPES.RefuelDapp)
-          return refuelDapp.refuel(transactionId)
+          return refuelDapp.refuel(this._registered[transactionId])
         })
         .then(() => {
           return Promise.delay(8000)
