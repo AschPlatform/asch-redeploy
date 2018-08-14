@@ -11,6 +11,7 @@
     "chalk": "2.4.1",
     "chokidar": "^2.0.3",
     "commander": "^2.16.0",
+    "compare-versions": "^3.3.0",
     "config": "1.30.0",
     "inversify": "^4.13.0",
     "inversify-vanillajs-helpers": "^2.0.0",
