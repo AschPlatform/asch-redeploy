@@ -86,6 +86,11 @@ let pr = {
       }
     }
     if (program.publisher) {
+      if (!/^[A-Za-z]{1,16}$/.test(program.publisher)) {
+        console.log('the --publisher needs to be between 1 and 16 alpha [A-Za-z] characters long')
+        process.exit(0)
+      }
+
       createUIAProperty()
       config.uia.publisher = program.publisher
 
@@ -95,6 +100,11 @@ let pr = {
       }
     }
     if (program.asset) {
+      if (!/^[A-Z]{3,6}$/.test(program.asset)) {
+        console.log(`the --asset needs to be between 3 and 6 alpha [A-Za-z] characters long`)
+        process.exit(0)
+      }
+
       createUIAProperty()
       config.uia.asset = program.asset
 
