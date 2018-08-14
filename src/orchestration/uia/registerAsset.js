@@ -16,6 +16,8 @@ let RegisterAsset = function (config, aschJS, axios, logger, promise) {
   }
 
   this.handleExistsAsset = (result) => {
+    console.log(`registerASSET answer: ${JSON.stringify(result.data, null, 2)}`)
+
     /*
       http://localhost:4096/api/uia/assets/CCtime.XCT
       response assetExists: {
@@ -38,9 +40,9 @@ let RegisterAsset = function (config, aschJS, axios, logger, promise) {
           "quantityShow":"0"
         }
       }
-      response assetExistsNot: {
-        "success":false,
-        "error":"Asset not found"
+      registerASSET answer: {
+        "success": false,
+        "error": "Asset not found"
       }
     */
 
@@ -56,7 +58,7 @@ let RegisterAsset = function (config, aschJS, axios, logger, promise) {
   }
 
   this.register = () => {
-    let name = `${config.uia.publisher}.${config.uia.asset}`
+    let name = `${config.uia.asset}`
     let desc = name
     let maximum = '1000000000000000000'
     let precision = 8
@@ -87,6 +89,8 @@ let RegisterAsset = function (config, aschJS, axios, logger, promise) {
       let asset = this.config.uia.asset
       this.logger.info(`asset "${asset}" registered`, { meta: 'inverse' })
       return true
+    } else {
+      throw new Error(`error during asset registration: ${response.data}`)
     }
   }
 
