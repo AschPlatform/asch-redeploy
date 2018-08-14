@@ -60,17 +60,18 @@ let RegisterAsset = function (config, aschJS, axios, logger, promise) {
     let desc = name
     let maximum = '1000000000000000000'
     let precision = 8
-    let strategy = ''
-    let allowWriteoff = 0
-    let allowWhitelist = 0
-    let allowBlacklist = 0
 
-    let transaction = aschJS.uia.createAsset(name, desc, maximum, precision, strategy, allowWriteoff, allowWhitelist, allowBlacklist, this.config.dapp.masterAccountPassword, this.config.dapp.masterAccountPassword2nd)
-
-    let url = `${this.config.node.host}:${this.config.node.port}/peer/transactions`
-    let data = {
-      transaction: transaction
+    let trs = {
+      type: 101,
+      secret: this.config.dapp.masterAccountPassword,
+      fee: 500 * 1e8,
+      args: [
+        name, desc, maximum, precision
+      ]
     }
+
+    let url = `${this.config.node.host}:${this.config.node.port}/api/transactions`
+
     let headers = {
       headers: {
         magic: this.config.node.magic,
@@ -78,7 +79,7 @@ let RegisterAsset = function (config, aschJS, axios, logger, promise) {
       }
     }
 
-    return axios.post(url, data, headers)
+    return axios.put(url, trs, headers)
   }
 
   this.handleRegister = (response) => {

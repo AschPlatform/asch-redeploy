@@ -63,12 +63,17 @@ let CreateTokens = function (config, aschJS, axios, logger, promise) {
     let currency = `${this.config.uia.publisher}.${this.config.uia.asset}`
     let amount = (20000 * 1e8).toString()
 
-    let transaction = aschJS.uia.createIssue(currency, amount, this.config.dapp.masterAccountPassword, this.config.dapp.masterAccountPassword2nd)
-
-    let url = `${this.config.node.host}:${this.config.node.port}/peer/transactions`
-    let data = {
-      transaction: transaction
+    let trs = {
+      type: 102,
+      secret: this.config.dapp.masterAccountPassword,
+      fee: 0.1 * 1e8,
+      args: [
+        currency, amount
+      ]
     }
+
+    let url = `${this.config.node.host}:${this.config.node.port}/api/transactions`
+
     let headers = {
       headers: {
         magic: this.config.node.magic,
@@ -76,7 +81,7 @@ let CreateTokens = function (config, aschJS, axios, logger, promise) {
       }
     }
 
-    return axios.post(url, data, headers)
+    return axios.put(url, trs, headers)
   }
 
   this.processCreateTokens = (response) => {

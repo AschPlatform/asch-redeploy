@@ -10,10 +10,9 @@ let registerPublisher = function (config, aschJS, axios, logger, promise) {
   this.waitingMS = 12000
 
   this.existsPublisher = () => {
-    let publicKey = this.aschJS.crypto.getKeys(this.config.dapp.masterAccountPassword).publicKey
-    let address = this.aschJS.crypto.getAddress(publicKey)
+    let publisher = this.config.uia.publisher
 
-    let url = `${config.node.host}:${config.node.port}/api/uia/issuers/${address}`
+    let url = `${config.node.host}:${config.node.port}/api/uia/issuers/${publisher}`
 
     return axios.get(url)
   }
@@ -29,9 +28,11 @@ let registerPublisher = function (config, aschJS, axios, logger, promise) {
       }
       samepublisherAlreadyRegistered: {
         "success":true,
-        "issuer": {
-          "name":"CCTime",
-          "desc":"asdf"
+        "issuer":{
+          "tid":"eda3df08875f2d967b6c44a3e913221315ea29f583e4405cd6c0ca6a77017ecf","name":"CCTime",
+          "issuerId":"AHMCKebuL2nRYDgszf9J2KjVZzAw95WUyB",
+          "desc":"CCTime",
+          "_version_":1
         }
       }
       noPublisherRegistered: {
@@ -56,19 +57,21 @@ let registerPublisher = function (config, aschJS, axios, logger, promise) {
   this.register = () => {
     let publisher = this.config.uia.publisher
 
-    let transaction = this.aschJS.uia.createIssuer(publisher, publisher, this.config.dapp.masterAccountPassword, this.config.dapp.masterAccountPassword2nd)
-
-    let url = `${this.config.node.host}:${this.config.node.port}/peer/transactions`
-    let data = {
-      transaction: transaction
+    let trs = {
+      secret: this.config.dapp.masterAccountPassword,
+      type: 100,
+      fee: 100 * 1e8,
+      args: [ publisher, publisher ]
     }
+
+    let url = `${this.config.node.host}:${this.config.node.port}/api/transactions`
     let headers = {
       headers: {
         magic: this.config.node.magic,
         version: ''
       }
     }
-    return axios.post(url, data, headers)
+    return axios.put(url, trs, headers)
   }
 
   this.handleRegister = (response) => {

@@ -68,7 +68,7 @@ let workflow = (service, config) => {
         })
         .then(() => {
           // TODO: Check if blockchain is ready
-          return Promise.delay(10000)
+          return Promise.delay(20000)
         })
         .then(() => {
           logger.info('blockchain started', { meta: 'blue.inverse' })
