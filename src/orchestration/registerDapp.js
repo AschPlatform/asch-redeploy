@@ -56,7 +56,7 @@ let RegisterDapp = function (config, dappConfig, utils, axios, aschJS, logger) {
           throw new Error(response.data)
         }
         this.logger.info(`DAPP registered, DappId: ${response.data.transactionId}`, { meta: 'green.inverse' })
-
+        this.logger.info(`DAPP name: ${this.dappName}`, { meta: 'white.inverse' })
         return {
           trs: response.data.transactionId,
           name: this.dappName

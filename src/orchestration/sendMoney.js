@@ -24,13 +24,11 @@ let sendMoney = function (config, logger, axios, aschJS, promise) {
     this.logger.info(`get account information from "${address}"`)
     return this.axios.get(url)
       .then((response) => {
-        this.logger.info(`response: ${JSON.stringify(response.data, null, 2)}`)
         if (response.status === 200 && response.data.success === true) {
           let value = {
             address: address,
             balance: response.data.balance
           }
-          this.logger.info(`${JSON.stringify(value)}`)
           return value
         }
       })
