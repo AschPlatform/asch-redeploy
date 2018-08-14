@@ -16,8 +16,6 @@ let RegisterAsset = function (config, aschJS, axios, logger, promise) {
   }
 
   this.handleExistsAsset = (result) => {
-    console.log(`registerASSET answer: ${JSON.stringify(result.data, null, 2)}`)
-
     /*
       http://localhost:4096/api/uia/assets/CCtime.XCT
       response assetExists: {

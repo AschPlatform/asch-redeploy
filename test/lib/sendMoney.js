@@ -183,9 +183,6 @@ describe('sendMoney', function () {
       /* act */
       let sendMoney = DI.container.get(DI.FILETYPES.SendMoney)
       sendMoney.sendMoney()
-        .then((result) => {
-          console.log(`result: ${result}`)
-        })
         .then(() => {
           throw new Error('should throw exception')
         })
