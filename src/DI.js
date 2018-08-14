@@ -4,7 +4,6 @@ require('reflect-metadata')
 
 const SendMoney = require('./orchestration/sendMoney')
 const RegisterDapp = require('./orchestration/registerDapp')
-const ChangeAschConfig = require('./orchestration/changeAschConfig')
 const Deploy = require('./orchestration/deploy')
 const StartUpCheck = require('./startup/startUpCheck')
 const IsConfigValid = require('./startup/isConfigValid')
@@ -25,7 +24,6 @@ const CheckBlockchainVersion = require('./startup/checkBlockchainVersion')
 const FILETYPES = {
   SendMoney: 'SendMoney',
   RegisterDapp: 'RegisterDapp',
-  ChangeAschConfig: 'ChangeAschConfig',
   Deploy: 'Deploy',
   StartUpCheck: 'StartUpCheck',
   IsConfigValid: 'IsConfigValid',
@@ -112,7 +110,6 @@ var container = new inversify.Container()
 // annotate
 helpers.annotate(SendMoney, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Axios, DEPENDENCIES.AschJS, DEPENDENCIES.Promise])
 helpers.annotate(RegisterDapp, [DEPENDENCIES.Config, DEPENDENCIES.DappConfig, DEPENDENCIES.Utils, DEPENDENCIES.Axios, DEPENDENCIES.AschJS, DEPENDENCIES.Logger])
-helpers.annotate(ChangeAschConfig, [DEPENDENCIES.Config, DEPENDENCIES.Fs, DEPENDENCIES.Path, DEPENDENCIES.Logger])
 helpers.annotate(Deploy, [DEPENDENCIES.Config, DEPENDENCIES.CopyDirectory, DEPENDENCIES.Path, DEPENDENCIES.Fs])
 helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FILETYPES.CheckFileStructure, DEPENDENCIES.CheckArch, FILETYPES.CheckPort, FILETYPES.CheckPublicDistDir, FILETYPES.CheckBlockchainVersion])
 helpers.annotate(IsConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.ZSchema, DEPENDENCIES.CustomValidators, DEPENDENCIES.ConfigSchema])
@@ -135,7 +132,6 @@ let setup = function () {
   // bindings
   container.bind(FILETYPES.SendMoney).to(SendMoney)
   container.bind(FILETYPES.RegisterDapp).to(RegisterDapp)
-  container.bind(FILETYPES.ChangeAschConfig).to(ChangeAschConfig)
   container.bind(FILETYPES.Deploy).to(Deploy)
   container.bind(FILETYPES.StartUpCheck).to(StartUpCheck)
   container.bind(FILETYPES.IsConfigValid).to(IsConfigValid)

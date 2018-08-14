@@ -45,10 +45,6 @@ let workflow = (service, config) => {
           let deploy = DI.container.get(DI.FILETYPES.Deploy)
           return deploy.deploy(transactionId, this._registered[transactionId])
         })
-        .then(function writeAschConfigFile (transactionId) {
-          let changeAschConfig = DI.container.get(DI.FILETYPES.ChangeAschConfig)
-          return changeAschConfig.add(transactionId)
-        })
         .then(function wait (result) {
           let ms = 10000
           logger.verbose(`wait for: ${ms}`)
