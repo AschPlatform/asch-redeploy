@@ -15,7 +15,7 @@ let checkBlockchainVersion = function (config, path, fs, logger, compareVersions
     packageJson = JSON.parse(packageJson)
     let version = packageJson.version
 
-    let result = this.compareVersions('1.4.0', version)
+    let result = this.compareVersions('1.4.2', version)
     if (result === 1) {
       throw new Error('This version of asch-redeploy is only compatible with ASCH blockchain version greater or equal to 1.4.0')
     }
