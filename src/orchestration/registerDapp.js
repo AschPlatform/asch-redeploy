@@ -32,6 +32,7 @@ let RegisterDapp = function (config, dappConfig, utils, axios, aschJS, logger) {
 
     let trs = {
       secret: secret,
+      secondSecret: secondSecret,
       fee: 100 * 1e8,
       type: 200,
       args: [

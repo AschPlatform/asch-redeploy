@@ -59,6 +59,7 @@ let registerPublisher = function (config, aschJS, axios, logger, promise) {
 
     let trs = {
       secret: this.config.dapp.masterAccountPassword,
+      secondSecret: this.config.dapp.masterAccountPassword2nd,
       type: 100,
       fee: 100 * 1e8,
       args: [ publisher, publisher ]

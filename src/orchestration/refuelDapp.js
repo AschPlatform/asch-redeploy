@@ -21,6 +21,7 @@ let RefuelDapp = function (config, axios, aschJS, logger) {
     }
 
     let secret = this.config.dapp.masterAccountPassword
+    let secondSecret = this.config.dapp.masterAccountPassword2nd
 
     let publicKey = this.aschJS.crypto.getKeys(secret).publicKey
     let senderId = this.aschJS.crypto.getAddress(publicKey)
@@ -28,6 +29,7 @@ let RefuelDapp = function (config, axios, aschJS, logger) {
     let amount = 500 * 1e8
     let trs = {
       secret: secret,
+      secondSecret: secondSecret,
       fee: 0.1 * 1e8,
       type: 204,
       senderId: senderId,

@@ -68,6 +68,7 @@ let CreateTokens = function (config, aschJS, axios, logger, promise) {
     let trs = {
       type: 102,
       secret: this.config.dapp.masterAccountPassword,
+      secondSecret: this.config.dapp.masterAccountPassword2nd,
       fee: 0.1 * 1e8,
       args: [
         currency, amount

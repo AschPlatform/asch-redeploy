@@ -64,6 +64,7 @@ let RegisterAsset = function (config, aschJS, axios, logger, promise) {
     let trs = {
       type: 101,
       secret: this.config.dapp.masterAccountPassword,
+      secondSecret: this.config.dapp.masterAccountPassword2nd,
       fee: 500 * 1e8,
       args: [
         name, desc, maximum, precision
