@@ -27,15 +27,15 @@ let workflow = (service, config) => {
       let registerDapp = DI.container.get(DI.FILETYPES.RegisterDapp)
       return registerDapp.register()
     })
-    .then ((registeredTrans) => {
+    .then((registeredTrans) => {
       this._registered[registeredTrans.trs] = registeredTrans.name
       return registeredTrans.trs
     })
     .then((transactionId) => {
       return Promise.delay(1000)
-        .then(function serializeNewDappId () {
+        .then(() => {
           let serializeNewDapp = DI.container.get(DI.FILETYPES.SerializedNewDappId)
-          let result = serializeNewDapp.serializeSync(transactionId)
+          let result = serializeNewDapp.serializeSync(transactionId, this._registered[transactionId])
           if (result === true) {
             logger.info(`wrote dappId to: ${result}`)
           }
