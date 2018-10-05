@@ -15,20 +15,13 @@ let RegisterDapp = function (config, utils, axios, aschJS, logger) {
 
   this.dappName = undefined
 
-  this.register = () => {
-    let secret = this.config.dapp.masterAccountPassword
-    let secondSecret = this.config.dapp.masterAccountPassword2nd
-
+  const constructDapp = () => {
     var dapp = {}
     dapp.name = `asch-${utils.generateRandomString(15)}`
     dapp.desc = dapp.name
     dapp.link = `http://${utils.generateRandomString(15)}.zip`
     dapp.icon = 'http://o7dyh3w0x.bkt.clouddn.com/hello.png'
     dapp.unlockDelegates = 3
-
-    let publicKey = this.aschJS.crypto.getKeys(secret).publicKey
-    let senderId = this.aschJS.crypto.getAddress(publicKey)
-
     this.dappName = dapp.name
 
     dapp.delegates = []
@@ -37,6 +30,17 @@ let RegisterDapp = function (config, utils, axios, aschJS, logger) {
     })
     dapp.delegates = configDelegates
     this.logger.info(`dapp: ${JSON.stringify(dapp, null, 2)}`)
+
+    return dapp
+  }
+
+  this.register = () => {
+    let secret = this.config.dapp.masterAccountPassword
+    let secondSecret = this.config.dapp.masterAccountPassword2nd
+    let publicKey = this.aschJS.crypto.getKeys(secret).publicKey
+    let senderId = this.aschJS.crypto.getAddress(publicKey)
+
+    let dapp = constructDapp()
 
     let trs = {
       secret: secret,
