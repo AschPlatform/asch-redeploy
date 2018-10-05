@@ -1,8 +1,7 @@
 
 // ctor
-let RegisterDapp = function (config, dappConfig, utils, axios, aschJS, logger) {
+let RegisterDapp = function (config, utils, axios, aschJS, logger) {
   this.config = config
-  this.dappConfig = dappConfig
   this.utils = utils
   this.axios = axios
   this.aschJS = aschJS
@@ -20,15 +19,24 @@ let RegisterDapp = function (config, dappConfig, utils, axios, aschJS, logger) {
     let secret = this.config.dapp.masterAccountPassword
     let secondSecret = this.config.dapp.masterAccountPassword2nd
 
-    var dapp = JSON.parse(JSON.stringify(this.dappConfig))
-    dapp.name = `${dapp.name}-${utils.generateRandomString(15)}`
-    dapp.link = `${dapp.link.replace('.zip', '')}-${utils.generateRandomString(15)}.zip`
-    this.logger.info(`dapp: ${JSON.stringify(dapp, null, 2)}`)
+    var dapp = {}
+    dapp.name = `asch-${utils.generateRandomString(15)}`
+    dapp.desc = dapp.name
+    dapp.link = `http://${utils.generateRandomString(15)}.zip`
+    dapp.icon = 'http://o7dyh3w0x.bkt.clouddn.com/hello.png'
+    dapp.unlockDelegates = 3
 
     let publicKey = this.aschJS.crypto.getKeys(secret).publicKey
     let senderId = this.aschJS.crypto.getAddress(publicKey)
 
     this.dappName = dapp.name
+
+    dapp.delegates = []
+    let configDelegates = this.config.dapp.delegates.map((delegate) => {
+      return this.aschJS.crypto.getKeys(delegate).publicKey
+    })
+    dapp.delegates = configDelegates
+    this.logger.info(`dapp: ${JSON.stringify(dapp, null, 2)}`)
 
     let trs = {
       secret: secret,
@@ -37,7 +45,7 @@ let RegisterDapp = function (config, dappConfig, utils, axios, aschJS, logger) {
       type: 200,
       args: [
         dapp.name,
-        dapp.description,
+        dapp.desc,
         dapp.link,
         dapp.icon,
         dapp.delegates,
@@ -45,6 +53,7 @@ let RegisterDapp = function (config, dappConfig, utils, axios, aschJS, logger) {
       ],
       senderId: senderId
     }
+
     return this.axios.put(this.peerTransactionUrl, trs, {
       headers: this.header
     })

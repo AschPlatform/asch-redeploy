@@ -53,7 +53,6 @@ const Axios = require('axios')
 const Logger = require('./logger')
 const AschJS = require('asch-js')
 const Promise = require('bluebird')
-const DappConfig = require('../dapp.json')
 const Utils = require('./utils')
 const Fs = require('fs')
 const Path = require('path')
@@ -92,7 +91,6 @@ const DEPENDENCIES = {
   Axios: 'Axios',
   AschJS: 'AschJS',
   Promise: 'Promise',
-  DappConfig: 'DappConfig',
   Utils: 'Utils',
   Fs: 'Fs',
   Path: 'Path',
@@ -114,7 +112,7 @@ var container = new inversify.Container()
 
 // annotate
 helpers.annotate(SendMoney, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Axios, DEPENDENCIES.AschJS, DEPENDENCIES.Promise])
-helpers.annotate(RegisterDapp, [DEPENDENCIES.Config, DEPENDENCIES.DappConfig, DEPENDENCIES.Utils, DEPENDENCIES.Axios, DEPENDENCIES.AschJS, DEPENDENCIES.Logger])
+helpers.annotate(RegisterDapp, [DEPENDENCIES.Config, DEPENDENCIES.Utils, DEPENDENCIES.Axios, DEPENDENCIES.AschJS, DEPENDENCIES.Logger])
 helpers.annotate(Deploy, [DEPENDENCIES.Config, DEPENDENCIES.CopyDirectory, DEPENDENCIES.Path, DEPENDENCIES.Fs])
 helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FILETYPES.CheckFileStructure, FILETYPES.IsUserConfigValid, DEPENDENCIES.CheckArch, FILETYPES.CheckPort, FILETYPES.CheckPublicDistDir, FILETYPES.CheckBlockchainVersion])
 helpers.annotate(IsConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.ZSchema, DEPENDENCIES.CustomValidators, DEPENDENCIES.ConfigSchema])
@@ -164,7 +162,6 @@ let setup = function () {
   registerConstantValue(DEPENDENCIES.Axios, Axios)
   registerConstantValue(DEPENDENCIES.AschJS, AschJS)
   registerConstantValue(DEPENDENCIES.Promise, Promise)
-  registerConstantValue(DEPENDENCIES.DappConfig, DappConfig)
   registerConstantValue(DEPENDENCIES.Utils, Utils)
   registerConstantValue(DEPENDENCIES.Fs, Fs)
   registerConstantValue(DEPENDENCIES.Path, Path)

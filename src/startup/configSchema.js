@@ -25,7 +25,7 @@ let schema = {
         },
         delegates: {
           type: 'array',
-          minItems: 5,
+          minItems: 3,
           uniqueItems: true,
           items: {
             type: 'string',
