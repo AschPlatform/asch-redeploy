@@ -4,7 +4,8 @@
       "interface/**.js",
       "model/**.js",
       "contract/**.js",
-      "init.js"
+      "init.js",
+      "public/**"
     ],
     "dapp": {
       "masterAccountPassword": "sentence weasel match weather apple onion release keen lens deal fruit matrix",

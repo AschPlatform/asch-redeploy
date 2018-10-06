@@ -1,6 +1,9 @@
 [![Build Status](https://travis-ci.org/AschPlatform/asch-redeploy.svg?branch=master)](https://travis-ci.org/AschPlatform/asch-redeploy)
 [![License](https://img.shields.io/badge/license-MIT-yellow.svg?style=flat)](http://aschplatform.mit-license.org)
 [![Platform](https://img.shields.io/badge/platform-Linux-green.svg?style=flat)](https://github.com/AschPlatform/asch-redeploy)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/aschplatform/asch-redeploy.svg)
+[![GitHub top language](https://img.shields.io/github/languages/top/badges/shields.svg?style=popout&colorB=brightgreen)](https://github.com/AschPlatform/asch-redeploy)
+
 - - -
 
 
@@ -100,6 +103,8 @@ If you want to use another account, you can:
 ### Custom delegates
 Specify your custom delegates in the `config.json` file. These delegates will be used to register your DApp and will be used for block generation (forging) on the newly registered DApp.
 
+<img src="./docs/blob/asch_config.png" alt="asch" style="width:600px;margin-right:20px;margin-left:20px;"/>
+
 Example `config.json`:  
 ```json
 {
@@ -115,7 +120,7 @@ Example `config.json`:
 ```
 
 ### --output file
-`-o, --output` You can specify a file to which the new DappId will be written every time a new Dapp was registered at the local Asch blockchain. This file can be very useful combined with a build server for frontend Dapp development. Every time the new Dapp will be registered the frontend rebuilds and automatically connects to the newest DappId.
+`-o, --output` You can specify a file to which the new dapp-name will be written to every time a new Dapp was registered at the local Asch blockchain. This file can be very useful combined with a build server for frontend Dapp development. Every time the new Dapp will be registered the frontend rebuilds and automatically connects to the newest DappId.
 
 
 Usage:  
@@ -123,13 +128,13 @@ Usage:
 asch-redeploy --output ./dappId.json
 ```
 
-Produces the following `dappId.json` file:  
+Produces the following `dappName.json` file in the current directory (`./`):  
 ```json
 {
   "host": "http://localhost",
   "port": "4096",
   "dappId": "4160d918edfbcae7fa508ed9ae2fce836537b8a2e6355a8ae69f8924867c16cb",
-  "dappName: "salt-sugar"
+  "dappName: "salt-sugar-dapp"
 }
 ```
 
@@ -153,16 +158,15 @@ The `asch-redeploy` package automates numerous manual steps to register and inst
   2.2 Register asset (e.g asset XCT with `--asset XCT`) on local Asch blockchain  
   2.3 Create 20000 `CCTime.XCT` Tokens - only if not previously created
 3. Register Dapp on local Asch blockchain  
-  3.1 Create random name for Dapp - two Dapps with same name are not allowed  
-  3.2 Create Dapp registration transaction - the resulting transactionId of this operation is our new `dappId` which uniquely identifies our Dapp  
+  3.1 Create random name for Dapp (e.g. `sugar-salt-dapp`) - two Dapps with same name are not allowed  
+  3.2 Create Dapp registration transaction - the `dappName` with which the Dapp was registered with can be used to uniquely identify our new Dapp  
 4. Install Dapp on local Asch blockchain  
-  4.1 Add new `dappId` to `asch/config.json` file  
-  4.2 Copy smart contract files (your working directory) to `asch/dapps/dappId`  
-  4.3 Restart local Asch blockchain to finish installation  
+  4.1 Copy smart contract files (your working directory) to `asch/chains/<our-dapp-name>`  
+  4.2 Restart local Asch blockchain to finish installation  
 5. Watch for file changes and start with __1.__ if a file changes  
 
 
-If you want you can also follow the manual steps as described [here](https://github.com/AschPlatform/asch/blob/2c8df1f7acbc713dab1d2c2a93bbe31b31eb1836/docs/dapp_docs/1_hello_en.md)
+If you want you can also follow the manual steps as described [here](https://github.com/AschPlatform/asch-docs/blob/master/dapp/hello_world/en.md)
 
 
 # Example Dapps
