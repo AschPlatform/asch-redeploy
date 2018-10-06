@@ -120,12 +120,12 @@ Example `config.json`:
 ```
 
 ### --output file
-`-o, --output` You can specify a file to which the new dapp-name will be written to every time a new Dapp was registered at the local Asch blockchain. This file can be very useful combined with a build server for frontend Dapp development. Every time the new Dapp will be registered the frontend rebuilds and automatically connects to the newest DappId.
+`-o, --output` You can specify a file to which the new dapp-name will be written to every time a new Dapp was registered at the local Asch blockchain. This file can be very useful combined with a build server for frontend Dapp development. Every time the new Dapp will be registered the frontend rebuilds and automatically connects to the right Dapp(Name).
 
 
 Usage:  
 ```bash
-asch-redeploy --output ./dappId.json
+asch-redeploy --output ./dappName.json
 ```
 
 Produces the following `dappName.json` file in the current directory (`./`):  
