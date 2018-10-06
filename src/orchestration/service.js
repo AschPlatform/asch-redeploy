@@ -26,6 +26,7 @@ let Service = function (config, logger, moment, path, fs, EventEmitter, createLo
 
       let absoluteAschPath = this.pathResolution.getAbsoluteAschPathSync()
       let appJS = this.path.join(absoluteAschPath, 'app.js')
+      this.logger.info('')
       this.logger.info(`starting asch-node in "${absoluteAschPath}" on port ${this.port}`, { meta: 'inverse' })
 
       this.process = this.fork(appJS, ['--port', parseInt(this.port), '--log', 'trace'], {

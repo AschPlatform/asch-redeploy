@@ -17,10 +17,7 @@ let styleText = function (text, meta) {
   return text
 }
 
-
-
 // CONSOLE
-
 const customFormat = printf(info => {
   let formattedDate = moment(info.timestamp).format('YYYY-MM-DD HH:mm:ss.SSS')
   let level = info.level.toUpperCase()
@@ -67,8 +64,6 @@ const customFormat = printf(info => {
   return output
 })
 
-
-
 let consoleLogLevel = 'info'
 if (process.env['NODE_ENV'] === 'development') {
   consoleLogLevel = 'verbose'
@@ -85,9 +80,7 @@ const con = new transports.Console({
 })
 logger.add(con)
 
-
 // FILE
-
 const fileFormatter = printf(info => {
   let msg = {
     timestamp: moment().valueOf(),

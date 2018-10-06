@@ -48,7 +48,7 @@ const LoadDelegates = function (config, path, fs, inquirer, logger) {
 
   this.processAnswers = (answers, content, configJsonPath) => {
     if (!answers.fillConfig) {
-      throw new Error('exit(0) you need to provide valid secrets in the "config.json" file')
+      throw new Error('You need to provide valid secrets in the "config.json" file')
     }
 
     content.secrets = this.default

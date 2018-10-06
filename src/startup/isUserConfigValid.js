@@ -13,22 +13,11 @@ let IsUserConfigValid = function (config, userConfigSchema, logger, ZSchema, pat
     let loadedUserConfig = this.fs.readFileSync(pathToUserConfig, 'utf8')
     loadedUserConfig = JSON.parse(loadedUserConfig)
 
-    if (loadedUserConfig.secrets.length === 0) {
-      this.logger.info('adding default delegates to "config.json"', { meta: 'white.inverse' })
-
-      loadedUserConfig.secrets = this.config.dapp.delegates
-      this.fs.writeFileSync(pathToUserConfig, JSON.stringify(loadedUserConfig, null, 2))
-      this.logger.info(`after: ${JSON.stringify(loadedUserConfig, null, 2)}`, { meta: 'green' })
-    }
-
-    if (!loadedUserConfig.secrets) {
-      throw new Error('the "config.json" file needs an "secrets" property')
-    }
-
     this.config.dapp.delegates = []
     this.config.dapp.delegates.push(...loadedUserConfig.secrets)
 
-    this.logger.info('using the following delegates from config.json:')
+    this.logger.info('')
+    this.logger.info('using the following delegates from config.json:', { meta: 'inverse' })
     loadedUserConfig.secrets.forEach((secret) => {
       this.logger.info(`\t"${secret}"`, { meta: 'underline' })
     })

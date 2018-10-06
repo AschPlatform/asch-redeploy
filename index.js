@@ -21,13 +21,13 @@ aschService.notifier.on('exit', function (code) {
   logger.warn(`asch-node terminated with code ${code}`)
 })
 process.on('SIGTERM', function () {
-  logger.warn('SIGTERM', { meta: 'inverse' })
+  logger.verbose('SIGTERM', { meta: 'inverse' })
   aschService.stop()
   process.exit(0)
 })
 process.on('SIGINT', function () {
   // ctrl+c
-  logger.warn('SIGTERM', { meta: 'inverse' })
+  logger.verbose('SIGTERM', { meta: 'inverse' })
   aschService.stop()
   process.exit(0)
 })
@@ -50,6 +50,6 @@ startUpCheck.check()
   })
   .catch((err) => { // last error handler
     logger.error(err.message)
-    logger.error(err.stack)
+    logger.verbose(err.stack)
     utils.endProcess()
   })

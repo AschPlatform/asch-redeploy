@@ -14,6 +14,7 @@ function Watcher (config, logger, chokidar, moment) {
     if (this.initialized === true) {
       throw new Error('already_initialized: watcher.watch() has already been initialized')
     }
+    this.logger.info('')
     this.logger.info(`files are watched in userDevDir: ${this.config.userDevDir}`, { meta: 'white.inverse' })
     this.choki = this.chokidar.watch(this.config.watch, {
       cwd: this.config.userDevDir,

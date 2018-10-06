@@ -3,7 +3,7 @@ const randomstring = require('randomstring')
 const logger = require('./logger')
 
 let endProcess = function () {
-  logger.info('SIGINT send', { meta: 'blue.inverse' })
+  logger.verbose('SIGINT send', { meta: 'blue.inverse' })
   process.kill(process.pid, 'SIGINT')
 }
 
