@@ -97,12 +97,21 @@ If you want to use another account, you can:
 ### --master2 secret
 `-2 --master2` Set the 2nd secret of our master account. This is only necessary if this account has the 2nd secret enabled.
 
-### --delegates list of secrets
-`-d, --delegates` List all delegate secrets with which the Dapp should be registered with. This secrets will enable the Dapp to produce blocks. Provide a string with comma separated secrets. According to this scheme: `--delegates "secret1 secret1 secret1, secret2 secret2 secret2, secret3 secret3 secret3"`  
+### Custom delegates
+Specify your custom delegates in the `config.json` file. These delegates will be used to register your DApp and will be used for block generation (forging) on the newly registered DApp.
 
-Example:  
-```bash
-asch-redeploy --delegates "flame bottom dragon rely endorse garage supply urge turtle team demand put, thrive veteran child enforce puzzle buzz valley crew genuine basket start top, black tool gift useless bring nothing huge vendor asset mix chimney weird"
+Example `config.json`:  
+```json
+{
+  "peers": [{"ip":"127.0.0.1","port":4096}],
+  "secrets": [
+    "flame bottom dragon rely endorse garage supply urge turtle team demand put",
+    "thrive veteran child enforce puzzle buzz valley crew genuine basket start top",
+    "black tool gift useless bring nothing huge vendor asset mix chimney weird",
+    "ribbon crumble loud chief turn maid neglect move day churn share fabric",
+    "scan prevent agent close human pair aerobic sad forest wave toe dust"
+  ]
+}
 ```
 
 ### --output file
@@ -119,7 +128,8 @@ Produces the following `dappId.json` file:
 {
   "host": "http://localhost",
   "port": "4096",
-  "dappId": "4160d918edfbcae7fa508ed9ae2fce836537b8a2e6355a8ae69f8924867c16cb"
+  "dappId": "4160d918edfbcae7fa508ed9ae2fce836537b8a2e6355a8ae69f8924867c16cb",
+  "dappName: "salt-sugar"
 }
 ```
 

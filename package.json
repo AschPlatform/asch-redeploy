@@ -1,6 +1,6 @@
 {
   "name": "asch-redeploy",
-  "version": "1.0.5",
+  "version": "2.0.0",
   "description": "A hassle-free local asch environment",
   "main": "index.js",
   "dependencies": {
