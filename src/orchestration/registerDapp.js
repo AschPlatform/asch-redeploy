@@ -17,9 +17,10 @@ let RegisterDapp = function (config, utils, axios, aschJS, logger) {
 
   const constructDapp = () => {
     var dapp = {}
-    dapp.name = `asch-${utils.generateRandomString(15)}`
+    let newName = `${utils.generateRandomString(2)}-dapp`
+    dapp.name = newName
     dapp.desc = dapp.name
-    dapp.link = `http://${utils.generateRandomString(15)}.zip`
+    dapp.link = `http://${newName}.zip`
     dapp.icon = 'http://o7dyh3w0x.bkt.clouddn.com/hello.png'
     dapp.unlockDelegates = 3
     this.dappName = dapp.name

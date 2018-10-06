@@ -1,6 +1,6 @@
 const path = require('path')
-const randomstring = require('randomstring')
 const logger = require('./logger')
+const Mnemonic = require('bitcore-mnemonic')
 
 let endProcess = function () {
   logger.verbose('SIGINT send', { meta: 'blue.inverse' })
@@ -12,12 +12,14 @@ let getParentDirectory = function (directory) {
   return split.slice(0, (split.length - 1)).join(path.sep)
 }
 
-let generateRandomString = function (length) {
-  var newRandom = randomstring.generate({
-    length: 12,
-    charset: 'alphabetic'
-  })
-  return newRandom
+let generateRandomString = function (howManyWords) {
+  if (howManyWords > 12) {
+    howManyWords = 12
+  }
+
+  let secret = new Mnemonic(Mnemonic.Words.ENGLISH).toString()
+  let joined = secret.split(' ').slice(0, howManyWords).join('-')
+  return joined
 }
 
 module.exports = {

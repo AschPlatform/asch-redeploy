@@ -9,12 +9,12 @@ let CheckFileStructure = function (config) {
   this.printNecessaryDirectories = () => {
     logger.info('Expected following structure', { meta: 'inverse' })
     let message = ''
-    message += '\t contract/'
+    message += '\n\t\t\t\t contract/'
     message += '\n\t\t\t\t interface/'
     message += '\n\t\t\t\t model/'
     message += '\n\t\t\t\t public/'
     message += '\n\t\t\t\t init.js'
-    logger.info(message, { meta: 'inverse' })
+    logger.info(message, { meta: 'inverse.red' })
   }
 
   this.checkSync = () => {
