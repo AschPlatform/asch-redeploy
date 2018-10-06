@@ -130,7 +130,7 @@ helpers.annotate(RegisterPublisher, [DEPENDENCIES.Config, DEPENDENCIES.AschJS, D
 helpers.annotate(RegisterAsset, [DEPENDENCIES.Config, DEPENDENCIES.AschJS, DEPENDENCIES.Axios, DEPENDENCIES.Logger, DEPENDENCIES.Promise])
 helpers.annotate(CreateTokens, [DEPENDENCIES.Config, DEPENDENCIES.AschJS, DEPENDENCIES.Axios, DEPENDENCIES.Logger, DEPENDENCIES.Promise])
 helpers.annotate(CheckBlockchainVersion, [DEPENDENCIES.Config, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.Logger, DEPENDENCIES.CompareVersions])
-helpers.annotate(IsUserConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.UserConfigSchema, DEPENDENCIES.Logger, DEPENDENCIES.ZSchema, DEPENDENCIES.Path, DEPENDENCIES.Fs])
+helpers.annotate(IsUserConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.UserConfigSchema, DEPENDENCIES.Logger, DEPENDENCIES.ZSchema, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.AschJS])
 
 let setup = function () {
   // bindings

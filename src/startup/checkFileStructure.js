@@ -62,6 +62,13 @@ let CheckFileStructure = function (config) {
     }
     logger.info('init.js file ✓', greenUnderline)
 
+    // config.json
+    let configJsonFile = path.join(this.config.userDevDir, 'config.json')
+    if (!fs.existsSync(configJsonFile)) {
+      throw new Error('config.json file doesn\'t exist')
+    }
+    logger.info('config.json file ✓', greenUnderline)
+
     return true
   }
 }
