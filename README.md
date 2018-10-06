@@ -134,7 +134,7 @@ Produces the following `dappName.json` file in the current directory (`./`):
   "host": "http://localhost",
   "port": "4096",
   "dappId": "4160d918edfbcae7fa508ed9ae2fce836537b8a2e6355a8ae69f8924867c16cb",
-  "dappName: "salt-sugar-dapp"
+  "dappName": "salt-sugar-dapp"
 }
 ```
 
