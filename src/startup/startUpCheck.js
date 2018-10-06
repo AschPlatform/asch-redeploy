@@ -17,7 +17,7 @@ let StartUpCheck = function (config, isConfigValid, checkFileStructure, isUserCo
         return this.checkFileStructure.checkSync()
       })
       .then(() => {
-        return this.loadDelegates.loadSync()
+        return this.loadDelegates.load()
       })
       .then(() => {
         return this.isUserConfigValid.isValidSync()

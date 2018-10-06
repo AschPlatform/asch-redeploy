@@ -70,6 +70,7 @@ const IsPortAvailable = require('is-port-available')
 const Chokidar = require('chokidar')
 const CompareVersions = require('compare-versions')
 const UserConfigSchema = require('./startup/userConfigSchema')
+const Inquirer = require('inquirer')
 
 Axios.interceptors.request.use(request => {
   Logger.verbose('Axios request:')
@@ -107,7 +108,8 @@ const DEPENDENCIES = {
   IsPortAvailable: 'IsPortAvailable',
   Chokidar: 'Chokidar',
   CompareVersions: 'CompareVersions',
-  UserConfigSchema: 'UserConfigSchema'
+  UserConfigSchema: 'UserConfigSchema',
+  Inquirer: 'inquirer'
 }
 
 var container = new inversify.Container()
@@ -133,7 +135,7 @@ helpers.annotate(RegisterAsset, [DEPENDENCIES.Config, DEPENDENCIES.AschJS, DEPEN
 helpers.annotate(CreateTokens, [DEPENDENCIES.Config, DEPENDENCIES.AschJS, DEPENDENCIES.Axios, DEPENDENCIES.Logger, DEPENDENCIES.Promise])
 helpers.annotate(CheckBlockchainVersion, [DEPENDENCIES.Config, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.Logger, DEPENDENCIES.CompareVersions])
 helpers.annotate(IsUserConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.UserConfigSchema, DEPENDENCIES.Logger, DEPENDENCIES.ZSchema, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.AschJS])
-helpers.annotate(LoadDelegates, [DEPENDENCIES.Config, DEPENDENCIES.Path, DEPENDENCIES.Fs])
+helpers.annotate(LoadDelegates, [DEPENDENCIES.Config, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.Inquirer, DEPENDENCIES.Logger])
 
 let setup = function () {
   // bindings
@@ -181,6 +183,7 @@ let setup = function () {
   registerConstantValue(DEPENDENCIES.Chokidar, Chokidar)
   registerConstantValue(DEPENDENCIES.CompareVersions, CompareVersions)
   registerConstantValue(DEPENDENCIES.UserConfigSchema, UserConfigSchema)
+  registerConstantValue(DEPENDENCIES.Inquirer, Inquirer)
 }
 
 let resetConstants = function () {
