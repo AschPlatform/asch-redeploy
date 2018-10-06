@@ -1,6 +1,6 @@
 
 // ctor
-let StartUpCheck = function (config, isConfigValid, checkFileStructure, isUserConfigValid, checkArch, checkPort, checkPublicDistDir, checkBlockchainVersion) {
+let StartUpCheck = function (config, isConfigValid, checkFileStructure, isUserConfigValid, checkArch, checkPort, checkPublicDistDir, checkBlockchainVersion, loadDelegates) {
   this.config = config
   this.isConfigValid = isConfigValid
   this.checkFileStructure = checkFileStructure
@@ -9,17 +9,21 @@ let StartUpCheck = function (config, isConfigValid, checkFileStructure, isUserCo
   this.checkPort = checkPort
   this.checkPublicDistDir = checkPublicDistDir
   this.checkBlockchainVersion = checkBlockchainVersion
+  this.loadDelegates = loadDelegates
 
   this.check = () => {
     return this.checkArch.check()
       .then(() => {
-        return this.isConfigValid.isValidSync()
-      })
-      .then(() => {
         return this.checkFileStructure.checkSync()
       })
       .then(() => {
+        return this.loadDelegates.loadSync()
+      })
+      .then(() => {
         return this.isUserConfigValid.isValidSync()
+      })
+      .then(() => {
+        return this.isConfigValid.isValidSync()
       })
       .then(() => {
         return this.checkPublicDistDir.createIfNotExistsSync()

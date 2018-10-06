@@ -22,6 +22,7 @@ const RegisterAsset = require('./orchestration/uia/registerAsset')
 const CreateTokens = require('./orchestration/uia/createTokens')
 const CheckBlockchainVersion = require('./startup/checkBlockchainVersion')
 const IsUserConfigValid = require('./startup/isUserConfigValid')
+const LoadDelegates = require('./startup/loadDelegates')
 
 const FILETYPES = {
   SendMoney: 'SendMoney',
@@ -43,7 +44,8 @@ const FILETYPES = {
   RegisterAsset: 'RegisterAsset',
   CreateTokens: 'CreateTokens',
   CheckBlockchainVersion: 'CheckBlockchainVersion',
-  IsUserConfigValid: 'IsUserConfigValid'
+  IsUserConfigValid: 'IsUserConfigValid',
+  LoadDelegates: 'LoadDelegates'
 }
 
 const userInput = require('./program').getUserInput()
@@ -114,7 +116,7 @@ var container = new inversify.Container()
 helpers.annotate(SendMoney, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Axios, DEPENDENCIES.AschJS, DEPENDENCIES.Promise])
 helpers.annotate(RegisterDapp, [DEPENDENCIES.Config, DEPENDENCIES.Utils, DEPENDENCIES.Axios, DEPENDENCIES.AschJS, DEPENDENCIES.Logger])
 helpers.annotate(Deploy, [DEPENDENCIES.Config, DEPENDENCIES.CopyDirectory, DEPENDENCIES.Path, DEPENDENCIES.Fs])
-helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FILETYPES.CheckFileStructure, FILETYPES.IsUserConfigValid, DEPENDENCIES.CheckArch, FILETYPES.CheckPort, FILETYPES.CheckPublicDistDir, FILETYPES.CheckBlockchainVersion])
+helpers.annotate(StartUpCheck, [DEPENDENCIES.Config, FILETYPES.IsConfigValid, FILETYPES.CheckFileStructure, FILETYPES.IsUserConfigValid, DEPENDENCIES.CheckArch, FILETYPES.CheckPort, FILETYPES.CheckPublicDistDir, FILETYPES.CheckBlockchainVersion, FILETYPES.LoadDelegates])
 helpers.annotate(IsConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.ZSchema, DEPENDENCIES.CustomValidators, DEPENDENCIES.ConfigSchema])
 helpers.annotate(CheckFileStructure, [DEPENDENCIES.Config])
 helpers.annotate(Service, [DEPENDENCIES.Config, DEPENDENCIES.Logger, DEPENDENCIES.Moment, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.EventEmitter, FILETYPES.CreateLogDir, DEPENDENCIES.Fork, FILETYPES.PathResolution])
@@ -131,6 +133,7 @@ helpers.annotate(RegisterAsset, [DEPENDENCIES.Config, DEPENDENCIES.AschJS, DEPEN
 helpers.annotate(CreateTokens, [DEPENDENCIES.Config, DEPENDENCIES.AschJS, DEPENDENCIES.Axios, DEPENDENCIES.Logger, DEPENDENCIES.Promise])
 helpers.annotate(CheckBlockchainVersion, [DEPENDENCIES.Config, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.Logger, DEPENDENCIES.CompareVersions])
 helpers.annotate(IsUserConfigValid, [DEPENDENCIES.Config, DEPENDENCIES.UserConfigSchema, DEPENDENCIES.Logger, DEPENDENCIES.ZSchema, DEPENDENCIES.Path, DEPENDENCIES.Fs, DEPENDENCIES.AschJS])
+helpers.annotate(LoadDelegates, [DEPENDENCIES.Config, DEPENDENCIES.Path, DEPENDENCIES.Fs])
 
 let setup = function () {
   // bindings
@@ -154,6 +157,7 @@ let setup = function () {
   container.bind(FILETYPES.CreateTokens).to(CreateTokens)
   container.bind(FILETYPES.CheckBlockchainVersion).to(CheckBlockchainVersion)
   container.bind(FILETYPES.IsUserConfigValid).to(IsUserConfigValid)
+  container.bind(FILETYPES.LoadDelegates).to(LoadDelegates)
 
   // constants or third party libraries
   const registerConstantValue = helpers.registerConstantValue(container)

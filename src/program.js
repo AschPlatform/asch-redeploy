@@ -37,9 +37,6 @@ let pr = {
       createDappProperty()
       config.dapp.masterAccountPassword2nd = program.master2
     }
-    if (program.delegates) {
-      console.log('--delegates has been deprecated')
-    }
 
     /* config.node */
     let createNodeProperty = function () {

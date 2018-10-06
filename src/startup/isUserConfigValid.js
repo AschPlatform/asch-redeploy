@@ -28,9 +28,9 @@ let IsUserConfigValid = function (config, userConfigSchema, logger, ZSchema, pat
     this.config.dapp.delegates = []
     this.config.dapp.delegates.push(...loadedUserConfig.secrets)
 
-    this.logger.info('using the following delgates from confir.json:')
+    this.logger.info('using the following delegates from config.json:')
     loadedUserConfig.secrets.forEach((secret) => {
-      this.logger.info(`\t"${secret}"`)
+      this.logger.info(`\t"${secret}"`, { meta: 'underline' })
     })
 
     let validator = new this.ZSchema({
