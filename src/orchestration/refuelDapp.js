@@ -12,12 +12,15 @@ let RefuelDapp = function (config, axios, aschJS, logger) {
     version: ''
   }
 
-  this.refuelDapp = (dappName, currency) => {
+  this.refuelDapp = (dappName, currency, precision) => {
     if (typeof dappName !== 'string') {
       throw new Error('dappName must be of type string')
     }
     if (!currency) {
       throw new Error('currency must be provided for DApp refuel')
+    }
+    if (!precision) {
+      throw new Error('precision must be provided for DApp refuel')
     }
 
     let secret = this.config.dapp.masterAccountPassword
@@ -26,7 +29,9 @@ let RefuelDapp = function (config, axios, aschJS, logger) {
     let publicKey = this.aschJS.crypto.getKeys(secret).publicKey
     let senderId = this.aschJS.crypto.getAddress(publicKey)
 
-    let amount = 500 * 1e8
+    let realAmount = 500
+    let amount = realAmount * (10 ** precision)
+
     let trs = {
       secret: secret,
       secondSecret: secondSecret,
@@ -38,7 +43,7 @@ let RefuelDapp = function (config, axios, aschJS, logger) {
       ]
     }
 
-    this.logger.info(`DAPP refuel with ${amount / 1e8} ${currency}`)
+    this.logger.info(`DAPP refuel with ${realAmount} ${currency} (${amount} ${currency})`)
     let url = `${this.config.node.host}:${this.config.node.port}/api/transactions`
 
     return this.axios.put(url, trs, {
@@ -59,12 +64,13 @@ let RefuelDapp = function (config, axios, aschJS, logger) {
   }
 
   this.start = (dappName) => {
-    return this.refuelDapp(dappName, 'XAS')
+    return this.refuelDapp(dappName, 'XAS', 8)
       .then((result) => this.handleRefuel(result))
       .then(() => {
         if (this.config.uia && this.config.uia.publisher && this.config.uia.asset) {
           let currency = `${this.config.uia.publisher}.${this.config.uia.asset}`
-          return this.refuelDapp(dappName, currency)
+          let precision = this.config.uia.precision
+          return this.refuelDapp(dappName, currency, precision)
         } else {
           throw new Error('no_asset')
         }

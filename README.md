@@ -54,6 +54,13 @@ $ asch-redeploy
 
 <img src="./docs/blob/publisher_asset_option.png" alt="asch" style="width:600px;margin-right:20px;margin-left:20px;"/>
 
+### --precision integer
+`--precision` specifies the asset precision. If the `--precision` option is not provided the standard precision of `8` will be used
+
+> Example:  
+> Publisher: `CCTime`, Asset: `XCT`, Precision: `8`  
+> Creates asset `CCTime.XCT` with precision `8`
+
 ### --asch directory
 `-a --asch` Points to the `asch` directory where the local Asch blockchain lives. Default `../asch`
 
@@ -163,7 +170,10 @@ The `asch-redeploy` package automates numerous manual steps to register and inst
 4. Install Dapp on local Asch blockchain  
   4.1 Copy smart contract files (your working directory) to `asch/chains/<our-dapp-name>`  
   4.2 Restart local Asch blockchain to finish installation  
-5. Watch for file changes and start with __1.__ if a file changes  
+5. Refuel Dapp  
+  5.1 Refuel Dapp With 500 XAS  
+  5.2 (optional) Refuel Dapp with asset that was created through `--publisher YYY` and `--asset ZZZ` options  
+6. Watch for file changes and start with __1.__ if a file changes  
 
 
 If you want you can also follow the manual steps as described [here](https://github.com/AschPlatform/asch-docs/blob/master/dapp/hello_world/en.md)
@@ -172,3 +182,6 @@ If you want you can also follow the manual steps as described [here](https://git
 # Example Dapps
 * [cctime](https://github.com/AschPlatform/cctime)
 * [asch-dapp-helloworld](https://github.com/AschPlatform/asch-dapp-helloworld)
+
+# Dapp Templates
+* [asch-starter-contract](https://github.com/AschTemplates/asch-starter-contract)

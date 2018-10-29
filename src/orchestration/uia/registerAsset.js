@@ -59,7 +59,7 @@ let RegisterAsset = function (config, aschJS, axios, logger, promise) {
     let name = `${config.uia.asset}`
     let desc = name
     let maximum = '1000000000000000000'
-    let precision = 8
+    let precision = config.uia.precision
 
     let trs = {
       type: 101,

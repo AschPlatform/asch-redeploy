@@ -16,6 +16,7 @@ program
 
   .option('--publisher <publisher>', 'Register this publisher')
   .option('--asset <asset>', 'Register asset')
+  .option('--precision <integer>', 'Specify precision for asset')
 
   .parse(process.argv)
 
@@ -104,6 +105,30 @@ let pr = {
         console.log('the --publisher option must be also provided')
         process.exit(0)
       }
+    }
+
+    if (program.precision) {
+      let precision = Number(program.precision)
+      if (!Number.isInteger(precision) || precision <= 0) {
+        console.log('--precision must be positive integer')
+        process.exit(0)
+      }
+
+      if (precision > 16 || precision < 0) {
+        console.log('--precision must be between 1 and 16')
+        process.exit(0)
+      }
+
+      if (!program.publisher || !program.asset) {
+        console.log('the --publisher and --asset options must be also provided')
+        process.exit(0)
+      }
+      console.warn(`WARNING: if the asset ${program.publisher}.${program.asset} was already created with another precision, then to set the --precision option is meaningless`)
+      createUIAProperty()
+      config.uia.precision = precision
+    } else {
+      createUIAProperty()
+      config.uia.precision = 8
     }
 
     return config

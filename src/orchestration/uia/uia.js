@@ -11,7 +11,10 @@ let UIA = function (config, logger, registerPublisher, registerAsset, createToke
   this.start = () => {
     return Promise.delay(100)
       .then(() => {
-        if (!this.config.uia) {
+        let uiaPropDoesNotExist = !this.config.uia
+        let uiaPropExistButPublisherAndAssetPropNot = (this.config.uia && !this.config.uia.publisher && !this.config.uia.asset)
+
+        if (uiaPropDoesNotExist || uiaPropExistButPublisherAndAssetPropNot) {
           throw new Error('no_publisher_no_asset')
         }
         return null

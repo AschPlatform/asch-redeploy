@@ -63,7 +63,10 @@ let CreateTokens = function (config, aschJS, axios, logger, promise) {
 
   this.createTokens = () => {
     let currency = `${this.config.uia.publisher}.${this.config.uia.asset}`
-    let amount = (20000 * 1e8).toString()
+    let createTokens = 20000
+    let precision = this.config.uia.precision
+    let amount = createTokens * (10 ** precision)
+    amount = String(amount)
 
     let trs = {
       type: 102,
