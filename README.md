@@ -3,6 +3,7 @@
 [![Platform](https://img.shields.io/badge/platform-Linux-green.svg?style=flat)](https://github.com/AschPlatform/asch-redeploy)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/aschplatform/asch-redeploy.svg)
 [![GitHub top language](https://img.shields.io/github/languages/top/badges/shields.svg?style=popout&colorB=brightgreen)](https://github.com/AschPlatform/asch-redeploy)
+[![Gitter Chat](https://img.shields.io/gitter/room/AschDevelopment/Lobby.svg)](https://gitter.im/asch-development/Lobby)
 
 - - -
 
