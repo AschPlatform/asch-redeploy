@@ -61,7 +61,8 @@
     "asch-redeploy": "./bin/asch-redeploy"
   },
   "os": [
-    "linux"
+    "linux",
+    "darwin"
   ],
   "engines": {
     "node": ">=7.0"
